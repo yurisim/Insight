@@ -1,8 +1,8 @@
-import { PersonStatus } from '../schemas/person.schema'
+import { PersonStatus } from '../schemas/person.schema';
 
-export class CreatePersonDto {
-    name : string;
-    workcenter : string;
-    status : PersonStatus;
-    duedate : Date;
-  }
+export class CreatePersonDTO {
+  name: string;
+  workCenter: string;
+  status: PersonStatus;
+  dueDate: Date;
+}
