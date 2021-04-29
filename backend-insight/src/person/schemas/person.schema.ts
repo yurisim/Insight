@@ -14,7 +14,11 @@ export enum PersonStatus {
 export const PersonSchema = new mongoose.Schema({
   name: String,
   workcenter: String,
-  status: PersonStatus,
+  
+  // this can't be an enum, sorry. Valid schema types are below
+  // see https://mongoosejs.com/docs/guide.html#definition
+  status: String,
+
   dueDate: Date,
 });
 

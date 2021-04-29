@@ -2,7 +2,7 @@ import { Controller, Get, Res, HttpStatus, Param, NotFoundException, Post, Body,
 //import { CreatePersonDto, UpdatePersonDto, ListAllEntities } from './dto';
 import { PersonService } from './person.service';
 import { CreatePersonDTO } from './dto/create-person.dto';
-import { ValidateObjectId } from 'src/shared/validate-object-id';
+import { ValidateObjectID } from 'src/shared/validate-object-id';
 
 @Controller('person')
 export class PersonController {
@@ -15,7 +15,7 @@ export class PersonController {
   //   return this.personService.addPerson(CreatePersonDTO);
   // }
 
-  @Post('/person')
+  @Post('add')
   async addPerson(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
     const addedPerson = await this.personService.addPerson(createPostDTO);
     return res.status(HttpStatus.OK).json({
@@ -34,8 +34,9 @@ export class PersonController {
   //   return this.personService;
   // }
 
-  @Get('person/:personID')
-  async getPost(@Res() res, @Param('personID', new ValidateObjectId()) personID) {
+  // Get Person of a specific ID
+  @Get('get/:personID')
+  async getPost(@Res() res, @Param('personID', new ValidateObjectID()) personID) {
     const person = await this.personService.getPerson(personID);
 
     if (!person) {
@@ -45,7 +46,8 @@ export class PersonController {
     return res.status(HttpStatus.OK).json(person);
   }
 
-  @Get('persons')
+  // Get Everyone
+  @Get('getAll')
   async getAllPersons(@Res() res) {
     const persons = await this.personService.getAllPersons();
     return res.status(HttpStatus.OK).json(persons);
@@ -56,10 +58,10 @@ export class PersonController {
     return `This action updates a #${id} person`;
   }*/
 
-  @Put('person/edit')
+  @Put('edit')
   async editPost(
     @Res() res,
-    @Query('personID', new ValidateObjectId()) personID,
+    @Query('personID', new ValidateObjectID()) personID,
     @Body() createPersonDTO: CreatePersonDTO,
   ) {
     const editedPerson = await this.personService.editPerson(personID, createPersonDTO);
@@ -77,8 +79,8 @@ export class PersonController {
   //   return `This action removes a #${id} person`;
   // }
 
-  @Delete('person/delete')
-  async deletePerson(@Res() res, @Query('personID', new ValidateObjectId()) personID) {
+  @Delete('delete')
+  async deletePerson(@Res() res, @Query('personID', new ValidateObjectID()) personID) {
     const deletedPerson = await this.personService.deletePerson(personID);
 
     if (!deletedPerson) {

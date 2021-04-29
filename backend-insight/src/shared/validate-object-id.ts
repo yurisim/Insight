@@ -2,7 +2,7 @@ import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from
 import * as mongoose from 'mongoose';
 
 @Injectable()
-export class ValidateObjectId implements PipeTransform<string> {
+export class ValidateObjectID implements PipeTransform<string> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(value: string, metadata: ArgumentMetadata) {
     const isValid = mongoose.Types.ObjectId.isValid(value);
