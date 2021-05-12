@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { PersonModule } from './person/person.module';
+import { TbaModule } from './tba/tba.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { PersonModule } from './person/person.module';
       useNewUrlParser: true,
     }),
     PersonModule,
+    TbaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

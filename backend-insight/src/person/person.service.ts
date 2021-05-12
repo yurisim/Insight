@@ -22,9 +22,9 @@ export class PersonService {
     return addedPerson.save();
   }
 
-  async getPerson(personID: any): Promise<Person> {
+  async getPerson(DoDID: any): Promise<Person> {
     // add await in case this takes a hot minute
-    const foundPerson = await this.personModel.findById(personID).exec();
+    const foundPerson = await this.personModel.findById(DoDID).exec();
     return foundPerson;
   }
 
@@ -34,17 +34,17 @@ export class PersonService {
     return allPersons;
   }
 
-  async editPerson(personID: any, createPersonDTO: CreatePersonDTO): Promise<Person> {
+  async editPerson(DoDID: any, createPersonDTO: CreatePersonDTO): Promise<Person> {
     const editedPerson = await this.personModel.findByIdAndUpdate(
-      personID,
+      DoDID,
       createPersonDTO,
-      { new: true },
+      { new: true }, //returns new version instead of old one
     );
     return editedPerson;
   }
 
-  async deletePerson(personID: any): Promise<any> {
-    const deletedPerson = await this.personModel.findByIdAndRemove(personID);
+  async deletePerson(DoDID: any): Promise<any> {
+    const deletedPerson = await this.personModel.findByIdAndRemove(DoDID);
     return deletedPerson;
   }
 }

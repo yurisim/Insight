@@ -12,21 +12,27 @@ export enum PersonStatus {
 }
 
 export const PersonSchema = new mongoose.Schema({
+  _id: Number, //DoDID
   name: String,
-  workcenter: String,
-  
+  _AFSCID: Number,//refrences foreign key
+  workCenter: String,
+  timeOnStation: Date,
   // this can't be an enum, sorry. Valid schema types are below
   // see https://mongoosejs.com/docs/guide.html#definition
   status: String,
-
   dueDate: Date,
+  comments: String,
 });
 
 export interface Person extends Document {
+  _id: number;
   name: string;
-  workcenter: string;
+  _AFSCID: number;//refrences foreign key
+  workCenter: string;
+  timeOnStation: Date;
   status: PersonStatus;
   dueDate: Date;
+  comments: string;
 }
 
 // @Schema()
