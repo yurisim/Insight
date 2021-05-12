@@ -2,7 +2,7 @@ import { Controller, Get, Res, HttpStatus, Param, NotFoundException, Post, Body,
 //import { CreatePersonDto, UpdatePersonDto, ListAllEntities } from './dto';
 import { PersonService } from './person.service';
 import { CreatePersonDTO } from './dto/create-person.dto';
-import { ValidateObjectID } from 'src/shared/validate-object-id';
+import { ValidateDoDID } from 'src/shared/validate-object-id';
 
 @Controller('person')
 export class PersonController {
@@ -14,10 +14,11 @@ export class PersonController {
   // createPerson(@Body() CreatePersonDTO: CreatePersonDTO) {
   //   return this.personService.addPerson(CreatePersonDTO);
   // }
-
+  
+  //Is part of the URL when adding a new person
   @Post('add')
-  async addPerson(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
-    const addedPerson = await this.personService.addPerson(createPostDTO);
+  async addPerson(@Res() res, @Body() addPersonDTO: CreatePersonDTO) {
+    const addedPerson = await this.personService.addPerson(addPersonDTO);
     return res.status(HttpStatus.OK).json({
       message: 'Post has been submitted successfully!',
       post: addedPerson,
@@ -35,9 +36,9 @@ export class PersonController {
   // }
 
   // Get Person of a specific ID
-  @Get('get/:personID')
-  async getPost(@Res() res, @Param('personID', new ValidateObjectID()) personID) {
-    const person = await this.personService.getPerson(personID);
+  @Get('get/:DoDID')
+  async getPost(@Res() res, @Param('DoDID', new ValidateDoDID()) DoDID) {
+    const person = await this.personService.getPerson(DoDID);
 
     if (!person) {
         throw new NotFoundException('Post does not exist!');
@@ -61,10 +62,10 @@ export class PersonController {
   @Put('edit')
   async editPost(
     @Res() res,
-    @Query('personID', new ValidateObjectID()) personID,
+    @Query('DoDID', new ValidateDoDID()) DoDID,
     @Body() createPersonDTO: CreatePersonDTO,
   ) {
-    const editedPerson = await this.personService.editPerson(personID, createPersonDTO);
+    const editedPerson = await this.personService.editPerson(DoDID, createPersonDTO);
     if (!editedPerson) {
         throw new NotFoundException('Person does not exist!');
     }
@@ -80,8 +81,8 @@ export class PersonController {
   // }
 
   @Delete('delete')
-  async deletePerson(@Res() res, @Query('personID', new ValidateObjectID()) personID) {
-    const deletedPerson = await this.personService.deletePerson(personID);
+  async deletePerson(@Res() res, @Query('DoDID', new ValidateDoDID()) DoDID) {
+    const deletedPerson = await this.personService.deletePerson(DoDID);
 
     if (!deletedPerson) {
         throw new NotFoundException('Person does not exist!');
