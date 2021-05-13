@@ -46,6 +46,18 @@ export class PersonController {
     return res.status(HttpStatus.OK).json(person);
   }
 
+  // Get Person of specific Name or Workcenter
+  @Get('search/:SearchInput')
+  async getSearch(@Res() res, @Param('SearchInput') SearchInput) {
+    const person = await this.personService.getSearch(SearchInput);
+
+    if (!person) {
+        throw new NotFoundException('Post does not exist!');
+    }
+
+    return res.status(HttpStatus.OK).json(person);
+  }
+
   // Get Everyone
   @Get('getAll')
   async getAllPersons(@Res() res) {
