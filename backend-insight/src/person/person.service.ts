@@ -28,6 +28,13 @@ export class PersonService {
     return foundPerson;
   }
 
+  async getSearch(SearchInput: any): Promise<Person[]> {
+    // add await in case this takes a hot minute
+    const foundSearch = await this.personModel.find().or([{ name: SearchInput}, {workCenter: SearchInput}]).exec();
+    return foundSearch;
+  }
+
+
   async getAllPersons(): Promise<Person[]> {
     // add await in case this takes a hot minute
     const allPersons = await this.personModel.find().exec();

@@ -12,3 +12,15 @@ export class ValidateDoDID implements PipeTransform<string> {
     return value;
   }
 }
+
+@Injectable()
+export class ValidateSearch implements PipeTransform<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async transform(value: string, metadata: ArgumentMetadata) {
+    const isValid = mongoose.Types.ObjectId.isValid(value);
+    if (!isValid) {
+        throw new BadRequestException('No Results Found');
+    }
+    return value;
+  }
+}
