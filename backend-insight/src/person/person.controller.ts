@@ -1,8 +1,8 @@
 import { Controller, Get, Res, HttpStatus, Param, NotFoundException, Post, Body, Put, Query, Delete } from '@nestjs/common';
 //import { CreatePersonDto, UpdatePersonDto, ListAllEntities } from './dto';
 import { PersonService } from './person.service';
-import { CreatePersonDTO } from './dto/create-person.dto';
-import { ValidateObjectID } from 'src/shared/validate-object-id';
+import { CreatePersonDTO } from './schemas/person.schema';
+import { ValidateObjectID } from './../shared/validate-object-id';
 
 @Controller('person')
 export class PersonController {

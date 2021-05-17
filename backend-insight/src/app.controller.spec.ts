@@ -20,3 +20,12 @@ describe('AppController', () => {
     });
   });
 });
+
+
+describe('Basic', () => {
+  describe('the basic test', () => {
+    it('should return "true!"', () => {
+      expect(true).toBeTruthy();
+    });
+  });
+});

@@ -2,52 +2,33 @@
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 
-// export type PersonDocument = Person & Document;
-
-// Need to declare this before it's used
-export enum PersonStatus {
-  CURRENT = 'Current',
-  UPCOMING = 'Upcoming',
-  OVERDUE = 'Overdue',
+export class CreatePersonDTO {
+  name: string;
+  dodid: number;
+  afscid: number;
+  workCenter: string;
+  timeOnStation: Date
+  status: string;
+  dueDate: Date;
+  comments: string;
 }
 
 export const PersonSchema = new mongoose.Schema({
   name: String,
-  workcenter: String,
-  
-  // this can't be an enum, sorry. Valid schema types are below
-  // see https://mongoosejs.com/docs/guide.html#definition
+  dodid: Number,
+  afscid: Number,
+  workCenter: String,
+  timeOnStation: Date,
   status: String,
-
   dueDate: Date,
+  comments: String
 });
 
-export interface Person extends Document {
-  name: string;
-  workcenter: string;
-  status: PersonStatus;
-  dueDate: Date;
-}
+export interface Person extends Document, CreatePersonDTO  {}
 
-// @Schema()
-// export class Person {
-//   @Prop()
-//   name: string;
-
-//   @Prop()
-//   workcenter: string; //enum?
-
-//   @Prop()
-//   status: PersonStatus;
-
-//   @Prop()
-//   duedate: Date;
-// }
-
+// // Need to declare this before it's used
 // export enum PersonStatus {
-//   CURRENT = 'CURRENT',
-//   UPCOMING = 'UPCOMING',
-//   OVERDUE = 'OVERDUE',
+//   CURRENT = 'Current',
+//   UPCOMING = 'Upcoming',
+//   OVERDUE = 'Overdue',
 // }
-
-// export const PersonSchema = SchemaFactory.createForClass(Person);
