@@ -1,0 +1,89 @@
+{
+"headers": [
+    {
+        "Header": "Name",
+        "accessor": "name"
+    },
+    {
+        "Header": "DOD ID",
+        "accessor": "dodid"
+    },
+    {
+        "Header": "AFSC ID",
+        "accessor": "afscid"
+    },
+    {
+        "Header": "Work Center",
+        "accessor": "workCenter"
+    },
+    {
+        "Header": "Time On Station",
+        "accessor": "timeOnStation"
+    },
+    {
+        "Header": "Status",
+        "accessor": "status"
+    },
+    {
+        "Header": "Due Date",
+        "accessor": "dueDate"
+    },
+    {
+        "Header": "Comments",
+        "accessor": "comments"
+    }
+],
+
+"rowData":[
+    {
+        "name": "Grif Castle",
+        "dodid": 1234567890,
+        "afscid": 4,
+        "workCenter": "DOUP",
+        "timeOnStation": "10/06/2018",
+        "status": "Safe",
+        "dueDate": "10/06/2019",
+        "comments": "awesome"
+    },
+    {
+        "name": "Yuri Sim",
+        "dodid": 1234567891,
+        "afscid": 4,
+        "workCenter": "DOUP",
+        "timeOnStation": "07/06/2020",
+        "status": "Upcoming",
+        "dueDate": "07/06/2021",
+        "comments": "eh"
+    },
+    {
+        "name": "Ryan Myers",
+        "dodid": 1234567892,
+        "afscid": 3,
+        "workCenter": "DOK",
+        "timeOnStation": "11/06/2018",
+        "status": "Safe",
+        "dueDate": "10/06/2019",
+        "comments": "awesome-ish"
+    },
+    {
+        "name": "Nathan Sullivan",
+        "dodid": 1234567893,
+        "afscid": 2,
+        "workCenter": "DOM",
+        "timeOnStation": "03/06/2019",
+        "status": "Safe",
+        "dueDate": "03/06/2020",
+        "comments": "awesome"
+    },
+    {
+        "name": "Alexander Withnell",
+        "dodid": 1234567894,
+        "afscid": 4,
+        "workCenter": "DOUP",
+        "timeOnStation": "10/06/2018",
+        "status": "Overdue",
+        "dueDate": "10/06/2019",
+        "comments": "sleepy"
+    }
+]
+}
