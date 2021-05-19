@@ -4,10 +4,13 @@ import {DataGrid, GridCellParams} from '@material-ui/data-grid';
 import '@material-ui/icons';
 import { Breadcrumbs, Link, Tabs, Tab, Chip, Paper, Card, TextField, InputAdornment, FormControl,Input, Button} from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
-import React, {useState} from 'react';
+import React, { useRef, useState, Component } from 'react';
+import "react-table/react-table.css";
+import data from "./data.json"
 import { SearchRounded } from '@material-ui/icons';
 import {spacing} from '@material-ui/system';
 
+const ReactTableCopyWrapper = require ('react-table-copy-wrapper');
 
 function TBA()
 {
@@ -53,7 +56,12 @@ function TBA()
                                     }/>
                                     
                                 </FormControl>
-                                <Button id='CCButton' variant='contained' color='primary'>Copy To Clipboard</Button>
+                                <Button 
+                                    onClick={() =>  navigator.clipboard.writeText('Copy this text to clipboard')}
+                                >
+                                    Copy
+                                </Button>
+                                {/* <Button id='CCButton' variant='contained' color='primary'>Copy To Clipboard</Button> */}
                            </div> 
                         <div style={{ height: 450}}>    
                             <DataGrid 
