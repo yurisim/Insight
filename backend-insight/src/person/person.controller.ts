@@ -7,6 +7,8 @@ import { ValidateObjectID } from './../shared/validate-object-id';
 @Controller('person')
 export class PersonController {
 
+
+
   // Be consistent w/ plurals and singulars
   constructor(private personService: PersonService) {}
 
@@ -63,7 +65,16 @@ export class PersonController {
   async getAllPersons(@Res() res) {
     const persons = await this.personService.getAllPersons();
     return res.status(HttpStatus.OK).json(persons);
+
   }
+
+  @Get ('Test')
+  async getTest(@Res() res){
+    const outcome = await this.personService.getTest();
+    console.log(outcome);
+    return res.status(HttpStatus.OK).json(outcome);
+  }
+  
 
   /*@Put(':id')
   update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {

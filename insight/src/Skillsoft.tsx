@@ -11,6 +11,7 @@ import axios from 'axios';
 import { resolveProjectReferencePath } from 'typescript';
 
 
+
 export interface CreatePersonDTO {
     name: string;
     dodid: number;
@@ -23,23 +24,25 @@ export interface CreatePersonDTO {
 }
 
 
+    let rows: CreatePersonDTO[] = []; 
 
-/*export function getTest()
+export async function getTest()
 {
-    axios({
+     
+    await axios({
         method: 'get',
         url: 'http://localhost:5000/person/getAll'
     })
        .then(res => {
-           let dataRec: CreatePersonDTO[]  = res.data;
-       console.log(dataRec[0].name);
+           rows = res.data;
+       console.log(rows[0].name);
 
     });
-}*/
+    return rows
+}
 
 function Skillsoft() {
     const [checked, setChecked] = useState(true);
-    let rows: CreatePersonDTO[] = [];
     let result: any;
     /*axios({
         method: 'get',
@@ -94,22 +97,13 @@ console.log(result);*/
 
                                 </FormControl>
                                 <Button id='CCButton' variant='contained' onClick={() => {
-                                    axios({
-                                        method: 'get',
-                                        url: 'http://localhost:5000/person/getAll'
-                                    })
-                                        .then(res => {
-                                            rows = res.data;
-                                            result = rows[0];
-                                            console.log(rows[0].name)
-                                        });
-
+                                    let result = getTest();
                                     console.log(result);
                                 }} color='primary'>Copy To Clipboard</Button>
                             </div>
                             <div style={{ height: 450 }}>
                                 <DataGrid
-
+                                
                                     checkboxSelection={true}
                                     columns={[
                                         { field: 'Name', flex: 1 },
@@ -117,7 +111,7 @@ console.log(result);*/
                                         { field: 'Status', flex: 1 },
                                         { field: 'Workcenter', flex: 1 }]}
 
-                                    rows={rows}
+                                    rows={[]}
                                 />
                             </div>
                         </Card>

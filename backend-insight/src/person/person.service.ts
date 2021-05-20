@@ -54,4 +54,9 @@ export class PersonService {
     const deletedPerson = await this.personModel.findByIdAndRemove(personID);
     return deletedPerson;
   }
+
+  async getTest(): Promise<string> {
+    const tested = 'Win'
+    return tested
+  }
 }
