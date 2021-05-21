@@ -1,22 +1,56 @@
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import {DataGrid, GridCellParams} from '@material-ui/data-grid';
+import {DataGrid, GridCellParams, GridToolbarContainer, GridToolbarExport, GRID_ROW_SELECTED} from '@material-ui/data-grid';
 import '@material-ui/icons';
 import { Breadcrumbs, Link, Tabs, Tab, Chip, Paper, Card, TextField, InputAdornment, FormControl,Input, Button} from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import { blue } from '@material-ui/core/colors';
 import React, { useRef, useState, Component } from 'react';
 import "react-table/react-table.css";
 import data from "./data.json"
-import { SearchRounded } from '@material-ui/icons';
+import { Check, RowingSharp, SearchRounded, TrendingUpRounded } from '@material-ui/icons';
 import {spacing} from '@material-ui/system';
+import { transpileModule } from 'typescript';
+import { getByTestId } from '@testing-library/dom';
 
-const ReactTableCopyWrapper = require ('react-table-copy-wrapper');
+
+//global variable used to determine if row is seleceted
+let check= false;
+
+//Creates export function, disabled by default, and enables it when row is selected
+function CustomToolbar() {
+    if (check === true){
+        return (
+            <GridToolbarContainer>
+                <GridToolbarExport disabled = {false}/>
+            </GridToolbarContainer>
+            )
+    }
+
+    else {
+        return (
+            <GridToolbarContainer>
+                <GridToolbarExport disabled = {true}/>
+            </GridToolbarContainer>
+            )
+    }
+}
+
+// export function IsChecked () {
+//     if (<Checkbox checked = {true}/>) {
+//         check = true;
+//     } 
+//     else {
+//         check = false;
+//     }
+// }
+
 
 function TBA()
 {
-    const [checked, setChecked] = useState(true);
+    // const [checked, setChecked] = useState(true);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {setChecked(event.target.checked)}
+    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {setChecked(event.target.checked)}
     return(
         <div>
             <Paper elevation={3}>
@@ -56,31 +90,61 @@ function TBA()
                                     }/>
                                     
                                 </FormControl>
-                                <Button 
-                                    onClick={() =>  navigator.clipboard.writeText('Copy this text to clipboard')}
-                                >
-                                    Copy
-                                </Button>
-                                {/* <Button id='CCButton' variant='contained' color='primary'>Copy To Clipboard</Button> */}
                            </div> 
                         <div style={{ height: 450}}>    
-                            <DataGrid 
-                                
+                            <DataGrid
+
+                                //Checks to see if rows are selected, and sets check variable accordingly
+                                onSelectionModelChange={(itm) => {
+                                    //console.log(itm); Logs the size of the array to the console
+                                    if(itm.selectionModel.length === 0)
+                                    {
+                                        check = false;
+                                    }
+                                    else{
+                                        check= true;
+                                    }
+                                }}
+                                //Adds toolbar to page
+                                components={{
+                                    Toolbar: CustomToolbar,
+                                }}
+                                //enables checkbox selection
                                 checkboxSelection={true}
+                                
                                 columns={[
                                 { field: 'Name', flex: 1 }, 
-                                { field: 'Status (Chip Column)', flex: 1}, 
+                                { field: 'Status', flex: 1}, 
                                 { field: 'Tasks Completed', flex: 1 }, 
+                                { field: 'Date of Last Task Completed', flex: 1 },
                                 { field: 'Workcenter', flex: 1 }]}
                                 rows={
                                     [
                                     {
                                     id: 1,
                                     Name: 'Withnell, Alexander',
-                                    Status: 'Add Chip',
+                                    Status: 'Safe',
                                     TasksCompleted: 'Complete',
+                                    DateOfLastTask: '11/07/17',
                                     Workcenter: 'DOUP',
-                                }, ]}
+                                },
+                                {
+                                    id: 2,
+                                    Name: 'Myers, Ryan',
+                                    Status: 'Overdue',
+                                    TasksCompleted: 'Complete',
+                                    DateOfLastTask: '11/07/17',
+                                    Workcenter: 'DOK',
+                                },
+                                {
+                                    id: 3,
+                                    Name: 'Klinker, Michael',
+                                    Status: 'Upcoming',
+                                    TasksCompleted: 'Complete',
+                                    DateOfLastTask: '11/07/17',
+                                    Workcenter: 'DOM',
+                                },
+                             ]}
                                 />
                         </div>
                         </Card>
