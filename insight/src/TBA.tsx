@@ -1,16 +1,9 @@
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import {DataGrid, GridCellParams} from '@material-ui/data-grid';
 import '@material-ui/icons';
 import { Breadcrumbs, Link, Tabs, Tab, Chip, Paper, Card, TextField, InputAdornment, FormControl,Input, Button} from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
 import React, { useRef, useState, Component } from 'react';
-import "react-table/react-table.css";
-import data from "./data.json"
 import { SearchRounded } from '@material-ui/icons';
-import {spacing} from '@material-ui/system';
-
-const ReactTableCopyWrapper = require ('react-table-copy-wrapper');
 
 function TBA()
 {
