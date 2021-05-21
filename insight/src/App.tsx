@@ -1,14 +1,17 @@
-import TBA from './TBA';
-// import Skillsoft from './Skillsoft';
 import './App.css';
+import PersonGrid from './components/PersonGrid'
 import CssBaseline from '@material-ui/core/CssBaseline'
+
+import {rows} from './junkdata';
+import {columns} from './junkdata';
+
 
 function App() {
   return (
     <div className="App">
       <CssBaseline/>
       {/* <Skillsoft/> */}
-      <TBA/>
+      <PersonGrid daRows={rows} daColumns={columns}/>
     </div>
   );
 }
