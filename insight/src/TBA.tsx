@@ -1,17 +1,9 @@
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import {DataGrid, GridCellParams, GridToolbarContainer, GridToolbarExport, GRID_ROW_SELECTED} from '@material-ui/data-grid';
+import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import '@material-ui/icons';
-import { Breadcrumbs, Link, Tabs, Tab, Chip, Paper, Card, TextField, InputAdornment, FormControl,Input, Button} from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import { blue } from '@material-ui/core/colors';
-import React, { useRef, useState, Component } from 'react';
+import { Breadcrumbs, Link, Tabs, Tab, Paper, Card, InputAdornment, FormControl,Input} from '@material-ui/core';
 import "react-table/react-table.css";
-import data from "./data.json"
-import { Check, RowingSharp, SearchRounded, TrendingUpRounded } from '@material-ui/icons';
-import {spacing} from '@material-ui/system';
-import { transpileModule } from 'typescript';
-import { getByTestId } from '@testing-library/dom';
+import { SearchRounded } from '@material-ui/icons';
 
 
 //global variable used to determine if row is seleceted

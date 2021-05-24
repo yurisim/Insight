@@ -54,4 +54,10 @@ export class PersonService {
     const deletedPerson = await this.personModel.findByIdAndRemove(personID);
     return deletedPerson;
   }
+
+  // async populatePeople(createPersonDTO: CreatePersonDTO): Promise<Person[]> {
+  //   const addedPerson = new this.personModel(createPersonDTO);
+
+  //   return addedPerson.save();
+  // }
 }

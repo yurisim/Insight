@@ -3,25 +3,27 @@ import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 
 export class CreatePersonDTO {
-  name: string;
+  lastName: string;
+  firstName: string;
   dodid: number;
   afscid: number;
   workCenter: string;
-  timeOnStation: Date
+  timeOnStation: Date;
   status: string;
   dueDate: Date;
   comments: string;
 }
 
 export const PersonSchema = new mongoose.Schema({
-  name: String,
+  lastName: String,
+  firstName: String,
   dodid: Number,
   afscid: Number,
   workCenter: String,
   timeOnStation: Date,
   status: String,
   dueDate: Date,
-  comments: String
+  comments: String,
 });
 
 export interface Person extends Document, CreatePersonDTO  {}
