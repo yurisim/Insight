@@ -1,14 +1,14 @@
-import CardActions from '@material-ui/core/CardActions';
+//import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import { DataGrid, GridCellParams } from '@material-ui/data-grid';
 import '@material-ui/icons';
 import { Breadcrumbs, Link, Tabs, Tab, Chip, Paper, Card, TextField, InputAdornment, FormControl, Input, Button } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
+//import { blue } from '@material-ui/core/colors';
 import React, { useState } from 'react';
 import { SearchRounded } from '@material-ui/icons';
-import { spacing } from '@material-ui/system';
+//import { spacing } from '@material-ui/system';
 import axios from 'axios';
-import { resolveProjectReferencePath } from 'typescript';
+//import { resolveProjectReferencePath } from 'typescript';
 
 
 
@@ -24,7 +24,7 @@ export interface CreatePersonDTO {
 }
 
 
-    let rows: CreatePersonDTO[] = []; 
+let rows: CreatePersonDTO[] = [];
 
 export async function getTest()
 {
@@ -36,9 +36,9 @@ export async function getTest()
        .then(res => {
            rows = res.data;
        console.log(rows[0].name);
-
+        
+        return rows;
     });
-    return rows
 }
 
 function Skillsoft() {
@@ -97,8 +97,15 @@ console.log(result);*/
 
                                 </FormControl>
                                 <Button id='CCButton' variant='contained' onClick={() => {
-                                    let result = getTest();
+                                    let result: CreatePersonDTO[] = []
+                                    getTest()
+                                    .then( res => {
+                                        result = res;
+                                    });
                                     console.log(result);
+                                    setTimeout(() => {
+                                        console.log(result)
+                                    });
                                 }} color='primary'>Copy To Clipboard</Button>
                             </div>
                             <div style={{ height: 450 }}>
@@ -111,7 +118,7 @@ console.log(result);*/
                                         { field: 'Status', flex: 1 },
                                         { field: 'Workcenter', flex: 1 }]}
 
-                                    rows={[]}
+                                    rows={rows}
                                 />
                             </div>
                         </Card>
