@@ -84,11 +84,8 @@ console.log(result);*/
                         <Card>
                             <div id='TopBox'>
                                 <FormControl id='Test'>
-
                                     <Input
                                         className="Searchbar"
-
-
                                         startAdornment={
                                             <InputAdornment position="start">
                                                 <SearchRounded />
@@ -124,7 +121,6 @@ console.log(result);*/
                         </Card>
                     </CardContent>
                 </Card>
-
             </Paper>
         </div>
     )

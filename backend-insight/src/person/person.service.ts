@@ -59,4 +59,9 @@ export class PersonService {
     const tested = 'Win'
     return tested
   }
+  // async populatePeople(createPersonDTO: CreatePersonDTO): Promise<Person[]> {
+  //   const addedPerson = new this.personModel(createPersonDTO);
+
+  //   return addedPerson.save();
+  // }
 }

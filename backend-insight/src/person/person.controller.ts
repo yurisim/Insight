@@ -115,4 +115,15 @@ export class PersonController {
       post: deletedPerson,
     });
   }
+
+    // Put People into Database
+    @Post('populatePeople')
+    async populatePeople(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
+
+      const populatedPeople = await this.personService.addPerson(createPostDTO);
+
+      return res.status(HttpStatus.OK).json({
+        message: 'Post has been submitted successfully!',
+        post: addedPerson,
+      });
 }
