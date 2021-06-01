@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import {Button} from '@material-ui/core'
 
-
-function 
-
 function TestPage(){
     const [checked, setChecked] = useState(true);
     let result: any;
@@ -14,6 +11,5 @@ function TestPage(){
         </div>
     )
 }
-
 
 export default TestPage;

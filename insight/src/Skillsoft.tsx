@@ -97,7 +97,7 @@ console.log(result);*/
                                     let result: CreatePersonDTO[] = []
                                     getTest()
                                     .then( res => {
-                                        result = res;
+                                        //result = res;
                                     });
                                     console.log(result);
                                     setTimeout(() => {

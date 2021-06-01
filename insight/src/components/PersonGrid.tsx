@@ -1,7 +1,10 @@
 import { DataGrid, GridToolbarContainer, GridToolbarExport, 
   GridColumnsToolbarButton, GridFilterToolbarButton, 
   GridColDef } from '@material-ui/data-grid';
+import SearchIcon from '@material-ui/icons/Search'
+import { TextField, Button, InputAdornment } from '@material-ui/core';
 import { Component } from 'react';
+import axios from 'axios';
 
 /* Handles the Export Button Toggle */
 let nothingSelected = true;
@@ -25,19 +28,34 @@ function PersonGridToolBar() {
 
 /* Whatever you stick into here will become the properties of the UIElement*/ 
 interface IPersonGridProps {
-  daRows: any;
   daColumns: GridColDef[];
 }
 
 class PersonGrid extends Component<IPersonGridProps> {
+  state = {
+    rows: []
+  }
+
+  componentDidMount(){
+    axios({
+      method: 'get',
+      url: 'http://localhost:5000/person/getAll'
+    })
+    .then(res => {
+      let rows = res.data;
+      rows.forEach(element => {
+        element.id = element._id
+      });
+      this.setState({ rows : res.data });
+    });
+  }
 
   render() {
     return (
       <div>
         <div style={{ height: 500, width: 'auto' }}>
-
           {/* Stick daRows and daColumns as a property of this react component in the constructor */}
-          <DataGrid rows={this.props.daRows} columns={this.props.daColumns} pageSize={8} density="compact"
+          <DataGrid rows={this.state.rows} columns={this.props.daColumns} pageSize={8} density="compact"
 
             /* Puts a checkbox in the first column of the table */
             checkboxSelection

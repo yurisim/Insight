@@ -75,7 +75,6 @@ export class PersonController {
     return res.status(HttpStatus.OK).json(outcome);
   }
   
-
   /*@Put(':id')
   update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
     return `This action updates a #${id} person`;
@@ -124,6 +123,7 @@ export class PersonController {
 
       return res.status(HttpStatus.OK).json({
         message: 'Post has been submitted successfully!',
-        post: addedPerson,
+        post: populatedPeople,
       });
+  }
 }
