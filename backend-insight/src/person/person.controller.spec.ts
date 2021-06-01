@@ -3,7 +3,7 @@ import { PersonController } from './person.controller';
 import { PersonService } from './person.service';
 import { Person } from './schemas/Person.schema';
 
-describe('BlogController', () => {
+describe('PersonController', () => {
 
   let personController: PersonController;
   let personService: PersonService;
@@ -29,7 +29,7 @@ describe('BlogController', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of cats', async () => {
+    it('should return an array of people', async () => {
       const result: Person[] = [];
 
       // Make the Cook Grab something premade from the fridge
