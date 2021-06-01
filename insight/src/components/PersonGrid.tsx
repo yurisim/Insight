@@ -13,6 +13,17 @@ let nothingSelected = true;
 function PersonGridToolBar() {
   return (
     <GridToolbarContainer>
+          {/* shrink:true makes it so the text is aligned with the top of the search box*/ }
+          <TextField label="Search" variant="outlined" InputLabelProps={{shrink: true}} 
+            InputProps=
+            {{ endAdornment : (
+              <InputAdornment position="end">
+                <SearchIcon color="primary" />
+              </InputAdornment>
+            )
+            }}
+          />
+          <Button variant="outlined" color="primary" > Search </Button>
 
       {/* Filter Columns */}
       <GridColumnsToolbarButton />
