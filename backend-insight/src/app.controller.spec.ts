@@ -1,44 +1,15 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-
-// describe('AppController', () => {
-//   let appController: AppController;
-
-//   beforeEach(async () => {
-//     const app: TestingModule = await Test.createTestingModule({
-//       controllers: [AppController],
-//       providers: [AppService],
-//     }).compile();
-
-//     appController = app.get<AppController>(AppController);
-//   });
-
-//   describe('root', () => {
-//     it('should return "Hello World!"', () => {
-//       expect(appController.getHello()).toBe('Hello World!');
-//     });
-//   });
-// });
-
-
-// describe('Basic', () => {
-//   describe('the basic test', () => {
-//     it('should return "true!"', () => {
-//       expect(true).toBeTruthy();
-//     });
-//   });
-// });
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
+import {CreatePersonDTO} from '../src/person/schemas/person.schema'
+
+
 describe('theAppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -47,9 +18,8 @@ describe('theAppController (e2e)', () => {
     await app.init();
   });
 
-  afterAll( done => {
-    app.close();
-    done();
+  afterAll( async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {
@@ -65,16 +35,48 @@ describe('theAppController (e2e)', () => {
   //     .expect('Elijah');
   // });¡
 
+  // Make a body
+  it('should be able to add a person', () => {
 
+    const postData : CreatePersonDTO = {
+      lastName: "ddfgdfg",
+      firstName: "ddfgdfg",
+      dodid: 1232141243,
+      afscid: 124214,
+      workCenter: "ddfgdfg",
+      status: "Safe",
+    }
 
-  // // Make a body
-  // it('/ (POST)', async done => {
-  //   request(app.getHttpServer())
-  //     .post('/person/add')
-  //     .send('lastName=Silly')
-  //     .expect(200);
+    return request(app.getHttpServer())
+      .post('/person/add')
+      .send(postData)
+      .expect(200);
+  });
 
-  //     done();
-  // });
+  it('should be able to find a specific ID', () => {
 
+    return request(app.getHttpServer())
+      .get('/person/get/60b7c192a5769d28841f67c8')
+      .then(response => {
+        expect(response.body.lastName).toBe('Silly')
+      })
+  });
+
+  it('should not be able to find an ID', () => {
+
+    return request(app.getHttpServer())
+      .get('/person/get/676dsf78sydf786sdf6sd8f7f')
+      .expect(400)
+  });
+
+  it('should be able to get all', () => {
+
+    return request(app.getHttpServer())
+      .get('/person/getAll')
+      .then(res => {
+        expect(Array.isArray(res.body)).toBeTruthy();
+        expect(res.body.length).toBeGreaterThanOrEqual(1);
+      })
+
+  });
 });

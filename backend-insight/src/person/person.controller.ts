@@ -38,10 +38,11 @@ export class PersonController {
   @Get('get/:personID')
   async getPost(@Res() res, @Param('personID', new ValidateObjectID()) personID) {
     const person = await this.personService.getPerson(personID);
-
-    if (!person) {
-        throw new NotFoundException('Post does not exist!');
-    }
+    
+    //Unreachable & redundant code, with ValidateObjectID
+    // if (!person) {
+    //     throw new NotFoundException('Post does not exist!');
+    // }
 
     return res.status(HttpStatus.OK).json(person);
   }
