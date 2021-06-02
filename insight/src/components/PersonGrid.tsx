@@ -5,6 +5,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import { TextField, Button, InputAdornment } from '@material-ui/core';
 import { Component } from 'react';
 import axios from 'axios';
+import { getAllJSDocTags } from 'typescript';
 
 /* Handles the Export Button Toggle */
 let nothingSelected = true;
@@ -47,10 +48,41 @@ class PersonGrid extends Component<IPersonGridProps> {
     rows: []
   }
 
-  componentDidMount(){
+  searchInput:string = ''
+
+  public PersonGridToolBar() {
+    return (
+      <GridToolbarContainer>
+            {/* shrink:true makes it so the text is aligned with the top of the search box*/ }
+            <TextField id="searchBox" label="SearchBox" variant="outlined" InputLabelProps={{shrink: true}} 
+              InputProps=
+              {{ endAdornment : (
+                <InputAdornment position="end">
+                  <SearchIcon color="primary" />
+                </InputAdornment>
+              )
+              }}
+            />
+            <Button id="submitButton" variant="outlined" color="primary"> Search </Button>
+  
+        {/* Filter Columns */}
+        <GridColumnsToolbarButton />
+  
+        {/* Filter by search  */}
+        <GridFilterToolbarButton />
+  
+        {/* The export button is disabled depending on what is toggled */}
+        <GridToolbarExport disabled={nothingSelected} variant="contained" />
+      </GridToolbarContainer>
+    );
+  }
+
+
+  public GetData( inputUrl:string) {
+
     axios({
       method: 'get',
-      url: 'http://localhost:5000/person/getAll'
+      url: inputUrl
     })
     .then(res => {
       let rows = res.data;
@@ -60,6 +92,12 @@ class PersonGrid extends Component<IPersonGridProps> {
       this.setState({ rows : res.data });
     });
   }
+
+  componentDidMount(){
+    this.GetData('http://localhost:5000/person/getAll')
+  }
+
+
 
   render() {
     return (
@@ -78,7 +116,7 @@ class PersonGrid extends Component<IPersonGridProps> {
             }}
 
             components={{
-              Toolbar: PersonGridToolBar,
+              Toolbar: this.PersonGridToolBar,
             }}
           />
         </div>
