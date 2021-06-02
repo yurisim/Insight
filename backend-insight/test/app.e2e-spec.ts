@@ -1,39 +1,50 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+// import { Test, TestingModule } from '@nestjs/testing';
+// import { INestApplication } from '@nestjs/common';
+// import * as request from 'supertest';
+// import { AppModule } from './../src/app.module';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication;
+// // import {CreatePersonDTO} from '../src/person/schemas/person.schema'
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+// describe('theAppController (e2e)', () => {
+//   let app: INestApplication;
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+//   beforeEach(async () => {
+//     const moduleFixture: TestingModule = await Test.createTestingModule({
+//       imports: [AppModule],
+//     }).compile();
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+//     app = moduleFixture.createNestApplication();
+//     await app.init();
+//   });
 
-  // it('/ (GET)', () => {
-  //   return request(app.getHttpServer())
-  //     .get('person/getAll')
-  //     .expect('Elijah');
-  // });¡
+//   afterAll(async done => {
+//     app.close();
+//     done();
+//   });
+
+//   it('/ (GET)', async () => {
+//     return request(app.getHttpServer())
+//       .get('/')
+//       .expect(200)
+//       .expect('Hello World!');
+//   });
+
+//   // it('/ (GET)', () => {
+//   //   return request(app.getHttpServer())
+//   //     .get('person/getAll')
+//   //     .expect('Elijah');
+//   // });¡
 
 
-  // Make a body
-  it('/ (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/person/add')
-      .send('lastName=Silly')
-      .expect(200)
-  });
-});
+
+//   // Make a body
+//   it('/ (POST)', async done => {
+//     request(app.getHttpServer())
+//       .post('/person/add')
+//       .send('lastName=Silly')
+//       .expect(200);
+
+//       done();
+//   });
+
+// });
