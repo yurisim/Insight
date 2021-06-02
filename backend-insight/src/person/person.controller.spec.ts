@@ -23,21 +23,21 @@ describe('PersonController', () => {
     jest.resetAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(personService).toBeDefined();
-    expect(personService).toBeDefined();
-  });
+  // it('should be defined', () => {
+  //   expect(personService).toBeDefined();
+  //   expect(personService).toBeDefined();
+  // });
 
-  describe('findAll', () => {
-    it('should return an array of people', async () => {
-      const result: Person[] = [];
+  // describe('findAll', () => {
+  //   it('should return an array of people', async () => {
+  //     const result: Person[] = [];
 
-      // Make the Cook Grab something premade from the fridge
-      jest.spyOn(personService, 'getAllPersons').mockImplementation(async () => result);
+  //     // Make the Cook Grab something premade from the fridge
+  //     jest.spyOn(personService, 'getAllPersons').mockImplementation(async () => result);
 
-      let res: any;
+  //     let res: any;
 
-      expect(await personController.getAllPersons(res)).toBe(result);
-    });
-  })
+  //     expect(await personController.getAllPersons(res)).toBe(result);
+  //   });
+  // })
 })
