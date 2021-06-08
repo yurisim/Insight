@@ -30,7 +30,8 @@ export class PersonService {
 
   async getSearch(SearchInput: any): Promise<Person[]> {
     // add await in case this takes a hot minute
-    const foundSearch = await this.personModel.find().or([{ lastName: SearchInput}, {workCenter: SearchInput}, { firstName: SearchInput}]).exec();
+    const regexSearch = { $regex : new RegExp(SearchInput, "i") };
+    const foundSearch = await this.personModel.find().or([{ lastName: regexSearch}, {workCenter: regexSearch}, { firstName: regexSearch}]).exec();
     return foundSearch;
   }
 
