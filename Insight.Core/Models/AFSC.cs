@@ -10,6 +10,9 @@ namespace Insight.Core.Models
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Name of AFSC
+        /// </summary>
         public string Name { get; set; }
 
         public int TBATasksNeeded { get; set; }

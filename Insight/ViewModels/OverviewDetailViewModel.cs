@@ -26,7 +26,7 @@ namespace Insight.ViewModels
         public async Task InitializeAsync(long orderID)
         {
             var data = await SampleDataService.GetContentGridDataAsync();
-            Item = data.First(i => i.OrderID == orderID);
+            Item = data.First(i => i.DoDID == orderID);
         }
     }
 }

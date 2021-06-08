@@ -43,7 +43,7 @@ namespace Insight.ViewModels
             if (clickedItem != null)
             {
                 NavigationService.Frame.SetListDataItemForNextConnectedAnimation(clickedItem);
-                NavigationService.Navigate<OverviewDetailPage>(clickedItem.OrderID);
+                NavigationService.Navigate<OverviewDetailPage>(clickedItem.DoDID);
             }
         }
     }

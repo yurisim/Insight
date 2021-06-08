@@ -17,7 +17,14 @@ namespace Insight.Core.Models
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
         public string Phone { get; set; }
+
+        public string DateOnStation { get; set; }
+
+        public string Comments { get; set; }
+
+        public Medical Medical { get; set; }
 
         public AFSC AFSC { get; set; }
 

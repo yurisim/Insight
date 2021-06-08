@@ -8,7 +8,7 @@ namespace Insight.Core.Models
     // It is the model class we use to display data on pages like Grid, Chart, and List Detail.
     public class SampleOrder
     {
-        public long OrderID { get; set; }
+        public long DoDID { get; set; }
 
         public DateTime OrderDate { get; set; }
 
@@ -16,13 +16,13 @@ namespace Insight.Core.Models
 
         public DateTime ShippedDate { get; set; }
 
-        public string ShipperName { get; set; }
+        public string Name { get; set; }
 
         public string ShipperPhone { get; set; }
 
         public double Freight { get; set; }
 
-        public string Company { get; set; }
+        public string Organization { get; set; }
 
         public string ShipTo { get; set; }
 
@@ -38,9 +38,9 @@ namespace Insight.Core.Models
 
         public override string ToString()
         {
-            return $"{Company} {Status}";
+            return $"{Organization} {Status}";
         }
 
-        public string ShortDescription => $"Order ID: {OrderID}";
+        public string ShortDescription => $"Order ID: {DoDID}";
     }
 }

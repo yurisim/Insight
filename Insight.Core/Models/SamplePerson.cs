@@ -6,11 +6,11 @@ namespace Insight.Core.Models
     // Remove this class once your pages/features are using your data.
     // This is used by the SampleDataService.
     // It is the model class we use to display data on pages like Grid, Chart, and List Detail.
-    public class SampleCompany
+    public class SamplePerson
     {
-        public string CompanyID { get; set; }
+        public string DoDID { get; set; }
 
-        public string CompanyName { get; set; }
+        public string PersonName { get; set; }
 
         public string ContactName { get; set; }
 

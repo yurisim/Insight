@@ -24,14 +24,14 @@ namespace Insight.Core.Services
             return companies.SelectMany(c => c.Orders);
         }
 
-        private static IEnumerable<SampleCompany> AllCompanies()
+        private static IEnumerable<SamplePerson> AllCompanies()
         {
-            return new List<SampleCompany>()
+            return new List<SamplePerson>()
             {
-                new SampleCompany()
+                new SamplePerson()
                 {
-                    CompanyID = "ALFKI",
-                    CompanyName = "Company A",
+                    DoDID = "ALFKI",
+                    PersonName = "552 ACNS",
                     ContactName = "Maria Anders",
                     ContactTitle = "Sales Representative",
                     Address = "Obere Str. 57",
@@ -44,17 +44,17 @@ namespace Insight.Core.Services
                     {
                         new SampleOrder()
                         {
-                            OrderID = 10643,
+                            DoDID = 10643,
                             OrderDate = new DateTime(1997, 8, 25),
                             RequiredDate = new DateTime(1997, 9, 22),
                             ShippedDate = new DateTime(1997, 9, 22),
-                            ShipperName = "Speedy Express",
+                            Name = "Adrien Jobs",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 29.46,
-                            Company = "Company A",
-                            ShipTo = "Company A, Obere Str. 57, Berlin, 12209, Germany",
+                            Organization = "552 ACNS",
+                            ShipTo = "552 ACNS, Obere Str. 57, Berlin, 12209, Germany",
                             OrderTotal = 814.50,
-                            Status = "Shipped",
+                            Status = "Upcoming",
                             SymbolCode = 57643, // Symbol Globe
                             Details = new List<SampleOrderDetail>()
                             {
@@ -98,17 +98,17 @@ namespace Insight.Core.Services
                         },
                         new SampleOrder()
                         {
-                            OrderID = 10835,
+                            DoDID = 10835,
                             OrderDate = new DateTime(1998, 1, 15),
                             RequiredDate = new DateTime(1998, 2, 12),
                             ShippedDate = new DateTime(1998, 1, 21),
-                            ShipperName = "Federal Shipping",
+                            Name = "Rössle Sauerkraut",
                             ShipperPhone = "(503) 555-9931",
                             Freight = 69.53,
-                            Company = "Company A",
-                            ShipTo = "Company A, Obere Str. 57, Berlin, 12209, Germany",
+                            Organization = "552 ACNS",
+                            ShipTo = "552 ACNS, Obere Str. 57, Berlin, 12209, Germany",
                             OrderTotal = 845.80,
-                            Status = "Closed",
+                            Status = "Overdue",
                             SymbolCode = 57737, // Symbol Audio
                             Details = new List<SampleOrderDetail>()
                             {
@@ -140,17 +140,17 @@ namespace Insight.Core.Services
                         },
                         new SampleOrder()
                         {
-                            OrderID = 10952,
+                            DoDID = 10952,
                             OrderDate = new DateTime(1998, 3, 16),
                             RequiredDate = new DateTime(1998, 4, 27),
                             ShippedDate = new DateTime(1998, 3, 24),
-                            ShipperName = "Speedy Express",
+                            Name = "John Smith",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 40.42,
-                            Company = "Company A",
-                            ShipTo = "Company A, Obere Str. 57, Berlin, 12209, Germany",
+                            Organization = "552 ACNS",
+                            ShipTo = "552 ACNS, Obere Str. 57, Berlin, 12209, Germany",
                             OrderTotal = 471.20,
-                            Status = "Closed",
+                            Status = "Current",
                             SymbolCode = 57699, // Symbol Calendar
                             Details = new List<SampleOrderDetail>()
                             {
@@ -182,10 +182,10 @@ namespace Insight.Core.Services
                         }
                     }
                 },
-                new SampleCompany()
+                new SamplePerson()
                 {
-                    CompanyID = "ANATR",
-                    CompanyName = "Company F",
+                    DoDID = "ANATR",
+                    PersonName = "960 AACS",
                     ContactName = "Ana Trujillo",
                     ContactTitle = "Owner",
                     Address = "Avda. de la Constitución 2222",
@@ -198,17 +198,17 @@ namespace Insight.Core.Services
                     {
                         new SampleOrder()
                         {
-                            OrderID = 10625,
+                            DoDID = 10625,
                             OrderDate = new DateTime(1997, 8, 8),
                             RequiredDate = new DateTime(1997, 9, 5),
                             ShippedDate = new DateTime(1997, 8, 14),
-                            ShipperName = "Speedy Express",
+                            Name = "Ana Trujillo",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 43.90,
-                            Company = "Company F",
-                            ShipTo = "Company F, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
+                            Organization = "960 AACS",
+                            ShipTo = "960 AACS, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
                             OrderTotal = 469.75,
-                            Status = "Shipped",
+                            Status = "Upcoming",
                             SymbolCode = 57620, // Symbol Camera
                             Details = new List<SampleOrderDetail>()
                             {
@@ -252,17 +252,17 @@ namespace Insight.Core.Services
                         },
                         new SampleOrder()
                         {
-                            OrderID = 10926,
+                            DoDID = 10926,
                             OrderDate = new DateTime(1998, 3, 4),
                             RequiredDate = new DateTime(1998, 4, 1),
                             ShippedDate = new DateTime(1998, 3, 11),
-                            ShipperName = "Federal Shipping",
+                            Name = "Cuesa Cabrales",
                             ShipperPhone = "(503) 555-9931",
                             Freight = 39.92,
-                            Company = "Company F",
-                            ShipTo = "Company F, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
+                            Organization = "960 AACS",
+                            ShipTo = "960 AACS, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
                             OrderTotal = 507.20,
-                            Status = "Shipped",
+                            Status = "Overdue",
                             SymbolCode = 57633, // Symbol Clock
                             Details = new List<SampleOrderDetail>()
                             {
@@ -318,10 +318,10 @@ namespace Insight.Core.Services
                         }
                     }
                 },
-                new SampleCompany()
+                new SamplePerson()
                 {
-                    CompanyID = "ANTON",
-                    CompanyName = "Company Z",
+                    DoDID = "ANTON",
+                    PersonName = "552 OSS",
                     ContactName = "Antonio Moreno",
                     ContactTitle = "Owner",
                     Address = "Mataderos  2312",
@@ -334,17 +334,17 @@ namespace Insight.Core.Services
                     {
                         new SampleOrder()
                         {
-                            OrderID = 10507,
+                            DoDID = 10507,
                             OrderDate = new DateTime(1997, 4, 15),
                             RequiredDate = new DateTime(1997, 5, 13),
                             ShippedDate = new DateTime(1997, 4, 22),
-                            ShipperName = "Speedy Express",
+                            Name = "Antonio Moreno",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 47.45,
-                            Company = "Company Z",
-                            ShipTo = "Company Z, Mataderos  2312, 05023, México D.F., Mexico",
+                            Organization = "552 OSS",
+                            ShipTo = "552 OSS, Mataderos  2312, 05023, México D.F., Mexico",
                             OrderTotal = 978.50,
-                            Status = "Closed",
+                            Status = "Current",
                             SymbolCode = 57661, // Symbol Contact
                             Details = new List<SampleOrderDetail>()
                             {
@@ -376,17 +376,17 @@ namespace Insight.Core.Services
                         },
                         new SampleOrder()
                         {
-                            OrderID = 10573,
+                            DoDID = 10573,
                             OrderDate = new DateTime(1997, 6, 19),
                             RequiredDate = new DateTime(1997, 7, 17),
                             ShippedDate = new DateTime(1997, 6, 20),
-                            ShipperName = "Federal Shipping",
+                            Name = "Juan Izapisa",
                             ShipperPhone = "(503) 555-9931",
                             Freight = 84.84,
-                            Company = "Company Z",
-                            ShipTo = "Company Z, Mataderos  2312, 05023, México D.F., Mexico",
+                            Organization = "552 OSS",
+                            ShipTo = "552 OSS, Mataderos  2312, 05023, México D.F., Mexico",
                             OrderTotal = 2082.00,
-                            Status = "Closed",
+                            Status = "Upcoming",
                             SymbolCode = 57619, // Symbol Star
                             Details = new List<SampleOrderDetail>()
                             {
@@ -430,17 +430,17 @@ namespace Insight.Core.Services
                         },
                         new SampleOrder()
                         {
-                            OrderID = 10682,
+                            DoDID = 10682,
                             OrderDate = new DateTime(1997, 9, 25),
                             RequiredDate = new DateTime(1997, 10, 23),
                             ShippedDate = new DateTime(1997, 10, 1),
-                            ShipperName = "United Package",
+                            Name = "Dave Zramer",
                             ShipperPhone = "(503) 555-3199",
                             Freight = 36.13,
-                            Company = "Company Z",
-                            ShipTo = "Company Z, Mataderos  2312, 05023, México D.F., Mexico",
+                            Organization = "552 OSS",
+                            ShipTo = "552 OSS, Mataderos  2312, 05023, México D.F., Mexico",
                             OrderTotal = 375.50,
-                            Status = "Closed",
+                            Status = "Overdue",
                             SymbolCode = 57615, // Symbol Home
                             Details = new List<SampleOrderDetail>()
                             {

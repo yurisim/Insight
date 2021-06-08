@@ -32,7 +32,7 @@
                     Grid.Column="1"
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center">
-                    <TextBlock Style="{ThemeResource ListTitleStyle}" Text="{x:Bind Company}" />
+                    <TextBlock Style="{ThemeResource ListTitleStyle}" Text="{x:Bind Organization}" />
                     <TextBlock Style="{StaticResource ListSubTitleStyle}" Text="{x:Bind Status}" />
                 </StackPanel>
             </Grid>

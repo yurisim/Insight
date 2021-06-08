@@ -16,12 +16,15 @@
                     <!--TODO WTS:
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
-                    <tg:DataGridTextColumn PropertyName="OrderID" />
+                    <tg:DataGridTextColumn PropertyName="DoDID" />
+                    <tg:DataGridTextColumn PropertyName="Name" />
+                    <tg:DataGridTextColumn PropertyName="Organization" />
+                    <tg:DataGridTextColumn PropertyName="Status" />
+
+
                     <tg:DataGridDateColumn PropertyName="OrderDate" />
-                    <tg:DataGridTextColumn PropertyName="Company" />
                     <tg:DataGridTextColumn PropertyName="ShipTo" />
                     <tg:DataGridNumericalColumn PropertyName="OrderTotal" />
-                    <tg:DataGridTextColumn PropertyName="Status" />
                     <tg:DataGridTemplateColumn Header="Symbol">
                         <tg:DataGridTemplateColumn.CellContentTemplate>
                             <DataTemplate x:DataType="model:SampleOrder">

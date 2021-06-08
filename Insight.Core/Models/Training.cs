@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Insight.Core.Models
 {
-    public class PEX
+    public class Training
     {
         [Key]
         public int Id { get; set; }
 
-        // Not sure, does each PEX account belong to an organization?
-        public Organization Organization { get; set; }
-
         public string Name { get; set; }
+
+        public int Interval { get; set; }
+
     }
 }
