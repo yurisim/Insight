@@ -10,66 +10,44 @@ import { getAllJSDocTags } from 'typescript';
 /* Handles the Export Button Toggle */
 let nothingSelected = true;
 
-/* This is the tool bar that renders above the grid */
-function PersonGridToolBar() {
-  return (
-    <GridToolbarContainer>
-          {/* shrink:true makes it so the text is aligned with the top of the search box*/ }
-          <TextField label="Search" variant="outlined" InputLabelProps={{shrink: true}} 
-            InputProps=
-            {{ endAdornment : (
-              <InputAdornment position="end">
-                <SearchIcon color="primary" />
-              </InputAdornment>
-            )
-            }}
-          />
-          <Button variant="outlined" color="primary" > Search </Button>
-
-      {/* Filter Columns */}
-      <GridColumnsToolbarButton />
-
-      {/* Filter by search  */}
-      <GridFilterToolbarButton />
-
-      {/* The export button is disabled depending on what is toggled */}
-      <GridToolbarExport disabled={nothingSelected} variant="contained" />
-    </GridToolbarContainer>
-  );
-}
-
 /* Whatever you stick into here will become the properties of the UIElement*/ 
 interface IPersonGridProps {
   daColumns: GridColDef[];
 }
 
-class PersonGrid extends Component<IPersonGridProps> {
-  state = {
-    rows: []
+/* Whatever you stick into here will become the state of the UIElement*/ 
+interface IPersonGridState {
+  rows: [],
+  search_value: string,
+}
+
+class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
+  constructor(props){
+    super(props);
+
+    this.searchClick = this.searchClick.bind(this);
+    //this.GetData = this.GetData.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    
+    this.state = {
+      rows: [],
+      search_value: ''
+    }
   }
 
-  searchInput:string = ''
-
+  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value)
+    this.setState({search_value: e.target.value});
+  }
+  
   public PersonGridToolBar() {
     return (
       <GridToolbarContainer>
-            {/* shrink:true makes it so the text is aligned with the top of the search box*/ }
-            <TextField id="searchBox" label="SearchBox" variant="outlined" InputLabelProps={{shrink: true}} 
-              InputProps=
-              {{ endAdornment : (
-                <InputAdornment position="end">
-                  <SearchIcon color="primary" />
-                </InputAdornment>
-              )
-              }}
-            />
-            <Button id="submitButton" variant="outlined" color="primary"> Search </Button>
-  
         {/* Filter Columns */}
         <GridColumnsToolbarButton />
   
         {/* Filter by search  */}
-        <GridFilterToolbarButton />
+        {/*<GridFilterToolbarButton />*/}
   
         {/* The export button is disabled depending on what is toggled */}
         <GridToolbarExport disabled={nothingSelected} variant="contained" />
@@ -77,9 +55,11 @@ class PersonGrid extends Component<IPersonGridProps> {
     );
   }
 
+  searchClick(){
+    this.GetData('http://localhost:5000/person/search/'+ this.state.search_value);
+  }
 
-  public GetData( inputUrl:string) {
-
+  GetData( inputUrl:string) {
     axios({
       method: 'get',
       url: inputUrl
@@ -97,12 +77,23 @@ class PersonGrid extends Component<IPersonGridProps> {
     this.GetData('http://localhost:5000/person/getAll')
   }
 
-
-
   render() {
     return (
-      <div>
+      
+      <div style={{ marginTop: 10, width: 'auto' }}>
+        
         <div style={{ height: 500, width: 'auto' }}>
+          {/* shrink:true makes it so the text is aligned with the top of the search box*/ }
+        <TextField id="searchBox" label="SearchBox" variant="outlined" size="small" InputLabelProps={{shrink: true}} onChange={ this.handleChange }
+              InputProps=
+              {{ endAdornment : (
+                <InputAdornment position="end">
+                  <SearchIcon color="primary" />
+                </InputAdornment>
+              )
+              }}
+            />
+            <Button id="submitButton" variant="outlined" color="primary" onClick={this.searchClick} > Search </Button>
           {/* Stick daRows and daColumns as a property of this react component in the constructor */}
           <DataGrid rows={this.state.rows} columns={this.props.daColumns} pageSize={8} density="compact"
 
