@@ -10,6 +10,62 @@ import { getAllJSDocTags } from 'typescript';
 /* Handles the Export Button Toggle */
 let nothingSelected = true;
 
+// /* Handles the Tab Filters */
+// let tab = "";
+
+// /* Sets filter for 'Safe' Tab */
+// const safeFilter: GridFilterModel = {
+//   items: [
+//     {columnField: 'status', operatorValue: 'contains', value: 'Safe'}
+//   ],
+//   linkOperator: GridLinkOperator.Or,
+// };
+
+
+// /* Sets filter for 'Upcoming' Tab */
+// const upcomingFilter: GridFilterModel = {
+//   items: [
+//     {columnField: 'status', operatorValue: 'contains', value: 'Upcoming'}
+//   ],
+//   linkOperator: GridLinkOperator.Or,
+// };
+
+
+// /* Sets filter for 'Overdue' Tab */
+// const overdueFilter: GridFilterModel = {
+//   items: [
+//      {columnField: 'status', operatorValue: 'contains', value: 'Overdue'}
+//   ],
+//   linkOperator: GridLinkOperator.Or,
+// };
+
+// const tabFilter: GridFilterModel = {
+//   items: [
+//     {columnField: 'status', operatorValue: 'contains', value: tab}
+//   ],
+//   linkOperator: GridLinkOperator.Or,
+// };
+
+
+/* This is the tool bar that renders above the grid */
+function PersonGridToolBar() {
+  return (
+    <GridToolbarContainer>
+      
+      {/* Filter Columns */}
+      <GridColumnsToolbarButton />
+
+      {/* Filter by search  */}
+      <GridFilterToolbarButton />
+
+      {/* The export button is disabled depending on what is toggled */}
+      <GridToolbarExport disabled={nothingSelected} />
+    </GridToolbarContainer>
+  );
+}
+
+/* Whatever you stick into here will become the properties of the UIElement */ 
+
 /* Whatever you stick into here will become the properties of the UIElement*/ 
 interface IPersonGridProps {
   daColumns: GridColDef[];
@@ -78,6 +134,7 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
   }
 
   render() {
+
     return (
       
       <div style={{ marginTop: 10, width: 'auto' }}>
@@ -99,6 +156,10 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
 
             /* Puts a checkbox in the first column of the table */
             checkboxSelection
+
+            // pagination
+
+            // rowsPerPageOptions={[10,20,30,40]}
 
             /* Whenever someone selects or deselects a checkbox, count the length of their selection.  */
             onSelectionModelChange={(newSelection) => {

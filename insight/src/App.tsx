@@ -1,5 +1,6 @@
 import './App.css';
 import PersonGrid from './components/PersonGrid'
+import StatusTabs from './components/StatusTabs'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import {columns} from './junkdata';
 
@@ -18,7 +19,7 @@ function App(){
   return (
     <div className="App">
       <CssBaseline/>
-    
+      <StatusTabs />
       <PersonGrid daColumns={columns}/>
     </div>
   );

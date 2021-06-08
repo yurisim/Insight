@@ -7,8 +7,6 @@ import { ValidateObjectID } from './../shared/validate-object-id';
 @Controller('person')
 export class PersonController {
 
-
-
   // Be consistent w/ plurals and singulars
   constructor(private personService: PersonService) {}
 
@@ -74,11 +72,6 @@ export class PersonController {
     console.log(outcome);
     return res.status(HttpStatus.OK).json(outcome);
   }
-  
-  /*@Put(':id')
-  update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
-    return `This action updates a #${id} person`;
-  }*/
 
   @Put('edit')
   async editPost(
@@ -115,15 +108,15 @@ export class PersonController {
     });
   }
 
-    // Put People into Database
-    @Post('populatePeople')
-    async populatePeople(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
+    // // Put People into Database
+    // @Post('populatePeople')
+    // async populatePeople(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
 
-      const populatedPeople = await this.personService.addPerson(createPostDTO);
+    //   const populatedPeople = await this.personService.addPerson(createPostDTO);
 
-      return res.status(HttpStatus.OK).json({
-        message: 'Post has been submitted successfully!',
-        post: populatedPeople,
-      });
-  }
+    //   return res.status(HttpStatus.OK).json({
+    //     message: 'Post has been submitted successfully!',
+    //     post: addedPerson,
+    //   });
+    // }
 }
