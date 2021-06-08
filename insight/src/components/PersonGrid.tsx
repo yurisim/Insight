@@ -103,7 +103,7 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
             /* Whenever someone selects or deselects a checkbox, count the length of their selection.  */
             onSelectionModelChange={(newSelection) => {
               /* if at least one is selected, change the state of the export button */
-              nothingSelected = (newSelection.selectionModel.length > 0) ? false : true;
+              nothingSelected = newSelection.selectionModel.length <= 0;
             }}
 
             components={{
