@@ -69,7 +69,7 @@
 
                         <StackPanel x:Name="orderDateGroup" Margin="{StaticResource SmallTopMargin}">
                             <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Order date" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Item.OrderDate}" />
+                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.Item.DateOfLastCompletion}" />
                         </StackPanel>
                     </StackPanel>
 

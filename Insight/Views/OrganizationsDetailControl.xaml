@@ -34,7 +34,7 @@
                     Margin="{StaticResource SmallTopMargin}"
                     Style="{StaticResource DetailSubTitleStyle}"
                     Text="Order date" />
-                <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ListMenuItem.OrderDate, Mode=OneWay}" />
+                <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ListMenuItem.DateOfLastCompletion, Mode=OneWay}" />
                 <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
                     Style="{StaticResource DetailSubTitleStyle}"

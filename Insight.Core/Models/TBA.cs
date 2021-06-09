@@ -5,14 +5,16 @@ using System.Text;
 
 namespace Insight.Core.Models
 {
-    public class Training
+    public class TBA
     {
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Name of AFSC
+        /// </summary>
         public string Name { get; set; }
 
-        public int Interval { get; set; }
-
+        public int TBATasksNeeded { get; set; }
     }
 }

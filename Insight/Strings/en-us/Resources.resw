@@ -130,7 +130,7 @@
     <comment>Navigation view item name for Overview</comment>
   </data>
   <data name="Shell_Status.Content" xml:space="preserve">
-    <value>Status</value>
+    <value>AEF Status</value>
     <comment>Navigation view item name for Status</comment>
   </data>
   <data name="Organizations_NoSelection.Text" xml:space="preserve">

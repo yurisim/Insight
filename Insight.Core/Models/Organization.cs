@@ -12,6 +12,6 @@ namespace Insight.Core.Models
 
         public string Name { get; set; }
 
-        public Organization[] Children { get; set; }
+        public List<Organization> ChildOrgs { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Insight.Core.Models
     {
         public long DoDID { get; set; }
 
-        public DateTime OrderDate { get; set; }
+        public DateTime DateOfLastCompletion { get; set; }
 
         public DateTime RequiredDate { get; set; }
 

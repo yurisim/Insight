@@ -14,5 +14,7 @@ namespace Insight.Core.Models
         public Organization Organization { get; set; }
 
         public string Name { get; set; }
+
+        public List<Person> Persons { get; set; }
     }
 }

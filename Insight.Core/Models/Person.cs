@@ -20,6 +20,8 @@ namespace Insight.Core.Models
 
         public string Phone { get; set; }
 
+        public string SSN { get;  set; }
+
         public string DateOnStation { get; set; }
 
         public string Comments { get; set; }
@@ -31,5 +33,7 @@ namespace Insight.Core.Models
         public Organization Organization { get; set; }
 
         public PEX PEX { get; set; }
+
+        public List<CourseInstance> CourseInstances { get; set; }
     }
 }

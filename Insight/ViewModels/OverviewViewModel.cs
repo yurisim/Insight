@@ -32,7 +32,7 @@ namespace Insight.ViewModels
 
             // Replace this with your actual data
             var data = await SampleDataService.GetContentGridDataAsync();
-            foreach (var item in data)
+            foreach (SampleOrder item in data)
             {
                 Source.Add(item);
             }
