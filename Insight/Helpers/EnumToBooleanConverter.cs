@@ -17,7 +17,7 @@ namespace Insight.Helpers
                     throw new ArgumentException("value must be an Enum!");
                 }
 
-                var enumValue = Enum.Parse(EnumType, enumString);
+                object enumValue = Enum.Parse(EnumType, enumString);
 
                 return enumValue.Equals(value);
             }

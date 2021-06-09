@@ -1,6 +1,4 @@
-﻿using System;
-
-using Insight.ViewModels;
+﻿using Insight.ViewModels;
 
 using Windows.UI.Xaml.Controls;
 

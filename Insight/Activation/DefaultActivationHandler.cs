@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Insight.Services;
+using System;
 using System.Threading.Tasks;
-
-using Insight.Services;
-
 using Windows.ApplicationModel.Activation;
 
 namespace Insight.Activation

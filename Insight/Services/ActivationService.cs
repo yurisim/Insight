@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Insight.Activation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Insight.Activation;
-
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

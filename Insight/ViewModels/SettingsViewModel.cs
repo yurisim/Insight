@@ -1,13 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-using Insight.Helpers;
+﻿using Insight.Helpers;
 using Insight.Services;
-
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 

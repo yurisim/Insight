@@ -1,7 +1,5 @@
-﻿using System;
-
-using Insight.Services;
-
+﻿using Insight.Services;
+using System;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 

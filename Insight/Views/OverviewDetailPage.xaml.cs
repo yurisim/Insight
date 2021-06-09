@@ -1,6 +1,4 @@
-﻿using System;
-
-using Insight.Services;
+﻿using Insight.Services;
 using Insight.ViewModels;
 
 using Microsoft.Toolkit.Uwp.UI.Animations;

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using Insight.Core.Services;
 using System.Threading.Tasks;
-
-using Insight.Core.Services;
-
 using Xunit;
 
 namespace Insight.Core.Tests.XUnit

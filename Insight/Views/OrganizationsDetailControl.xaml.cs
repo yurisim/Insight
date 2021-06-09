@@ -1,6 +1,4 @@
-﻿using System;
-
-using Insight.Core.Models;
+﻿using Insight.Core.Models;
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

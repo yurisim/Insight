@@ -65,5 +65,5 @@
                 <HyperlinkButton x:Uid="Settings_PrivacyTermsLink" Margin="{StaticResource XSmallTopMargin}" />
             </StackPanel>
         </StackPanel>
-    </Grid>    
+    </Grid>
 </Page>

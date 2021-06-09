@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Insight.Core.Models;
+using Insight.Core.Services;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Insight.Core.Models;
-using Insight.Core.Services;
-
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace Insight.ViewModels
 {
