@@ -15,7 +15,7 @@ namespace Insight.Services
     {
         private readonly App _app;
         private readonly Type _defaultNavItem;
-        private Lazy<UIElement> _shell;
+        private readonly Lazy<UIElement> _shell;
 
         private object _lastActivationArgs;
 
