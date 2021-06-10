@@ -6,26 +6,26 @@ using System.Threading.Tasks;
 
 namespace Insight.Core.Services
 {
-    // This class holds sample data used by some generated pages to show how they can be used.
-    // TODO WTS: The following classes have been created to display sample data. Delete these files once your app is using real data.
-    // 1. Services/SampleDataService.cs
-    // 2. Models/SampleCompany.cs
-    // 3. Models/SampleOrder.cs
-    // 4. Models/SampleOrderDetail.cs
-    public static class SampleDataService
-    {
-        private static IEnumerable<SampleOrder> _allOrders;
+   // This class holds sample data used by some generated pages to show how they can be used.
+   // TODO WTS: The following classes have been created to display sample data. Delete these files once your app is using real data.
+   // 1. Services/SampleDataService.cs
+   // 2. Models/SampleCompany.cs
+   // 3. Models/SampleOrder.cs
+   // 4. Models/SampleOrderDetail.cs
+   public static class SampleDataService
+   {
+      private static IEnumerable<SampleOrder> _allOrders;
 
-        private static IEnumerable<SampleOrder> AllOrders()
-        {
-            // The following is order summary data
-            var companies = AllCompanies();
-            return companies.SelectMany(c => c.Orders);
-        }
+      private static IEnumerable<SampleOrder> AllOrders()
+      {
+         // The following is order summary data
+         var companies = AllCompanies();
+         return companies.SelectMany(c => c.Orders);
+      }
 
-        private static IEnumerable<SamplePerson> AllCompanies()
-        {
-            return new List<SamplePerson>()
+      private static IEnumerable<SamplePerson> AllCompanies()
+      {
+         return new List<SamplePerson>()
             {
                 new SamplePerson()
                 {
@@ -50,8 +50,8 @@ namespace Insight.Core.Services
                             Name = "Adrien Jobs",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 29.46,
-                            Organization = "552 ACNS",
-                            ShipTo = "552 ACNS, Obere Str. 57, Berlin, 12209, Germany",
+                            Organization = "607 ACS",
+                            ShipTo = "607 ACS, Obere Str. 57, Berlin, 12209, Germany",
                             OrderTotal = 814.50,
                             Status = "Upcoming",
                             SymbolCode = 57643, // Symbol Globe
@@ -146,8 +146,8 @@ namespace Insight.Core.Services
                             Name = "John Smith",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 40.42,
-                            Organization = "552 ACNS",
-                            ShipTo = "552 ACNS, Obere Str. 57, Berlin, 12209, Germany",
+                            Organization = "726 ACS",
+                            ShipTo = "726 ACS, Obere Str. 57, Berlin, 12209, Germany",
                             OrderTotal = 471.20,
                             Status = "Current",
                             SymbolCode = 57699, // Symbol Calendar
@@ -184,7 +184,7 @@ namespace Insight.Core.Services
                 new SamplePerson()
                 {
                     DoDID = "ANATR",
-                    PersonName = "960 AACS",
+                    PersonName = "123 ABCS",
                     ContactName = "Ana Trujillo",
                     ContactTitle = "Owner",
                     Address = "Avda. de la Constitución 2222",
@@ -204,8 +204,8 @@ namespace Insight.Core.Services
                             Name = "Ana Trujillo",
                             ShipperPhone = "(503) 555-9831",
                             Freight = 43.90,
-                            Organization = "960 AACS",
-                            ShipTo = "960 AACS, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
+                            Organization = "456 DEFS",
+                            ShipTo = "456 DEFS, Avda. de la Constitución 2222, 05021, México D.F., Mexico",
                             OrderTotal = 469.75,
                             Status = "Upcoming",
                             SymbolCode = 57620, // Symbol Camera
@@ -382,7 +382,7 @@ namespace Insight.Core.Services
                             Name = "Juan Izapisa",
                             ShipperPhone = "(503) 555-9931",
                             Freight = 84.84,
-                            Organization = "552 OSS",
+                            Organization = "728 ACS",
                             ShipTo = "552 OSS, Mataderos  2312, 05023, México D.F., Mexico",
                             OrderTotal = 2082.00,
                             Status = "Upcoming",
@@ -436,7 +436,7 @@ namespace Insight.Core.Services
                             Name = "Dave Zramer",
                             ShipperPhone = "(503) 555-3199",
                             Freight = 36.13,
-                            Organization = "552 OSS",
+                            Organization = "960 AACS",
                             ShipTo = "552 OSS, Mataderos  2312, 05023, México D.F., Mexico",
                             OrderTotal = 375.50,
                             Status = "Overdue",
@@ -484,32 +484,32 @@ namespace Insight.Core.Services
                     }
                 }
             };
-        }
+      }
 
-        // Remove this once your ListDetail pages are displaying real data.
-        public static async Task<IEnumerable<SampleOrder>> GetListDetailDataAsync()
-        {
-            await Task.CompletedTask;
-            return AllOrders();
-        }
+      // Remove this once your ListDetail pages are displaying real data.
+      public static async Task<IEnumerable<SampleOrder>> GetListDetailDataAsync()
+      {
+         await Task.CompletedTask;
+         return AllOrders();
+      }
 
-        // Remove this once your ContentGrid page is displaying real data.
-        public static async Task<IEnumerable<SampleOrder>> GetContentGridDataAsync()
-        {
-            if (_allOrders == null)
-            {
-                _allOrders = AllOrders();
-            }
+      // Remove this once your ContentGrid page is displaying real data.
+      public static async Task<IEnumerable<SampleOrder>> GetContentGridDataAsync()
+      {
+         if (_allOrders == null)
+         {
+            _allOrders = AllOrders();
+         }
 
-            await Task.CompletedTask;
-            return _allOrders;
-        }
+         await Task.CompletedTask;
+         return _allOrders;
+      }
 
-        // Remove this once your grid page is displaying real data.
-        public static async Task<IEnumerable<SampleOrder>> GetGridDataAsync()
-        {
-            await Task.CompletedTask;
-            return AllOrders();
-        }
-    }
+      // Remove this once your grid page is displaying real data.
+      public static async Task<IEnumerable<SampleOrder>> GetGridDataAsync()
+      {
+         await Task.CompletedTask;
+         return AllOrders();
+      }
+   }
 }

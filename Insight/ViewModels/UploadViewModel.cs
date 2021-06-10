@@ -11,17 +11,15 @@ using System.Windows.Input;
 
 namespace Insight.ViewModels
 {
-    public class OverviewViewModel : ObservableObject
+    public class UploadViewModel : ObservableObject
     {
         private ICommand _itemClickCommand;
-        public ICommand ItemClickCommand => _itemClickCommand ?? (_itemClickCommand = new RelayCommand<SampleOrder>(OnItemClick));
 
-        private ICommand _uploadPageCommand;
-        public ICommand UploadPageCommand => _uploadPageCommand ?? (_uploadPageCommand = new RelayCommand(GoToUpload));
+        public ICommand ItemClickCommand => _itemClickCommand ?? (_itemClickCommand = new RelayCommand<SampleOrder>(OnItemClick));
 
         public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
 
-        public OverviewViewModel()
+        public UploadViewModel()
         {
         }
 
@@ -43,14 +41,7 @@ namespace Insight.ViewModels
             {
                 NavigationService.Frame.SetListDataItemForNextConnectedAnimation(clickedItem);
                 NavigationService.Navigate<OverviewDetailPage>(clickedItem.DoDID);
-
-                //NavigationService.Navigate<OverviewDetailPage>(clickedItem.DoDID);
             }
-        }
-
-        private void GoToUpload()
-        {
-            NavigationService.Navigate<UploadPage>();
         }
     }
 }

@@ -5,12 +5,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Insight.Core.Models"
+    xmlns:helpers="using:Insight.Helpers"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
+    <StackPanel x:Name="ContentArea">
+        <winui:InfoBar
+           Padding="{StaticResource MediumLeftTopRightBottomMargin}"
+            IsOpen="True"
+            Severity="Error"
+            Title="Update Data"
+            Message="This is either your first time running this application or you have not updated your Unit's files for some time. Please navigate to the Upload page and update your documents!">
+            <winui:InfoBar.ActionButton>
+                <Button Content="Upload" Command="{x:Bind ViewModel.UploadPageCommand}"/>
+            </winui:InfoBar.ActionButton>
+        </winui:InfoBar>
         <controls:AdaptiveGridView
             Padding="{StaticResource MediumLeftRightMargin}"
             animations:Connected.ListItemElementName="itemThumbnail"
@@ -40,5 +52,5 @@
                 </DataTemplate>
             </controls:AdaptiveGridView.ItemTemplate>
         </controls:AdaptiveGridView>
-    </Grid>
+    </StackPanel>
 </Page>

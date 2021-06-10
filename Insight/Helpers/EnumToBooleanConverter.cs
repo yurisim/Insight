@@ -4,6 +4,9 @@ using Windows.UI.Xaml.Data;
 
 namespace Insight.Helpers
 {
+    /// <summary>
+    /// Used in the settings page to store/retrieve data
+    /// </summary>
     public class EnumToBooleanConverter : IValueConverter
     {
         public Type EnumType { get; set; }

@@ -21,6 +21,8 @@ namespace Insight.Core.Services
 
       public DbSet<Org> Orgs { get; set; }
 
+      public DbSet<Person> Persons { get; set; }
+
       public DbSet<PEX> PEXs { get; set; }
 
       public DbSet<TBA> TBAs { get; set; }

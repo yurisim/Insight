@@ -158,6 +158,7 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
+    <Compile Include="ViewModels\UploadViewModel.cs" />
     <Compile Include="ViewModels\WebViewViewModel.cs" />
     <Compile Include="Views\OrganizationsDetailControl.xaml.cs">
       <DependentUpon>OrganizationsDetailControl.xaml</DependentUpon>
@@ -179,6 +180,9 @@
     </Compile>
     <Compile Include="Views\StatusPage.xaml.cs">
       <DependentUpon>StatusPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UploadPage.xaml.cs">
+      <DependentUpon>UploadPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>
@@ -239,6 +243,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\UploadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WebViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -264,7 +272,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Insight_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

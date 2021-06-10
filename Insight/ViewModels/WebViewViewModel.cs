@@ -10,7 +10,7 @@ namespace Insight.ViewModels
     public class WebViewViewModel : ObservableObject
     {
         // TODO WTS: Set the URI of the page to show by default
-        private const string DefaultUrl = "https://docs.microsoft.com/windows/apps/";
+        private const string DefaultUrl = "https://www.my.af.mil/";
 
         private Uri _source;
 
