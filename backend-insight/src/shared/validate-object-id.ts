@@ -13,6 +13,18 @@ export class ValidateObjectID implements PipeTransform<string> {
   }
 }
 
+// @Injectable()
+// export class ValidateDoDID implements PipeTransform<string> {
+//   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//   async transform(value: string, metadata: ArgumentMetadata) {
+
+//     const isValid = mongoose.Types.
+//     if (!isValid) {
+//         throw new BadRequestException('Invalid ID!');
+//     }
+//     return value;
+//   }
+// }
 @Injectable()
 export class ValidateSearch implements PipeTransform<string> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

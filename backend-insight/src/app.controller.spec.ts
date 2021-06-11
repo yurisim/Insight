@@ -56,9 +56,9 @@ describe('theAppController (e2e)', () => {
   it('should be able to find a specific ID', () => {
 
     return request(app.getHttpServer())
-      .get('/person/get/60b7c192a5769d28841f67c8')
+      .get('/person/get/60b7f69703ee000ce48ae958')
       .then(response => {
-        expect(response.body.lastName).toBe('Silly')
+        expect(response.body.lastName).toBe('ddfgdfg')
       })
   });
 
@@ -79,4 +79,41 @@ describe('theAppController (e2e)', () => {
       })
 
   });
+
+  it('should be able to search for a specific Workcenter', () => {
+
+    return request(app.getHttpServer())
+      .get('/person/search/DOUP')
+      .then(response => {
+        expect(response.body[0].workCenter).toBe('DOUP')
+      })
+  });
+
+  it('should be able to search for a specific name', () => {
+
+    return request(app.getHttpServer())
+      .get('/person/search/Grif Castle')
+      .then(response => {
+        expect(response.body[0].name).toBe('Grif Castle')
+      })
+  });
+
+  // it('should delete person made by test', () => {
+
+  //   return request(app.getHttpServer())
+  //     .delete('/person/delete/1232141243')
+  //     .then(response => {
+  //       expect(response.body.message).toBe('Person has been deleted!')
+  //     })
+  // });
+
+  it('should be able to edit a specific person based on ID', () => {
+
+    return request(app.getHttpServer())
+      .put('/person/edit/60b7f69703ee000ce48ae958')
+      .then(response => {
+        expect(response.body.message).toBe('Person has been successfully updated')
+      })
+  });
+
 });

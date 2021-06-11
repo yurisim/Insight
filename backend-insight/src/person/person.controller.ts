@@ -71,12 +71,8 @@ export class PersonController {
     return `This action updates a #${id} person`;
   }*/
 
-  @Put('edit')
-  async editPost(
-    @Res() res,
-    @Query('personID', new ValidateObjectID()) personID,
-    @Body() createPersonDTO: CreatePersonDTO,
-  ) {
+  @Put('edit/:EditInput')
+  async editPost(@Res() res, @Param('EditInput', new ValidateObjectID()) personID, @Body() createPersonDTO: CreatePersonDTO,) {
     const editedPerson = await this.personService.editPerson(personID, createPersonDTO);
     if (!editedPerson) {
         throw new NotFoundException('Person does not exist!');
@@ -92,8 +88,8 @@ export class PersonController {
   //   return `This action removes a #${id} person`;
   // }
 
-  @Delete('delete')
-  async deletePerson(@Res() res, @Query('personID', new ValidateObjectID()) personID) {
+  @Delete('delete/:DeleteInput')
+  async deletePerson(@Res() res, @Param('DeleteInput', new ValidateObjectID()) personID) {
     const deletedPerson = await this.personService.deletePerson(personID);
 
     if (!deletedPerson) {
