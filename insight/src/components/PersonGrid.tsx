@@ -92,6 +92,7 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
 
     this.searchClick = this.searchClick.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.keyPress = this.keyPress.bind(this);
 
     this.state = {
       search_textbox_value: "",
@@ -108,6 +109,14 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
     //console.log(e.target.value);
     this.setState({ search_textbox_value: e.target.value });
   }
+
+  keyPress(e){
+    if(e.key === "Enter"){
+      this.setState({
+        search_key: this.state.search_textbox_value.toLowerCase(),
+      });
+    }
+ }
 
   /**
    * Search button click handler
@@ -164,6 +173,7 @@ class PersonGrid extends Component<IPersonGridProps, IPersonGridState> {
               size="small"
               InputLabelProps={{ shrink: true }}
               onChange={this.handleTabChange}
+              onKeyDown={this.keyPress}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
