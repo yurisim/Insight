@@ -2,7 +2,11 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 using System;
+using System.Diagnostics;
+
 using Windows.Storage.Pickers;
+using Windows.Storage;
+using Insight.Helpers;
 
 namespace Insight.ViewModels
 {
@@ -19,20 +23,23 @@ namespace Insight.ViewModels
 
         private async void OpenFileDialog()
         {
-            var picker = new FileOpenPicker();
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.Downloads;
+            FileOpenPicker picker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.Downloads
+            };
+
+
             picker.FileTypeFilter.Add(".xlsx");
             picker.FileTypeFilter.Add(".xls");
             picker.FileTypeFilter.Add(".csv");
 
-            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
+            StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
                 // Application now has read/write access to the picked file
                 //this.textBlock.Text = "Picked photo: " + file.Name;
-                Console.WriteLine(file.Path);
-                
+                ReadFile.HandleFile(file);
             }
             else
             {
