@@ -17,6 +17,8 @@ namespace Insight.ViewModels
 
         public ICommand ItemClickCommand => _itemClickCommand ?? (_itemClickCommand = new RelayCommand<SampleOrder>(OnItemClick));
 
+        public UploadItemControl ViewModel { get; } = new UploadItemControl();
+
         public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
 
         public UploadViewModel()
