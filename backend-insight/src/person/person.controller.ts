@@ -38,10 +38,11 @@ export class PersonController {
   @Get('get/:personID')
   async getPost(@Res() res, @Param('personID', new ValidateObjectID()) personID) {
     const person = await this.personService.getPerson(personID);
-
-    if (!person) {
-        throw new NotFoundException('Post does not exist!');
-    }
+    
+    //Unreachable & redundant code, with ValidateObjectID
+    // if (!person) {
+    //     throw new NotFoundException('Post does not exist!');
+    // }
 
     return res.status(HttpStatus.OK).json(person);
   }
@@ -73,12 +74,8 @@ export class PersonController {
     return res.status(HttpStatus.OK).json(outcome);
   }
 
-  @Put('edit')
-  async editPost(
-    @Res() res,
-    @Query('personID', new ValidateObjectID()) personID,
-    @Body() createPersonDTO: CreatePersonDTO,
-  ) {
+  @Put('edit/:EditInput')
+  async editPost(@Res() res, @Param('EditInput', new ValidateObjectID()) personID, @Body() createPersonDTO: CreatePersonDTO,) {
     const editedPerson = await this.personService.editPerson(personID, createPersonDTO);
     if (!editedPerson) {
         throw new NotFoundException('Person does not exist!');
@@ -94,8 +91,8 @@ export class PersonController {
   //   return `This action removes a #${id} person`;
   // }
 
-  @Delete('delete')
-  async deletePerson(@Res() res, @Query('personID', new ValidateObjectID()) personID) {
+  @Delete('delete/:DeleteInput')
+  async deletePerson(@Res() res, @Param('DeleteInput', new ValidateObjectID()) personID) {
     const deletedPerson = await this.personService.deletePerson(personID);
 
     if (!deletedPerson) {
@@ -108,7 +105,7 @@ export class PersonController {
     });
   }
 
-    // // Put People into Database
+    // Put People into Database
     // @Post('populatePeople')
     // async populatePeople(@Res() res, @Body() createPostDTO: CreatePersonDTO) {
 

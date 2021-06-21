@@ -8,10 +8,10 @@ export class CreatePersonDTO {
   dodid: number;
   afscid: number;
   workCenter: string;
-  timeOnStation: Date;
+  dateOnStation?: Date;
   status: string;
-  dueDate: Date;
-  comments: string;
+  dueDate?: Date;
+  comments?: string;
 }
 
 export const PersonSchema = new mongoose.Schema({
@@ -20,10 +20,10 @@ export const PersonSchema = new mongoose.Schema({
   dodid: Number,
   afscid: Number,
   workCenter: String,
-  timeOnStation: Date,
+  dateOnStation: Date,
   status: String,
   dueDate: Date,
-  comments: String,
+  comments: String
 });
 
 export interface Person extends Document, CreatePersonDTO  {}
