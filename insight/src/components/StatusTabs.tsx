@@ -10,7 +10,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { green, orange, red, indigo } from '@material-ui/core/colors';
-
+import { enumStatusView } from "../App";
 
 
 /* Whatever you stick into here will become the properties of the UIElement */
@@ -23,24 +23,23 @@ interface TabPanelProps {
 
 /* Needed to create tabs, no clue as to what it does exactly */
 function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other} = props;
+  const { children, value, index, ...other } = props;
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`full-width-tabpanel-${index}`}
-            aria-labelledby={`full-width-tabpanel-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={4}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-
-        </div>
-    );
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tabpanel-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={4}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
 }
 
 /* Sets the ID of a tab based on it's location in an array */
@@ -59,44 +58,33 @@ const styles = makeStyles((theme: Theme) => ({
 
 }));
 
-/* creates tabs */
-export default class StatusTabs extends React.Component<{ }, { value: string }> {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: 'None',
-        };
-    }
+/**
+ * StatusTabs Props
+ */
+interface IStatusTabsProps {
+  selectedStatus: enumStatusView;
+  changeStatusTab: (status: enumStatusView) => void;
+}
 
-    handleChange = (_, value) => {
-        this.setState({
-            value,
-        });
-    };
-
-    render() {
-        return (
-            <div>
-                <Tabs
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                >
-                    <Tab icon={<PeopleAltIcon />} style={{ color: indigo[500]}} label="All" {...allyProps(0)} value="All" />
-                    <Tab icon={<CheckCircleIcon />} style={{ color: green[500]}} label="Safe" {...allyProps(1)} value="Safe" />
-                    <Tab icon={<WarningIcon />} style={{ color: orange[400]}} label="Upcoming" {...allyProps(2)} value="Upcoming" />
-                    <Tab icon={<ErrorIcon />} style={{ color: red[500]}} label="Overdue" {...allyProps(3)} value="Overdue" />
-                </Tabs>
-                <TabPanel value={"All"} index={0}>
-                </TabPanel>
-                <TabPanel value={"Safe"} index={1}>
-                </TabPanel>
-                <TabPanel value={"Upcoming"} index={2}>   
-                </TabPanel>
-                <TabPanel value={"Overdue"} index={3}>
-                </TabPanel>
-            </div>
-        )
-    }
+/**
+ * Tabs that select which persons by status to display
+ */
+export default class StatusTabs extends React.Component<IStatusTabsProps> {
+  render() {
+    return (
+      <div>
+        <Tabs value={this.props.selectedStatus} onChange={ (_, value) => { this.props.changeStatusTab(value) } } indicatorColor="primary">
+          <Tab icon={<PeopleAltIcon />} style={{ color: indigo[500] }} {...allyProps(0)} value={enumStatusView.ALL} /> 
+          <Tab icon={<CheckCircleIcon />} style={{ color: green[500] }} label="Safe" {...allyProps(1)} value={enumStatusView.SAFE} /> 
+          <Tab icon={<WarningIcon />} style={{ color: orange[400] }} label="Upcoming" {...allyProps(2)} value={enumStatusView.UPCOMING} /> 
+          <Tab icon={<ErrorIcon />} style={{ color: red[500] }} label="Overdue" {...allyProps(3)} value={enumStatusView.OVERDUE} />
+        </Tabs>
+        <TabPanel value={enumStatusView.ALL} index={0}></TabPanel>
+        <TabPanel value={enumStatusView.SAFE} index={1}></TabPanel>
+        <TabPanel value={enumStatusView.UPCOMING} index={2}></TabPanel>
+        <TabPanel value={enumStatusView.OVERDUE} index={3}></TabPanel>
+      </div>
+    );
+  }
 }
