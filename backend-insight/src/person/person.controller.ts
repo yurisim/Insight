@@ -64,12 +64,15 @@ export class PersonController {
   async getAllPersons(@Res() res) {
     const persons = await this.personService.getAllPersons();
     return res.status(HttpStatus.OK).json(persons);
+
   }
 
-  /*@Put(':id')
-  update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
-    return `This action updates a #${id} person`;
-  }*/
+  @Get ('Test')
+  async getTest(@Res() res){
+    const outcome = await this.personService.getTest();
+    console.log(outcome);
+    return res.status(HttpStatus.OK).json(outcome);
+  }
 
   @Put('edit/:EditInput')
   async editPost(@Res() res, @Param('EditInput', new ValidateObjectID()) personID, @Body() createPersonDTO: CreatePersonDTO,) {
