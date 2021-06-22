@@ -1,6 +1,0 @@
-{
-    // Set Working directories for ESLint
-    "eslint.workingDirectories": [
-     "backend-insight", "insight"
-    ]
-  }
