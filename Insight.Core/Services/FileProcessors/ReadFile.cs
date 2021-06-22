@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Insight.Core.Models;
 
 namespace Insight.Core.Services
 {
-   public static class Ingest
+   public static class ReadFile
    {
       /// <summary>
       /// Returns true if upload is successful, returns false if failed.
@@ -13,7 +14,7 @@ namespace Insight.Core.Services
       /// <param name="filePath"></param>
       /// <param name="output"></param>
       /// <returns></returns>
-      public static bool ReadFile(string filePath, out List<string> output)
+      public static bool ReadText(string filePath, out List<string> output)
       {
          bool status = true;
 

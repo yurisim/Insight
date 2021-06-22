@@ -14,7 +14,7 @@ namespace Insight.Helpers
         public static void HandleFile(StorageFile file)
         {
             string filePath = file.Path;
-            Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".")+1));
+            Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".") + 1));
             switch (filePath.Substring(filePath.LastIndexOf(".")))
             {
                 case ".xlsx":
@@ -33,7 +33,7 @@ namespace Insight.Helpers
             {
                 var workBook = package.Workbook;
                 Debug.WriteLine(package.File == null);
-                Debug.WriteLine("*"+ package.File);
+                Debug.WriteLine("*" + package.File);
                 //var sheet = workBook.Names
 
                 //sheet.Cells["A2"].Value = "SIM, YURA";

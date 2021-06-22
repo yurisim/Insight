@@ -84,6 +84,22 @@ namespace Insight.Core.Services
             .Property(entity => entity.Id)
              .ValueGeneratedOnAdd();
 
+         // TODO Write custom exception to deal w/ duplicate DoDIDs
+         modelBuilder.Entity<Person>()
+             .HasIndex(b => b.DoDID)
+             .IsUnique(true);
+
+         // TODO Write custom exception to deal w/ duplicate SSNs
+         modelBuilder.Entity<Person>()
+             .HasIndex(b => b.SSN)
+             .IsUnique(true);
+
+         // Configured ono-to-one relationship between Person and Medical
+         modelBuilder.Entity<Person>()
+           .HasOne(p => p.Medicals)
+           .WithOne(p => p.Person)
+           .HasForeignKey<Medical>(m => m.Id);
+
          base.OnModelCreating(modelBuilder);
       }
    }
