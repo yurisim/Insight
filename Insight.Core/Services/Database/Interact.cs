@@ -1,6 +1,7 @@
 ﻿using Insight.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Insight.Core.Services.Database
@@ -12,18 +13,39 @@ namespace Insight.Core.Services.Database
          using (var insightContext = new InsightContext())
          {
             //Ensure database is created
-            insightContext.Database.EnsureCreated();
+            _ = insightContext.Database.EnsureCreated();
          }
       }
 
       public static void AddPerson(Person person)
       {
-         using (var insightContext = new InsightContext())
+         using (InsightContext insightContext = new InsightContext())
          {
-            insightContext.Persons.Add(person);
+            _ = insightContext.Persons.Add(person);
 
-            insightContext.SaveChanges();
+            _ = insightContext.SaveChanges();
          }
+      }
+
+      /// <summary>
+      /// Returns all Person objects from database
+      /// </summary>
+      /// <returns></returns>
+      public static List<Person> GetAllPersons()
+      {
+         List<Person> persons = new List<Person>();
+         try
+         {
+            using (InsightContext insightContext = new InsightContext())
+            {
+               persons = insightContext.Persons.Select(x => x).ToList();
+            }
+         }
+         catch (Exception)
+         {
+            throw new Exception("Insight.db access error");
+         }
+         return persons;
       }
    }
 }
