@@ -17,7 +17,7 @@ namespace Insight.Core.Tests.XUnit
       [Fact]
       public async Task EnsureSampleDataServiceReturnsContentGridDataAsync()
       {
-         var actual = await SampleDataService.GetContentGridDataAsync();
+         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetContentGridDataAsync();
 
          Assert.NotEmpty(actual);
       }
@@ -27,7 +27,7 @@ namespace Insight.Core.Tests.XUnit
       [Fact]
       public async Task EnsureSampleDataServiceReturnsGridDataAsync()
       {
-         var actual = await SampleDataService.GetGridDataAsync();
+         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetGridDataAsync();
 
          Assert.NotEmpty(actual);
       }
@@ -37,7 +37,7 @@ namespace Insight.Core.Tests.XUnit
       [Fact]
       public async Task EnsureSampleDataServiceReturnsListDetailDataAsync()
       {
-         var actual = await SampleDataService.GetListDetailDataAsync();
+         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetListDetailDataAsync();
 
          Assert.NotEmpty(actual);
       }

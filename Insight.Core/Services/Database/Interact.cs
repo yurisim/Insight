@@ -10,7 +10,7 @@ namespace Insight.Core.Services.Database
    {
       public static void EnsureDB()
       {
-         using (var insightContext = new InsightContext())
+         using (InsightContext insightContext = new InsightContext())
          {
             //Ensure database is created
             _ = insightContext.Database.EnsureCreated();
@@ -45,6 +45,7 @@ namespace Insight.Core.Services.Database
          {
             throw new Exception("Insight.db access error");
          }
+
          return persons;
       }
    }

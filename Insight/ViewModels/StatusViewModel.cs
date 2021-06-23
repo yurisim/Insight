@@ -19,9 +19,9 @@ namespace Insight.ViewModels
             Source.Clear();
 
             // Replace this with your actual data
-            var data = await SampleDataService.GetGridDataAsync();
+            System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetGridDataAsync();
 
-            foreach (var item in data)
+            foreach (SampleOrder item in data)
             {
                 Source.Add(item);
             }

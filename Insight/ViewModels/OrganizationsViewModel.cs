@@ -28,9 +28,9 @@ namespace Insight.ViewModels
         {
             SampleItems.Clear();
 
-            var data = await SampleDataService.GetListDetailDataAsync();
+            System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetListDetailDataAsync();
 
-            foreach (var item in data)
+            foreach (SampleOrder item in data)
             {
                 SampleItems.Add(item);
             }

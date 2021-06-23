@@ -7,44 +7,49 @@ using System.Diagnostics;
 using OfficeOpenXml;
 using OfficeOpenXml.Table;
 
-namespace Insight.Helpers
-{
-    public static class ReadFile
-    {
-        public static void HandleFile(StorageFile file)
-        {
-            string filePath = file.Path;
-            Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".") + 1));
-            switch (filePath.Substring(filePath.LastIndexOf(".")))
-            {
-                case ".xlsx":
-                    break;
-                case ".xls":
-                    ReadXLSX(filePath);
-                    break;
-            }
-        }
+//namespace Insight.Helpers
+//{
+//public static class ReadFile
+//{
+//public static void HandleFile(StorageFile file)
+//{
+//    string filePath = file.Path;
 
-        public static void ReadXLSX(string filePath)
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+//    Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".") + 1));
 
-            using (var package = new ExcelPackage(new FileInfo(filePath)))
-            {
-                var workBook = package.Workbook;
-                Debug.WriteLine(package.File == null);
-                Debug.WriteLine("*" + package.File);
-                //var sheet = workBook.Names
+//    switch (filePath.Substring(filePath.LastIndexOf(".")))
+//    {
+//        case ".xlsx":
+//            break;
 
-                //sheet.Cells["A2"].Value = "SIM, YURA";
+//        case ".xls":
+//            ReadXLSX(filePath);
+//            break;
 
-                var tempSheet = workBook.Worksheets.Add("Cater is Cool");
+//        default:
+//            break;
+//    }
+//}
 
-                tempSheet.Cells["A1"].Value = "Cater is Even Cooler!";
+//public static void ReadXLSX(string filePath)
+//{
+//    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                package.Save();
-            }
+//    using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+//    {
+//        ExcelWorkbook workBook = package.Workbook;
+//        Debug.WriteLine(package.File == null);
+//        Debug.WriteLine("*" + package.File);
+//        //var sheet = workBook.Names
 
-        }
-    }
-}
+//        //sheet.Cells["A2"].Value = "SIM, YURA";
+
+//        ExcelWorksheet tempSheet = workBook.Worksheets.Add("Cater is Cool");
+
+//        tempSheet.Cells["A1"].Value = "Cater is Even Cooler!";
+
+//        package.Save();
+//    }
+//        //}
+//    }
+//}

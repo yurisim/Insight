@@ -19,7 +19,7 @@ namespace Insight.Core.Services
       private static IEnumerable<SampleOrder> AllOrders()
       {
          // The following is order summary data
-         var companies = AllCompanies();
+         IEnumerable<SamplePerson> companies = AllCompanies();
          return companies.SelectMany(c => c.Orders);
       }
 

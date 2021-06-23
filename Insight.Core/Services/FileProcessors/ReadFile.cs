@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Insight.Core.Models;
+using System.Diagnostics;
 
-namespace Insight.Core.Services
+namespace Insight.Core.Services.FileProcessors
 {
    public static class ReadFile
    {
@@ -35,8 +36,9 @@ namespace Insight.Core.Services
                }
             }
          }
-         catch
+         catch (Exception e)
          {
+            Debug.WriteLine(e.Message);
             status = false;
          }
 
