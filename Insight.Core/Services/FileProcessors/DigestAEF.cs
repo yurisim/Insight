@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using Insight.Core.Models;
+using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services
+namespace Insight.Core.Services.FileProcessors
 {
-    class AEFDigest
+    class DigestAEF : IDigest 
     {
-        public List<AEF> processedData = new List<AEF>();
-        
+        List<string> File = new List<string>();
+
         /// <summary>
         /// loops AEF generated string list of lines and processes them
         /// </summary>
         /// <param name="File"></param>
-        public void Digest(List<string> File)
+        public void DigestLines()
         {
             for (int i = 0; i < File.Count; i++)
             {
@@ -29,7 +30,7 @@ namespace Insight.Core.Services
                 {
                     string[] data = File[i].Split(',');
                     //processedData.Add(new AEF(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16]));
-                    AEF newAEF = new AEF();
+                    /*AEF newAEF = new AEF();
                     newAEF.Name = data[0];
                     newAEF.CourseCount = data[1];
                     newAEF.DRCStatusForEmail = data[2];
@@ -46,7 +47,35 @@ namespace Insight.Core.Services
                     newAEF.HasAEFAccount = data[13];
                     newAEF.VisitedAEFOnline = data[14];
                     newAEF.ChecklistStatus = data[15];
-                    newAEF.ModeTip = data[16];
+                    newAEF.ModeTip = data[16];*/
+
+                    //Check variables
+                    string name = data[0];
+                    string unit = data[5];
+                    string AFSC = data[7];
+
+                    Person person = Interact.GetPersonsByName(name);
+                    Status staus;
+                    if (data[11] == "g")
+                    {
+                        staus = Status.Current;
+                    }
+                    else if (data[11] == "y")
+                    {
+                        staus = Status.Current;
+                    }
+                    else if (data[11] == "r")
+                    {
+                        staus = Status.Current;
+                    }
+                    else
+                    {
+
+                    }
+
+                    Medical medical = 
+
+                    Interact.UpdatePerson(person);
                 }
             }
         }

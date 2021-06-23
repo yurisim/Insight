@@ -47,5 +47,54 @@ namespace Insight.Core.Services.Database
          }
          return persons;
       }
-   }
+
+        public static Person GetPersonsByName(string name)
+        {
+            List<Person> persons = new List<Person>();
+            try
+            {
+                using (InsightContext insightContext = new InsightContext())
+                {
+                    persons = insightContext.Persons.Where(x => x.FirstName + ' ' + x.LastName == name).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("Insight.db access error");
+            }
+            if (persons.Count > 1)
+            {
+                throw new Exception("too many results");
+            }
+            return persons[0];
+        }
+        public static void UpdatePerson(Person person)
+        {
+            try
+            {
+                using (InsightContext insightContext = new InsightContext())
+                {
+                    _ = insightContext.Persons.Update(person);
+                    _ = insightContext.SaveChanges();
+                }
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("Insight.db access error");
+            }
+        }
+
+        public static Medical GetOrCreate(Person person)
+        {
+
+            using (InsightContext insightContext = new InsightContext())
+            {
+                _ = insightContext.Medicals.Find();
+                _ = insightContext.SaveChanges();
+            }
+
+            return default;
+        }
+    }
 }
