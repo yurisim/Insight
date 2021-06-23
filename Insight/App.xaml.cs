@@ -1,4 +1,5 @@
-﻿using Insight.Services;
+﻿using Insight.Core.Services.Database;
+using Insight.Services;
 using System;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -16,6 +17,7 @@ namespace Insight
 
         public App()
         {
+            Interact.EnsureDB();
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
 

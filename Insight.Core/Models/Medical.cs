@@ -5,7 +5,7 @@ namespace Insight.Core.Models
    public class Medical
    {
       [Key]
-      public int Id { get; set; }
+      public long Id { get; set; }
 
       public Person Person { get; set; }
 
