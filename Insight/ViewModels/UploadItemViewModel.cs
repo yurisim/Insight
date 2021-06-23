@@ -12,13 +12,11 @@ namespace Insight.ViewModels
 {
     public class UploadItemViewModel : ObservableObject
     {
-
         private ICommand _openFileDialogCommand;
         public ICommand OpenFileDialogCommand => _openFileDialogCommand ?? (_openFileDialogCommand = new RelayCommand(OpenFileDialog));
 
         public UploadItemViewModel()
         {
-
         }
 
         private async void OpenFileDialog()
@@ -28,7 +26,6 @@ namespace Insight.ViewModels
                 ViewMode = PickerViewMode.Thumbnail,
                 SuggestedStartLocation = PickerLocationId.Downloads
             };
-
 
             picker.FileTypeFilter.Add(".xlsx");
             picker.FileTypeFilter.Add(".xls");
@@ -43,9 +40,8 @@ namespace Insight.ViewModels
             }
             else
             {
-            //    this.textBlock.Text = "Operation cancelled.";
+                //    this.textBlock.Text = "Operation cancelled.";
             }
         }
-
     }
 }

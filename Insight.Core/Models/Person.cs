@@ -18,13 +18,15 @@ namespace Insight.Core.Models
 
       public string Phone { get; set; }
 
+      public long DoDID { get; set; }
+
       public string SSN { get; set; }
 
       public string DateOnStation { get; set; }
 
       public string Comments { get; set; }
 
-      public Medical MedicalRecord { get; set; }
+      public Medical Medicals { get; set; }
 
       public AFSC AFSC { get; set; }
 
