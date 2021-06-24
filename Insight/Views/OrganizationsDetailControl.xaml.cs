@@ -22,7 +22,7 @@ namespace Insight.Views
 
         private static void OnListMenuItemPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as OrganizationsDetailControl;
+            OrganizationsDetailControl control = d as OrganizationsDetailControl;
             control.ForegroundElement.ChangeView(0, 0, 1);
         }
     }

@@ -75,8 +75,8 @@ namespace Insight.ViewModels
             }
             else
             {
-                var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
-                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+                WinUI.NavigationViewItem selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
+                Type pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
 
                 if (pageType != null)
                 {
@@ -104,7 +104,7 @@ namespace Insight.ViewModels
                 return;
             }
 
-            var selectedItem = GetSelectedItem(_navigationView.MenuItems, e.SourcePageType);
+            WinUI.NavigationViewItem selectedItem = GetSelectedItem(_navigationView.MenuItems, e.SourcePageType);
             if (selectedItem != null)
             {
                 Selected = selectedItem;
@@ -113,14 +113,14 @@ namespace Insight.ViewModels
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
         {
-            foreach (var item in menuItems.OfType<WinUI.NavigationViewItem>())
+            foreach (WinUI.NavigationViewItem item in menuItems.OfType<WinUI.NavigationViewItem>())
             {
                 if (IsMenuItemForPageType(item, pageType))
                 {
                     return item;
                 }
 
-                var selectedChild = GetSelectedItem(item.MenuItems, pageType);
+                WinUI.NavigationViewItem selectedChild = GetSelectedItem(item.MenuItems, pageType);
                 if (selectedChild != null)
                 {
                     return selectedChild;
@@ -132,13 +132,13 @@ namespace Insight.ViewModels
 
         private bool IsMenuItemForPageType(WinUI.NavigationViewItem menuItem, Type sourcePageType)
         {
-            var pageType = menuItem.GetValue(NavHelper.NavigateToProperty) as Type;
+            Type pageType = menuItem.GetValue(NavHelper.NavigateToProperty) as Type;
             return pageType == sourcePageType;
         }
 
         private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
         {
-            var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
+            KeyboardAccelerator keyboardAccelerator = new KeyboardAccelerator() { Key = key };
             if (modifiers.HasValue)
             {
                 keyboardAccelerator.Modifiers = modifiers.Value;
@@ -150,7 +150,7 @@ namespace Insight.ViewModels
 
         private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            var result = NavigationService.GoBack();
+            bool result = NavigationService.GoBack();
             args.Handled = result;
         }
     }

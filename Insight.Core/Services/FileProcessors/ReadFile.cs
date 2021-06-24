@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Insight.Core.Models;
+using System.Diagnostics;
 
-namespace Insight.Core.Services
+namespace Insight.Core.Services.FileProcessors
 {
    public static class ReadFile
    {
@@ -16,7 +17,7 @@ namespace Insight.Core.Services
       /// <returns></returns>
       public static bool ReadText(string filePath, out List<string> output)
       {
-         bool status = true;
+         var status = true;
 
          output = new List<string>();
 
@@ -24,7 +25,7 @@ namespace Insight.Core.Services
          {
             // Create an instance of StreamReader to read from a file.
             // The using statement also closes the StreamReader.
-            using (StreamReader sr = new StreamReader(filePath))
+            using (var sr = new StreamReader(filePath))
             {
                string line;
                // Read and display lines from the file until the end of
@@ -35,12 +36,15 @@ namespace Insight.Core.Services
                }
             }
          }
-         catch
+         catch (Exception e)
          {
+            Debug.WriteLine(e.Message);
             status = false;
          }
 
          return status;
       }
    }
+
+
 }

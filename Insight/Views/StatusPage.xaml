@@ -16,7 +16,6 @@
                     <!--TODO WTS:
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
-                    <tg:DataGridTextColumn PropertyName="DoDID" />
                     <tg:DataGridTextColumn PropertyName="Name" />
                     <tg:DataGridTextColumn PropertyName="Organization" />
                     <tg:DataGridTextColumn PropertyName="Status" />

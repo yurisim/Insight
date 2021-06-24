@@ -17,7 +17,7 @@ namespace Insight.Tests.XUnit
       public void TestOrganizationsViewModelCreation()
       {
          // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-         var vm = new OrganizationsViewModel();
+         OrganizationsViewModel vm = new OrganizationsViewModel();
          Assert.NotNull(vm);
       }
 
@@ -26,7 +26,7 @@ namespace Insight.Tests.XUnit
       public void TestOverviewViewModelCreation()
       {
          // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-         var vm = new OverviewViewModel();
+         OverviewViewModel vm = new OverviewViewModel();
          Assert.NotNull(vm);
       }
 
@@ -35,7 +35,7 @@ namespace Insight.Tests.XUnit
       public void TestSettingsViewModelCreation()
       {
          // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-         var vm = new SettingsViewModel();
+         SettingsViewModel vm = new SettingsViewModel();
          Assert.NotNull(vm);
       }
 
@@ -44,7 +44,7 @@ namespace Insight.Tests.XUnit
       public void TestStatusViewModelCreation()
       {
          // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-         var vm = new StatusViewModel();
+         StatusViewModel vm = new StatusViewModel();
          Assert.NotNull(vm);
       }
 
@@ -53,7 +53,7 @@ namespace Insight.Tests.XUnit
       public void TestWebViewViewModelCreation()
       {
          // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-         var vm = new WebViewViewModel();
+         WebViewViewModel vm = new WebViewViewModel();
          Assert.NotNull(vm);
       }
    }

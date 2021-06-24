@@ -62,7 +62,7 @@ namespace Insight.Tests.XUnit
 
       private void OnSuspending(object sender, SuspendingEventArgs e)
       {
-         var deferral = e.SuspendingOperation.GetDeferral();
+         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
 
          // In a regular app, this is where you would
          // Save application state and stop any background activity

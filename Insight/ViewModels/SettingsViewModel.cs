@@ -62,10 +62,10 @@ namespace Insight.ViewModels
 
         private string GetVersionDescription()
         {
-            var appName = "AppDisplayName".GetLocalized();
-            var package = Package.Current;
-            var packageId = package.Id;
-            var version = packageId.Version;
+            string appName = "AppDisplayName".GetLocalized();
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
 
             return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         }
