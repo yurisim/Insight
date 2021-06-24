@@ -17,7 +17,7 @@ namespace Insight
 
         public App()
         {
-            Interact.EnsureDB();
+            Interact.EnsureDatabase();
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
 
