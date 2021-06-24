@@ -19,7 +19,10 @@ namespace Insight.Core.Services
 
       public DbSet<Medical> Medicals { get; set; }
 
-      public DbSet<Org> Orgs { get; set; }
+        public DbSet<Training> Trainings { get; set; }
+
+
+        public DbSet<Org> Orgs { get; set; }
 
       public DbSet<Person> Persons { get; set; }
 
@@ -50,6 +53,7 @@ namespace Insight.Core.Services
          modelBuilder.Entity<Course>().ToTable("Courses");
          modelBuilder.Entity<CourseInstance>().ToTable("CourseInstances");
          modelBuilder.Entity<Medical>().ToTable("Medicals");
+            modelBuilder.Entity<Training>().ToTable("Trainings");
          modelBuilder.Entity<Org>().ToTable("Orgs");
          modelBuilder.Entity<Person>().ToTable("Persons");
          modelBuilder.Entity<PEX>().ToTable("PEXs");
@@ -69,6 +73,10 @@ namespace Insight.Core.Services
              .ValueGeneratedOnAdd();
 
          modelBuilder.Entity<Medical>()
+             .Property(entity => entity.Id)
+             .ValueGeneratedOnAdd();
+
+         modelBuilder.Entity<Training>()
              .Property(entity => entity.Id)
              .ValueGeneratedOnAdd();
 
@@ -100,7 +108,13 @@ namespace Insight.Core.Services
            .WithOne(p => p.Person)
            .HasForeignKey<Medical>(m => m.Id);
 
-         base.OnModelCreating(modelBuilder);
+            // Configured ono-to-one relationship between Person and Training
+            modelBuilder.Entity<Person>()
+              .HasOne(p => p.Trainings)
+              .WithOne(p => p.Person)
+              .HasForeignKey<Training>(m => m.Id);
+
+            base.OnModelCreating(modelBuilder);
       }
    }
 }

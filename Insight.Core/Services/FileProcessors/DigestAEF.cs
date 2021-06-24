@@ -55,29 +55,35 @@ namespace Insight.Core.Services.FileProcessors
                     string AFSC = data[7];
 
                     Person person = Interact.GetPersonsByName(name);
-                    Status staus;
-                    if (data[11] == "g")
-                    {
-                        staus = Status.Current;
-                    }
-                    else if (data[11] == "y")
-                    {
-                        staus = Status.Current;
-                    }
-                    else if (data[11] == "r")
-                    {
-                        staus = Status.Current;
-                    }
-                    else
-                    {
+                    Medical medical = new Medical() 
+                    { OverallStatus = StatusReader(data[11]), Person = person };
+                    person.Medicals = medical;
+                    Training training = new Training()
+                    { OverallStatus = StatusReader(data[11]), Person = person };
+                    person.Trainings = training;
 
-                    }
-
-                    Medical medical = 
-
+                    Interact.AddMedical(medical);
+                    Interact.AddTraining(training);
                     Interact.UpdatePerson(person);
                 }
             }
+        }
+        private Status StatusReader (string input)
+        {
+            Status staus;
+            if (input == "g")
+            {
+                staus = Status.Current;
+            }
+            else if (input == "y")
+            {
+                staus = Status.Upcoming;
+            }
+            else
+            {
+                staus = Status.Overdue;
+            }
+            return staus;
         }
     }
 }

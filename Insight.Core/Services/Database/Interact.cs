@@ -85,16 +85,25 @@ namespace Insight.Core.Services.Database
             }
         }
 
-        public static Medical GetOrCreate(Person person)
+        public static void AddMedical(Medical medical)
         {
-
             using (InsightContext insightContext = new InsightContext())
             {
-                _ = insightContext.Medicals.Find();
+                _ = insightContext.Medicals.Add(medical);
+
                 _ = insightContext.SaveChanges();
             }
-
-            return default;
         }
+
+        public static void AddTraining(Training training)
+        {
+            using (InsightContext insightContext = new InsightContext())
+            {
+                _ = insightContext.Trainings.Add(training);
+
+                _ = insightContext.SaveChanges();
+            }
+        }
+
     }
 }

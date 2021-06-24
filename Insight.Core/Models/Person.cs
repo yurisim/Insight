@@ -28,6 +28,8 @@ namespace Insight.Core.Models
 
       public Medical Medicals { get; set; }
 
+      public Training Trainings { get; set; }
+
       public AFSC AFSC { get; set; }
 
       public Org Organization { get; set; }
@@ -35,9 +37,6 @@ namespace Insight.Core.Models
       public PEX PEX { get; set; }
 
       public List<CourseInstance> CourseInstances { get; set; }
-
-      public AEF AEF { get; set; }
-
 
    }
 }
