@@ -57,13 +57,19 @@ namespace Insight.Core.Services.FileProcessors
                     Person person = Interact.GetPersonsByName(name);
                     Medical medical = new Medical() 
                     { OverallStatus = StatusReader(data[11]), Person = person };
-                    person.Medicals = medical;
+                    person.Medical = medical;
+
                     Training training = new Training()
-                    { OverallStatus = StatusReader(data[11]), Person = person };
-                    person.Trainings = training;
+                    { OverallStatus = StatusReader(data[12]), Person = person };
+                    person.Training = training;
+
+                    Personnel personnel = new Personnel()
+                    { OverallStatus = StatusReader(data[10]), Person = person };
+                    person.Personnel = personnel;
 
                     Interact.AddMedical(medical);
                     Interact.AddTraining(training);
+                    Interact.AddPersonnel(personnel);
                     Interact.UpdatePerson(person);
                 }
             }

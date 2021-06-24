@@ -15,8 +15,12 @@ namespace Insight.ViewModels
         private ICommand _openFileDialogCommand;
         public ICommand OpenFileDialogCommand => _openFileDialogCommand ?? (_openFileDialogCommand = new RelayCommand(OpenFileDialog));
 
+
+
+
         public UploadItemViewModel()
-        {
+        {      
+
         }
 
         private async void OpenFileDialog()

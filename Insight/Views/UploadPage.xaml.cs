@@ -22,5 +22,10 @@ namespace Insight.Views
 
             await ViewModel.LoadDataAsync();
         }
+
+        private void UploadItemControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+
+        }
     }
 }

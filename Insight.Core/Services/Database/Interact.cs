@@ -104,6 +104,15 @@ namespace Insight.Core.Services.Database
                 _ = insightContext.SaveChanges();
             }
         }
+        public static void AddPersonnel(Personnel personnel)
+        {
+            using (InsightContext insightContext = new InsightContext())
+            {
+                _ = insightContext.Personnels.Add(personnel);
+
+                _ = insightContext.SaveChanges();
+            }
+        }
 
     }
 }

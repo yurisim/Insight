@@ -26,9 +26,11 @@ namespace Insight.Core.Models
 
       public string Comments { get; set; }
 
-      public Medical Medicals { get; set; }
+      public Medical Medical { get; set; }
 
-      public Training Trainings { get; set; }
+      public Training Training { get; set; }
+
+      public Personnel Personnel { get; set; }
 
       public AFSC AFSC { get; set; }
 
