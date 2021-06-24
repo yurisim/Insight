@@ -17,7 +17,7 @@ namespace Insight.Core.Services.FileProcessors
       /// <returns></returns>
       public static bool ReadText(string filePath, out List<string> output)
       {
-         bool status = true;
+         var status = true;
 
          output = new List<string>();
 
@@ -25,7 +25,7 @@ namespace Insight.Core.Services.FileProcessors
          {
             // Create an instance of StreamReader to read from a file.
             // The using statement also closes the StreamReader.
-            using (StreamReader sr = new StreamReader(filePath))
+            using (var sr = new StreamReader(filePath))
             {
                string line;
                // Read and display lines from the file until the end of
@@ -45,4 +45,6 @@ namespace Insight.Core.Services.FileProcessors
          return status;
       }
    }
+
+
 }

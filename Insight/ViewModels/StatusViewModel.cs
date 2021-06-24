@@ -3,12 +3,13 @@ using Insight.Core.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Insight.Core.Services.Database;
 
 namespace Insight.ViewModels
 {
     public class StatusViewModel : ObservableObject
     {
-        public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
+        public ObservableCollection<Person> Source { get; } = new ObservableCollection<Person>();
 
         public StatusViewModel()
         {
@@ -19,9 +20,12 @@ namespace Insight.ViewModels
             Source.Clear();
 
             // Replace this with your actual data
-            System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetGridDataAsync();
+            //var data = await SampleDataService.GetGridDataAsync();
 
-            foreach (SampleOrder item in data)
+            var data = await Interact.GetAllPersons();
+
+
+            foreach (var item in data)
             {
                 Source.Add(item);
             }
