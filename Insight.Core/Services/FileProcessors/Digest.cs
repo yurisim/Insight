@@ -33,8 +33,8 @@ namespace Insight.Core.Services.FileProcessors
 
             var person = new Person()
             {
-               FirstName = ConvertToTitleCase(digestedLines[0].Substring(1).ToLower()),
-               LastName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1).ToLower()),
+               LastName = ConvertToTitleCase(digestedLines[0].Substring(1).ToLower()),
+               FirstName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1).ToLower()),
                Phone = digestedLines[43],
                SSN = digestedLines[2],
                DateOnStation = digestedLines[17],
