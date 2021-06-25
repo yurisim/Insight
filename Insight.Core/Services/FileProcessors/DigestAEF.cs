@@ -6,9 +6,14 @@ using Insight.Core.Services.Database;
 
 namespace Insight.Core.Services.FileProcessors
 {
-    class DigestAEF : IDigest 
+    public class DigestAEF : IDigest 
     {
-        List<string> File = new List<string>();
+        private readonly IList<string> File = new List<string>();
+
+        public DigestAEF(IList<string> input)
+        {
+            this.File = input;
+        }
 
         /// <summary>
         /// loops AEF generated string list of lines and processes them
@@ -16,17 +21,9 @@ namespace Insight.Core.Services.FileProcessors
         /// <param name="File"></param>
         public void DigestLines()
         {
-            for (int i = 0; i < File.Count; i++)
+            for (int i = 3; i < File.Count -1; i++)
             {
-                if (i > 3)
-                {
-
-                }
-                else if (i == File.Count - 1)
-                {
-
-                }
-                else
+                
                 {
                     string[] data = File[i].Split(',');
                     //processedData.Add(new AEF(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16]));
@@ -50,11 +47,11 @@ namespace Insight.Core.Services.FileProcessors
                     newAEF.ModeTip = data[16];*/
 
                     //Check variables
-                    string name = data[0];
+                    var name = data[0].Split(' ');
                     string unit = data[5];
                     string AFSC = data[7];
-
-                    Person person = Interact.GetPersonsByName(name);
+                    
+                    Person person = Interact.GetPersonsByName(firstName: name[1], lastName: name[0]);
                     Medical medical = new Medical() 
                     { OverallStatus = StatusReader(data[11]), Person = person };
                     person.Medical = medical;

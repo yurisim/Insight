@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Insight.Core.Services.Database
 {
@@ -52,24 +53,35 @@ namespace Insight.Core.Services.Database
          return persons;
       }
 
-        public static Person GetPersonsByName(string name)
+        public static Person GetPersonsByName(string firstName, string lastName)
         {
-            List<Person> persons = new List<Person>();
+           List<Person> persons = new List<Person>();
             try
             {
                 using (InsightContext insightContext = new InsightContext())
                 {
-                    persons = insightContext.Persons.Where(x => x.FirstName + ' ' + x.LastName == name).ToList();
+                    //TODO put AEF formatting stuff in DigestAEF
+
+                    var folks = insightContext.Persons.Select(x => x).ToList();
+
+                    Debug.WriteLine(insightContext.Persons.Count());
+
+                    //persons = insightContext.Persons.Where(x => x.FirstName.ToUpper() == firstName && x.LastName.ToUpper() == lastName).ToList();
+                    persons = (from x in insightContext.Persons
+                              where x.FirstName.ToUpper() == firstName && x.LastName.ToUpper() == lastName
+                              select x).ToList();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new Exception("Insight.db access error");
             }
-            if (persons.Count > 1)
+
+            if (persons.Count != 1)
             {
-                throw new Exception("too many results");
+                throw new Exception("sdoihdsoighskldjglkghsd");
             }
+
             return persons[0];
         }
         public static void UpdatePerson(Person person)

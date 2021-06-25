@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="textBlock" Text="{Binding FileType, ElementName=userControl}" Margin="{StaticResource SmallLeftTopRightBottomMargin}" FontSize="{StaticResource LargeFontSize}" />
         <TextBox x:Name="textBox" PlaceholderText="{Binding FileType, ElementName=userControl}" Grid.Row="1" Grid.Column="0"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" />
-        <Button Grid.Row="1" Grid.Column="1"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" Command="{x:Bind ViewModel.OpenFileDialogCommand}" Tag="asdgag">
+
+        <Button Grid.Row="1" Grid.Column="1"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" Click="btnFileDialog_Click" >
+            <!--<Button Grid.Row="1" Grid.Column="1"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" Command="{x:Bind ViewModel.UploadFileCommand}" >-->
             <SymbolIcon Symbol="Upload" />
         </Button>
     </Grid>
