@@ -9,53 +9,70 @@ using Insight.Core.Services.Database;
 
 namespace Insight.Core.Services.FileProcessors
 {
-   public class DigestAlphaRoster : IDigest
-   {
-      private readonly IList<string> input = new List<string>();
+    public class DigestAlphaRoster : IDigest
+    {
+        private readonly IList<string> input = new List<string>();
 
-      public DigestAlphaRoster(IList<string> input)
-      {
-         this.input = input;
-      }
+        public DigestAlphaRoster(IList<string> input)
+        {
+            this.input = input;
+        }
 
-      public void DigestLines()
-      {
-         // TODO dialog exception for schema differences
-         if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
-         {
-            throw new NotImplementedException();
-         }
-
-         // We start at i = 1 so that we ignore the initial schema.
-         for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
-         {
-            string[] digestedLines = input[lineIndex].Split(',');
-
-            var person = new Person()
+        public void DigestLines()
+        {
+            // TODO dialog exception for schema differences
+            if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
             {
-               LastName = ConvertToTitleCase(digestedLines[0].Substring(1).ToLower()),
-               FirstName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1).ToLower()),
-               Phone = digestedLines[43],
-               SSN = digestedLines[2],
-               DateOnStation = digestedLines[17],
+                 throw new NotImplementedException();
+            }
 
-               // TODO get AFSC from alpha roster and create/use existing in database
-               //AFSC =
+            // We start at i = 1 so that we ignore the initial schema.
+            for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+            {
+                string[] digestedLines = input[lineIndex].Split(',');
 
-               // TODO get Organization from alpha roster and create/use existing in database
-               //Organization =
-            };
+                string LastName = ConvertToTitleCase(digestedLines[0].Substring(1));
+                string FirstName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1));
+                string SSN = digestedLines[2].Replace("-", "");
 
-            Interact.AddPerson(person);
-         }
-      }
+                //TODO look for existing person and update if it exists. Lookup by name and SSN
+                var person = Interact.GetPersonsByNameSSN(FirstName, LastName, SSN);
+
+                if(person == null)
+                {
+                    //TODO input validation
+                    person = new Person()
+                    {
+                        LastName = ConvertToTitleCase(digestedLines[0].Substring(1)),
+                        FirstName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1)),
+                        Phone = digestedLines[43],
+                        SSN = digestedLines[2].Replace("-", ""),
+                        DateOnStation = digestedLines[17],
+                        Medical = new Medical(),
+
+                        // TODO get AFSC from alpha roster and create/use existing in database
+                        //AFSC =
+
+                        // TODO get Organization from alpha roster and create/use existing in database
+                        //Organization =
+                    };
+                    Interact.AddMedical(person.Medical, person);
+                    Interact.AddPerson(person);
+                }
+
+                person.Phone = digestedLines[43];
+                person.DateOnStation = digestedLines[17];
+
+                Interact.UpdatePerson(person);
+            }
+        }
 
         //TODO move to helper
-      public string ConvertToTitleCase(string improperCase)
-      {
-         var ti = CultureInfo.CurrentCulture.TextInfo;
+        public string ConvertToTitleCase(string improperCase)
+        {
+            var ti = CultureInfo.CurrentCulture.TextInfo;
 
-         return ti.ToTitleCase(improperCase);
-      }
-   }
+            return ti.ToTitleCase(improperCase.ToLower().Trim());
+        }
+    }
 }

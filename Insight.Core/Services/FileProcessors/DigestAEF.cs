@@ -6,7 +6,7 @@ using Insight.Core.Services.Database;
 
 namespace Insight.Core.Services.FileProcessors
 {
-    public class DigestAEF : IDigest 
+    public class DigestAEF : IDigest
     {
         private readonly IList<string> File = new List<string>();
 
@@ -21,10 +21,10 @@ namespace Insight.Core.Services.FileProcessors
         /// <param name="File"></param>
         public void DigestLines()
         {
-            for (int i = 3; i < File.Count -1; i++)
+            for (int i = 3; i < File.Count - 1; i++)
             {
+
                 
-                {
                     string[] data = File[i].Split(',');
                     //processedData.Add(new AEF(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16]));
                     /*AEF newAEF = new AEF();
@@ -50,28 +50,63 @@ namespace Insight.Core.Services.FileProcessors
                     var name = data[0].Split(' ');
                     string unit = data[5];
                     string AFSC = data[7];
-                    
-                    Person person = Interact.GetPersonsByName(firstName: name[1], lastName: name[0]);
-                    Medical medical = new Medical() 
-                    { OverallStatus = StatusReader(data[11]), Person = person };
-                    person.Medical = medical;
 
-                    Training training = new Training()
-                    { OverallStatus = StatusReader(data[12]), Person = person };
-                    person.Training = training;
+                    Person person = Interact.GetPersonsByName(firstName: name[1].Trim(), lastName: name[0].Trim());
 
-                    Personnel personnel = new Personnel()
-                    { OverallStatus = StatusReader(data[10]), Person = person };
-                    person.Personnel = personnel;
+                    //MEDICAL
+                    if (person.Medical == null)
+                    {
+                        Medical medical = new Medical() {
+                            OverallStatus = StatusReader(data[11])/*, Person = person*/ };
+                        person.Medical = medical;
+                        Interact.AddMedical(medical, person);
+                    }
+                    else //entity already exists
+                    {
+                        Medical medical = person.Medical;
+                        medical.OverallStatus = StatusReader(data[11]);
+                        Interact.UpdateMedical(medical);
+                    }
 
-                    Interact.AddMedical(medical);
-                    Interact.AddTraining(training);
-                    Interact.AddPersonnel(personnel);
+                    //TRAINING
+                    if (person.Training == null)
+                    {
+                        Training training = new Training()
+                        {
+                            OverallStatus = StatusReader(data[11])/*, Person = person */
+                        };
+                        person.Training = training;
+                        Interact.AddTraining(training);
+                    }
+                    else //entity already exists
+                    {
+                        Training training = person.Training;
+                        training.OverallStatus = StatusReader(data[12]);
+                        Interact.UpdateTraining(training);
+                    }
+
+                    //PERSONNEL
+                    if (person.Personnel == null)
+                    {
+                        Personnel personnel = new Personnel()
+                        {
+                            OverallStatus = StatusReader(data[11])/*, Person = person */
+                        };
+                        person.Personnel = personnel;
+                        Interact.AddPersonnel(personnel);
+                    }
+                    else //entity already exists
+                    {
+                        Personnel personnel = person.Personnel;
+                        personnel.OverallStatus = StatusReader(data[10]);
+                        Interact.UpdatePersonnel(personnel);
+                    }
+
                     Interact.UpdatePerson(person);
-                }
+                
             }
         }
-        private Status StatusReader (string input)
+        private Status StatusReader(string input)
         {
             Status staus;
             if (input == "g")

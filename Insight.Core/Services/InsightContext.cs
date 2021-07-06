@@ -61,6 +61,10 @@ namespace Insight.Core.Services
             modelBuilder.Entity<PEX>().ToTable("PEXs");
             modelBuilder.Entity<TBA>().ToTable("TBAs");
 
+            modelBuilder.Entity<Person>()
+                .HasKey(c => new { c.PersonId });
+            
+
             // This makes the primary key of the below entity
             modelBuilder.Entity<AFSC>()
                 .Property(entity => entity.Id)
@@ -75,16 +79,16 @@ namespace Insight.Core.Services
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Medical>()
-                .Property(entity => entity.Id)
+                .Property(entity => entity.PersonId)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Training>()
-                .Property(entity => entity.Id)
-                .ValueGeneratedOnAdd();
+            //modelBuilder.Entity<Training>()
+            //    .Property(entity => entity.Id)
+            //    .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Personnel>()
-                .Property(entity => entity.Id)
-                .ValueGeneratedOnAdd();
+            //modelBuilder.Entity<Personnel>()
+            //    .Property(entity => entity.Id)
+            //    .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Org>()
                 .Property(entity => entity.Id)
@@ -103,28 +107,27 @@ namespace Insight.Core.Services
             //    .HasIndex(b => b.DoDID)
             //    .IsUnique(true);
 
-            //// TODO Write custom exception to deal w/ duplicate SSNs
-            //modelBuilder.Entity<Person>()
-            //    .HasIndex(b => b.SSN)
+            //modelBuilder.Entity<Medical>()
+            //    .HasIndex(b => b.Id)
             //    .IsUnique(true);
 
             // Configured ono-to-one relationship between Person and Medical
-            modelBuilder.Entity<Person>()
-              .HasOne(p => p.Medical)
-              .WithOne(p => p.Person)
-              .HasForeignKey<Medical>(m => m.Id);
+            //modelBuilder.Entity<Person>()
+            //  .HasOne(person => person.Medical)
+            //  .WithOne(medical => medical.Person)
+            //  .HasForeignKey<Medical>(medical => medical.Id);
 
             // Configured ono-to-one relationship between Person and Training
-            modelBuilder.Entity<Person>()
-              .HasOne(p => p.Training)
-              .WithOne(p => p.Person)
-              .HasForeignKey<Training>(m => m.Id);
+            //modelBuilder.Entity<Person>()
+            //  .HasOne(p => p.Training)
+            //  .WithOne(p => p.Person)
+            //  .HasForeignKey<Training>(m => m.Id);
 
-            // Configured ono-to-one relationship between Person and Personnel
-            modelBuilder.Entity<Person>()
-              .HasOne(p => p.Personnel)
-              .WithOne(p => p.Person)
-              .HasForeignKey<Personnel>(m => m.Id);
+            //// Configured ono-to-one relationship between Person and Personnel
+            //modelBuilder.Entity<Person>()
+            //  .HasOne(p => p.Personnel)
+            //  .WithOne(p => p.Person)
+            //  .HasForeignKey<Personnel>(m => m.Id);
 
             base.OnModelCreating(modelBuilder);
         }
