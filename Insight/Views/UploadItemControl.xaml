@@ -9,11 +9,11 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d" HorizontalAlignment="Center" VerticalAlignment="Center">
     <Grid VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
