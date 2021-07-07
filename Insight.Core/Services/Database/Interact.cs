@@ -164,19 +164,32 @@ namespace Insight.Core.Services.Database
       return persons.FirstOrDefault();
     }
 
-    public static async void UpdatePerson(Person person)
+    public static async void Update<T>(T t)
     {
       try
       {
         using (InsightContext insightContext = new InsightContext())
         {
-          _ = insightContext.Persons.Update(person);
-          _ = insightContext.Trainings.Update(person.Training);
-          _ = insightContext.Medicals.Update(person.Medical);
-          _ = insightContext.Personnels.Update(person.Personnel);
+          _ = insightContext.Update(t);
           _ = await insightContext.SaveChangesAsync();
         }
 
+      }
+      //TODO implement exception
+      catch (Exception e)
+      {
+        throw new Exception("Insight.db access error");
+      }
+    }
+
+    public static async void UpdatePerson(Person person)
+    {
+      try
+      {
+        Update(person);
+        Update(person.Training);
+        Update(person.Medical);
+        Update(person.Personnel);
       }
       //TODO implement exception
       catch (Exception e)
@@ -207,61 +220,6 @@ namespace Insight.Core.Services.Database
         return insightContext.Personnels.Where(x => x.PersonId == person.PersonId).ToList().FirstOrDefault();
 
       return null;
-    }
-
-    public static void UpdateMedical(Medical medical)
-    {
-      try
-      {
-        using (InsightContext insightContext = new InsightContext())
-        {
-          _ = insightContext.Medicals.Update(medical);
-          _ = insightContext.SaveChanges();
-        }
-
-      }
-      //TODO implement exception
-      catch (Exception e)
-      {
-        throw new Exception("Insight.db access error");
-      }
-    }
-
-    public static void UpdateTraining(Training training)
-    {
-      try
-      {
-        using (InsightContext insightContext = new InsightContext())
-        {
-          _ = insightContext.Trainings.Update(training);
-          _ = insightContext.SaveChanges();
-        }
-
-      }
-      //TODO implement exception
-      catch (Exception e)
-      {
-        throw new Exception("Insight.db access error");
-      }
-    }
-
-
-    public static void UpdatePersonnel(Personnel personnel)
-    {
-      try
-      {
-        using (InsightContext insightContext = new InsightContext())
-        {
-          _ = insightContext.Personnels.Update(personnel);
-          _ = insightContext.SaveChanges();
-        }
-
-      }
-      //TODO implement exception
-      catch (Exception e)
-      {
-        throw new Exception("Insight.db access error");
-      }
     }
   }
 }
