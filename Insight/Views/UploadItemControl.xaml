@@ -8,7 +8,9 @@
     xmlns:helpers="using:Insight.Helpers"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:winui="using:Microsoft.UI.Xaml.Controls" xmlns:viewmodels="using:Insight.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:UploadItemViewModel}"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewmodels="using:Insight.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:UploadItemViewModel}"
     mc:Ignorable="d">
     <Grid VerticalAlignment="Top">
         <Grid.ColumnDefinitions>

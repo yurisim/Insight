@@ -9,11 +9,11 @@ using Insight.Core.Services.Database;
 
 namespace Insight.Core.Services.FileProcessors
 {
-    public class DigestAlphaRoster : IDigest
+    public class DigestPEX : IDigest
     {
         private readonly IList<string> input = new List<string>();
 
-      public DigestAlphaRoster(IList<string> input)
+      public DigestPEX(IList<string> input)
         {
             this.input = input;
         }
@@ -21,7 +21,7 @@ namespace Insight.Core.Services.FileProcessors
         public void DigestLines()
         {
             // TODO dialog exception for schema differences
-            if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
+            if (!input[0].StartsWith(Resources.PEXExpectedSchema))
             {
                  throw new NotImplementedException();
             }
@@ -31,8 +31,8 @@ namespace Insight.Core.Services.FileProcessors
             {
                 string[] digestedLines = input[lineIndex].Split(',');
 
-                string LastName = ConvertToTitleCase(digestedLines[0].Substring(1));
-                string FirstName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1));
+                string shortName = digestedLines[0];
+                string PEXName = ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1));
                 string SSN = digestedLines[2].Replace("-", "");
 
                 //TODO look for existing person and update if it exists. Lookup by name and SSN
@@ -68,14 +68,6 @@ namespace Insight.Core.Services.FileProcessors
 
                 Interact.AddPerson(person);
             }
-        }
-
-        //TODO move to helper
-        public string ConvertToTitleCase(string improperCase)
-        {
-            var ti = CultureInfo.CurrentCulture.TextInfo;
-
-            return ti.ToTitleCase(improperCase.ToLower().Trim());
         }
     }
 }

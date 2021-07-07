@@ -69,8 +69,6 @@ namespace Insight.Views
                 SuggestedStartLocation = PickerLocationId.Downloads
             };
 
-            //picker.FileTypeFilter.Add(".xlsx");
-            //picker.FileTypeFilter.Add(".xls");
             picker.FileTypeFilter.Add(".csv");
 
             var file = await picker.PickSingleFileAsync();
