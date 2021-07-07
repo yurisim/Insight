@@ -85,7 +85,7 @@ namespace Insight.Core.Services.Database
     /// <param name="firstName"></param>
     /// <param name="lastName"></param>
     /// <returns></returns>
-    public static Person GetPersonsByName(string firstName, string lastName)
+    public static Person GetPersonByName(string firstName, string lastName)
     {
       List<Person> persons = new List<Person>();
       try
@@ -126,7 +126,7 @@ namespace Insight.Core.Services.Database
     /// <param name="lastName"></param>
     /// <param name="SSN"></param>
     /// <returns></returns>
-    public static Person GetPersonsByNameSSN(string firstName, string lastName, string SSN)
+    public static Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
     {
       //TODO refactor to reuse code more and have better methods
       List<Person> persons = new List<Person>();

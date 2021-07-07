@@ -61,8 +61,8 @@ namespace Insight.Core.Services
             modelBuilder.Entity<PEX>().ToTable("PEXs");
             modelBuilder.Entity<TBA>().ToTable("TBAs");
 
-            modelBuilder.Entity<Person>()
-                .HasKey(c => new { c.PersonId });
+            //modelBuilder.Entity<Person>()
+            //    .HasKey(c => new { c.PersonId });
             
 
             // This makes the primary key of the below entity
