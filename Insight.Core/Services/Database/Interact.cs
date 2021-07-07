@@ -39,7 +39,26 @@ namespace Insight.Core.Services.Database
 
          try
          {
-            using (InsightContext insightContext = new InsightContext())
+            using (var insightContext = new InsightContext())
+            {
+               persons = await insightContext.Persons.Select(x => x).ToListAsync();
+            }
+         }
+         catch (Exception)
+         {
+            throw new Exception("Insight.db access error");
+         }
+
+         return persons;
+      }
+
+      public static async Task<List<Person>> GetAllPersonsWithShortName(string ShortName, Org org)
+      {
+         List<Person> persons;
+
+         try
+         {
+            using (var insightContext = new InsightContext())
             {
                persons = await insightContext.Persons.Select(x => x).ToListAsync();
             }

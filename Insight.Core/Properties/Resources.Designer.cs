@@ -70,11 +70,11 @@ namespace Insight.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \.
+        ///   Looks up a localized string similar to ShortName,PEX Designation.
         /// </summary>
-        internal static string String1 {
+        internal static string PEXExpectedSchema {
             get {
-                return ResourceManager.GetString("String1", resourceCulture);
+                return ResourceManager.GetString("PEXExpectedSchema", resourceCulture);
             }
         }
     }

@@ -11,25 +11,25 @@ namespace Insight.Core.Services.FileProcessors
 {
    public class DigestAlphaRoster : IDigest
    {
-      private readonly IList<string> input = new List<string>();
+      private readonly IList<string> _input;
 
       public DigestAlphaRoster(IList<string> input)
       {
-         this.input = input;
+         this._input = input;
       }
 
       public void DigestLines()
       {
          // TODO dialog exception for schema differences
-         if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
+         if (!_input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
          {
             throw new NotImplementedException();
          }
 
          // We start at i = 1 so that we ignore the initial schema.
-         for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+         for (var lineIndex = 1; lineIndex < _input.Count; lineIndex++)
          {
-            string[] digestedLines = input[lineIndex].Split(',');
+            string[] digestedLines = _input[lineIndex].Split(',');
 
             var person = new Person()
             {
@@ -55,6 +55,39 @@ namespace Insight.Core.Services.FileProcessors
          var ti = CultureInfo.CurrentCulture.TextInfo;
 
          return ti.ToTitleCase(improperCase);
+      }
+   }
+
+   public class DigestPEX : IDigest
+   {
+      private readonly IList<string> _input;
+
+      public DigestPEX(IList<string> input)
+      {
+         this._input = input;
+      }
+
+      public void DigestLines()
+      {
+         // TODO dialog exception for schema differences
+         if (!_input[0].StartsWith(Resources.PEXExpectedSchema))
+         {
+            throw new NotImplementedException();
+         }
+
+         // We start at i = 1 so that we ignore the initial schema.
+         for (var lineIndex = 1; lineIndex < _input.Count; lineIndex++)
+         {
+            string[] digestedLine = _input[lineIndex].Split(',');
+
+            string shortName = digestedLine[0];
+
+            string pexDesignation = digestedLine[1];
+
+
+
+            Interact.AddPerson(person);
+         }
       }
    }
 }
