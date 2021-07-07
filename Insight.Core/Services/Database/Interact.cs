@@ -206,18 +206,15 @@ namespace Insight.Core.Services.Database
          return persons.FirstOrDefault();
       }
 
-      public static async void UpdatePerson(Person person)
+    public static async void Update<T>(T t)
+    {
+      try
       {
-         try
-         {
-            using (InsightContext insightContext = new InsightContext())
-            {
-               _ = insightContext.Persons.Update(person);
-               _ = insightContext.Trainings.Update(person.Training);
-               _ = insightContext.Medicals.Update(person.Medical);
-               _ = insightContext.Personnels.Update(person.Personnel);
-               _ = await insightContext.SaveChangesAsync();
-            }
+        using (InsightContext insightContext = new InsightContext())
+        {
+          _ = insightContext.Update(t);
+          _ = await insightContext.SaveChangesAsync();
+        }
 
          }
          //TODO implement exception
@@ -227,83 +224,83 @@ namespace Insight.Core.Services.Database
          }
       }
 
-      public static void UpdateMedical(Medical medical)
+    private static Medical GetMedicalByPersonId(Person person, InsightContext insightContext)
+    {
+      if (insightContext != null)
+        return insightContext.Medicals.Where(x => x.PersonId == person.PersonId).ToList().FirstOrDefault();
+
+      return null;
+    }
+
+    private static Training GetTrainingByPersonId(Person person, InsightContext insightContext)
+    {
+      if (insightContext != null)
+        return insightContext.Trainings.Where(x => x.PersonId == person.PersonId).ToList().FirstOrDefault();
+
+      return null;
+    }
+
+    private static Personnel GetPersonnelByPersonId(Person person, InsightContext insightContext)
+    {
+      if (insightContext != null)
+        return insightContext.Personnels.Where(x => x.PersonId == person.PersonId).ToList().FirstOrDefault();
+
+      return null;
+    }
+
+    public static void UpdateMedical(Medical medical)
+    {
+      try
       {
-         try
-         {
-            using (InsightContext insightContext = new InsightContext())
-            {
-               _ = insightContext.Medicals.Update(medical);
-               _ = insightContext.SaveChanges();
-            }
-
-         }
-         //TODO implement exception
-         catch (Exception e)
-         {
-            throw new Exception("Insight.db access error");
-         }
-      }
-
-      public static void UpdateTraining(Training training)
-      {
-         try
-         {
-            using (InsightContext insightContext = new InsightContext())
-            {
-               _ = insightContext.Trainings.Update(training);
-               _ = insightContext.SaveChanges();
-            }
-
-         }
-         //TODO implement exception
-         catch (Exception e)
-         {
-            throw new Exception("Insight.db access error");
-         }
-      }
-
-
-      public static void UpdatePersonnel(Personnel personnel)
-      {
-         try
-         {
-            using (InsightContext insightContext = new InsightContext())
-            {
-               _ = insightContext.Personnels.Update(personnel);
-               _ = insightContext.SaveChanges();
-            }
-
-         }
-         //TODO implement exception
-         catch (Exception e)
-         {
-            throw new Exception("Insight.db access error");
-         }
-      }
-
-      #region GetEntityByPersonID
-      private static Medical GetMedicalByPersonId(Person person, InsightContext insightContext)
-      {
-         return insightContext?.Medicals.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+        using (InsightContext insightContext = new InsightContext())
+        {
+          _ = insightContext.Medicals.Update(medical);
+          _ = insightContext.SaveChanges();
+        }
 
       }
-
-      private static Training GetTrainingByPersonId(Person person, InsightContext insightContext)
+      //TODO implement exception
+      catch (Exception e)
       {
-         return insightContext?.Trainings.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+        throw new Exception("Insight.db access error");
       }
+    }
 
-      private static Personnel GetPersonnelByPersonId(Person person, InsightContext insightContext)
+    public static void UpdateTraining(Training training)
+    {
+      try
       {
-         return insightContext?.Personnels.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
-      }
+        using (InsightContext insightContext = new InsightContext())
+        {
+          _ = insightContext.Trainings.Update(training);
+          _ = insightContext.SaveChanges();
+        }
 
-      private static PEX GetPEXByPersonId(Person person, InsightContext insightContext)
+      }
+      //TODO implement exception
+      catch (Exception e)
       {
-         return insightContext?.PEXs.Where(x => x.Id == person.PEX.Id).FirstOrDefault();
+        throw new Exception("Insight.db access error");
       }
+    }
 
-      #endregion
-   }
+
+    public static void UpdatePersonnel(Personnel personnel)
+    {
+      try
+      {
+        using (InsightContext insightContext = new InsightContext())
+        {
+          _ = insightContext.Personnels.Update(personnel);
+          _ = insightContext.SaveChanges();
+        }
+
+      }
+      //TODO implement exception
+      catch (Exception e)
+      {
+        throw new Exception("Insight.db access error");
+      }
+    }
+  }
 }
