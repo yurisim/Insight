@@ -17,9 +17,9 @@
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
                     <tg:DataGridTextColumn PropertyName="Name" />
-                    <tg:DataGridTextColumn PropertyName="Organization" />
-                    <tg:DataGridTextColumn PropertyName="Status" />
-                    <tg:DataGridDateColumn PropertyName="DateOfLastCompletion" />
+                    <tg:DataGridTextColumn Header="Medical" PropertyName="Medical.OverallStatus" />
+                    <tg:DataGridTextColumn Header="Training" PropertyName="Training.OverallStatus" />
+                    <tg:DataGridDateColumn Header="Personnel"  PropertyName="Personnel.OverallStatus" />
                     <!--<tg:DataGridTemplateColumn Header="Symbol">
                         <tg:DataGridTemplateColumn.CellContentTemplate>
                             <DataTemplate x:DataType="model:SampleOrder">
