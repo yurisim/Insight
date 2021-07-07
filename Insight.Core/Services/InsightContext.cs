@@ -95,7 +95,7 @@ namespace Insight.Core.Services
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<PEX>()
-                .Property(entity => entity.Id)
+                .Property(entity => entity.PEXId)
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<TBA>()

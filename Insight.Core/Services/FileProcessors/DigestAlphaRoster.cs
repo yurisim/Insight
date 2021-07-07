@@ -52,6 +52,7 @@ namespace Insight.Core.Services.FileProcessors
                 Medical = new Medical(),
                 Training = new Training(),
                 Personnel = new Personnel(),
+                PEX = new PEX() 
 
                 // TODO get AFSC from alpha roster and create/use existing in database
                 //AFSC =
