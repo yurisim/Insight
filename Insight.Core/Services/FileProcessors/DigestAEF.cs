@@ -53,19 +53,24 @@ namespace Insight.Core.Services.FileProcessors
 
                     Person person = Interact.GetPersonsByName(firstName: name[1].Trim(), lastName: name[0].Trim());
 
+                    //TODO handle user existing in AEF but not in alpha roster
+                    if (person == null)
+                    {
+                      continue;
+                    }
+
                     //MEDICAL
                     if (person.Medical == null)
                     {
                         Medical medical = new Medical() {
                             OverallStatus = StatusReader(data[11])/*, Person = person*/ };
                         person.Medical = medical;
-                        Interact.AddMedical(medical, person);
                     }
                     else //entity already exists
                     {
                         Medical medical = person.Medical;
                         medical.OverallStatus = StatusReader(data[11]);
-                        Interact.UpdateMedical(medical);
+                        //Interact.UpdateMedical(medical);
                     }
 
                     //TRAINING
@@ -76,13 +81,12 @@ namespace Insight.Core.Services.FileProcessors
                             OverallStatus = StatusReader(data[11])/*, Person = person */
                         };
                         person.Training = training;
-                        Interact.AddTraining(training);
                     }
                     else //entity already exists
                     {
                         Training training = person.Training;
                         training.OverallStatus = StatusReader(data[12]);
-                        Interact.UpdateTraining(training);
+                        //Interact.UpdateTraining(training);
                     }
 
                     //PERSONNEL
@@ -93,35 +97,39 @@ namespace Insight.Core.Services.FileProcessors
                             OverallStatus = StatusReader(data[11])/*, Person = person */
                         };
                         person.Personnel = personnel;
-                        Interact.AddPersonnel(personnel);
                     }
                     else //entity already exists
                     {
                         Personnel personnel = person.Personnel;
                         personnel.OverallStatus = StatusReader(data[10]);
-                        Interact.UpdatePersonnel(personnel);
+                        //Interact.UpdatePersonnel(personnel);
                     }
 
                     Interact.UpdatePerson(person);
                 
             }
         }
+
+        //TODO move to helper
         private Status StatusReader(string input)
         {
-            Status staus;
-            if (input == "g")
-            {
-                staus = Status.Current;
-            }
-            else if (input == "y")
-            {
-                staus = Status.Upcoming;
-            }
-            else
-            {
-                staus = Status.Overdue;
-            }
-            return staus;
+	        Status status;
+	        switch (input.ToLower())
+	        {
+                case "g":
+	                status = Status.Current;
+                    break;
+                case "y": 
+	                status = Status.Upcoming;
+	                break;
+                case "r":
+	                status = Status.Overdue;
+	                break;
+                default:
+                  status = Status.Unknown;
+                  break;
+	        }
+            return status;
         }
     }
 }

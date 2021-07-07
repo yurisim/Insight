@@ -49,21 +49,24 @@ namespace Insight.Core.Services.FileProcessors
                         SSN = digestedLines[2].Replace("-", ""),
                         DateOnStation = digestedLines[17],
                         Medical = new Medical(),
+                        Training = new Training(),
+                        Personnel = new Personnel(),
 
-                        // TODO get AFSC from alpha roster and create/use existing in database
-                        //AFSC =
+                      // TODO get AFSC from alpha roster and create/use existing in database
+                      //AFSC =
 
-                        // TODO get Organization from alpha roster and create/use existing in database
-                        //Organization =
+                      // TODO get Organization from alpha roster and create/use existing in database
+                      //Organization =
                     };
-                    Interact.AddMedical(person.Medical, person);
-                    Interact.AddPerson(person);
+                    
+                    //Interact.AddPerson(person);
+                    //Interact.AddMedical(person.Medical, person);
                 }
 
                 person.Phone = digestedLines[43];
                 person.DateOnStation = digestedLines[17];
 
-                Interact.UpdatePerson(person);
+                Interact.AddPerson(person);
             }
         }
 

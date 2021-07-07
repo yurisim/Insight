@@ -25,7 +25,6 @@ namespace Insight.Core.Models
 
         public string Comments { get; set; }
 
-        //[ForeignKey("Medical")]
         public Medical Medical { get; set; }
 
         public Training Training { get; set; }

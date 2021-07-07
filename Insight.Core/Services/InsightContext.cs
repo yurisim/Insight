@@ -78,9 +78,9 @@ namespace Insight.Core.Services
                 .Property(entity => entity.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Medical>()
-                .Property(entity => entity.PersonId)
-                .ValueGeneratedOnAdd();
+            //modelBuilder.Entity<Medical>()
+            //    .Property(entity => entity.PersonId)
+            //    .ValueGeneratedOnAdd();
 
             //modelBuilder.Entity<Training>()
             //    .Property(entity => entity.Id)

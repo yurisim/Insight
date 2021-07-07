@@ -8,8 +8,6 @@ namespace Insight.Core.Models
         [Key,ForeignKey("Person"),Required]
         public int PersonId { get; set; }
 
-        public Person Person { get; set; }
-
         public Status OverallStatus { get; set; }
 
         public Status Dental { get; set; }

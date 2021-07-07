@@ -8,12 +8,11 @@ namespace Insight.Core.Models
 {
     public class Personnel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+      [Key, ForeignKey("Person"), Required]
+      public int PersonId { get; set; }
 
-        public Status OverallStatus { get; set; }
+      public Status OverallStatus { get; set; }
 
-        //public Person Person { get; set; }
-    }
+          //public Person Person { get; set; }
+      }
 }
