@@ -12,7 +12,5 @@ namespace Insight.Core.Models
       public int PersonId { get; set; }
 
       public Status OverallStatus { get; set; }
-
-          //public Person Person { get; set; }
-      }
+    }
 }

@@ -63,6 +63,7 @@ namespace Insight.Views
 
         private static async Task<IList<string>> GetFile()
         {
+            //TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
             var picker = new FileOpenPicker
             {
                 ViewMode = PickerViewMode.Thumbnail,
