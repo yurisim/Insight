@@ -12,8 +12,11 @@
     mc:Ignorable="d">
 
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid VerticalAlignment="Top">
-            <views:UploadItemControl></views:UploadItemControl>
-        </Grid>
+        <StackPanel VerticalAlignment="Top">
+            <views:UploadItemControl FileType="Alpha Roster"></views:UploadItemControl>
+            <views:UploadItemControl FileType="AEF"></views:UploadItemControl>
+            <views:UploadItemControl FileType="PEX"></views:UploadItemControl>
+
+        </StackPanel>
     </Grid>
 </Page>

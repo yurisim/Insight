@@ -1,81 +1,26 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
-using System;
-using System.Diagnostics;
-
-using Windows.Foundation;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using Insight.Helpers;
-using Insight.Core.Services.FileProcessors;
-using System.Collections.Generic;
-using Windows.Storage.AccessCache;
-using Windows.UI.Popups;
 
 namespace Insight.ViewModels
 {
     public class UploadItemViewModel : ObservableObject
     {
-        private ICommand _openFileDialogCommand;
-        public ICommand OpenFileDialogCommand => _openFileDialogCommand ?? (_openFileDialogCommand = new RelayCommand(OpenFileDialog));
 
-        /// <summary>
-        ///
-        /// </summary>
-        private static async void OpenFileDialog()
-        {
-            var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.Downloads
-            };
+        //private ICommand _uploadFileCommand;
+        //public ICommand UploadFileCommand => _uploadFileCommand ?? (_uploadFileCommand = new RelayCommand(OpenFileDialog));
 
-            //picker.FileTypeFilter.Add(".xlsx");
-            //picker.FileTypeFilter.Add(".xls");
-            picker.FileTypeFilter.Add(".csv");
+        //private string _fileType;
 
-            var file = await picker.PickSingleFileAsync();
+        //public string FileType
+        //{
+        //    get { return _fileType; }
+        //    set { SetProperty(ref _fileType, value); }
+        //}
 
+        ////Using a DependencyProperty as the backing store for FileType.This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty FileTypeProperty =
+        //     DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
 
-            if (file != null)
-            {
-                // Move file to Future Access List
-                string fileToken = FileService.RememberFile(file);
-
-                var fileObject = await FileService.GetFileForToken(fileToken);
-
-                var fileLines = await FileIO.ReadLinesAsync(fileObject);
-
-                FileService.ForgetFile(fileToken);
-
-                var digestAlpha = new DigestAlphaRoster(fileLines);
-                digestAlpha.DigestLines();
-
-                //Debug.WriteLine("Yo Yo" + fileObject.Path);
-
-                //if (ReadFile.ReadText(fileObject.Path, out var output))
-                //{
-                //    var digestAlpha = new DigestAlphaRoster(output);
-                //    digestAlpha.DigestLines();
-                //    Debug.WriteLine("System has digested lines");
-                //}
-                //else
-                //{
-                //    Debug.WriteLine("System has not digested lines.");
-                //}
-                // Push file through file streamer
-
-                // Read
-
-                // Application now has read/write access to the picked file
-            }
-            else
-            {
-                Debug.WriteLine("File is null.");
-
-                //    this.textBlock.Text = "Operation cancelled.";
-            }
-        }
     }
 }
