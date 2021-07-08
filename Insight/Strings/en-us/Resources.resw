@@ -232,4 +232,7 @@
   <data name="Update_PleaseUpdate" xml:space="preserve">
     <value>This is either your first time running this application or you have not updated your files for some time. Please navigate to the Upload page and update your documents!</value>
   </data>
+  <data name="Shell_Upload.Content" xml:space="preserve">
+    <value>Upload</value>
+  </data>
 </root>
