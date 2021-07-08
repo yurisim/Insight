@@ -1,6 +1,7 @@
 ﻿using Insight.Helpers;
+using Insight.Services;
 using Insight.ViewModels;
-
+using System.Diagnostics;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,6 +21,11 @@ namespace Insight.Views
             base.OnNavigatedTo(e);
 
             await ViewModel.LoadDataAsync();
+        }
+
+        private void StackPanel_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            NavigationService.Navigate<OverviewDetailPage>();
         }
     }
 }

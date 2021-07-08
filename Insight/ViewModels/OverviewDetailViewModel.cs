@@ -1,6 +1,7 @@
 ﻿using Insight.Core.Models;
 using Insight.Core.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace Insight.ViewModels
             get { return _item; }
             set { SetProperty(ref _item, value); }
         }
+
+        public ObservableCollection<Person> Source { get; } = new ObservableCollection<Person>();
 
         public OverviewDetailViewModel()
         {
