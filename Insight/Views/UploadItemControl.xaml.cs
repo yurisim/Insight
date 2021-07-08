@@ -1,14 +1,10 @@
-﻿using Insight.Core.Models;
-
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Insight.ViewModels;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Insight.Helpers;
 using Insight.Core.Services.FileProcessors;
-using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -53,6 +49,8 @@ namespace Insight.Views
                         break;
                     case "PEX":
                         Debug.WriteLine(FileType);
+                        var digestPEX = new DigestPEX(filesLines);
+                        digestPEX.DigestLines();
                         break;
                     default:
                         Debug.WriteLine("OOPS");

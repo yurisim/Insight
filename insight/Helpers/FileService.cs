@@ -6,8 +6,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
-using OfficeOpenXml;
-using OfficeOpenXml.Table;
 
 namespace Insight.Helpers
 {
