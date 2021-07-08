@@ -43,14 +43,13 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext())
 				{
-					persons = await insightContext.Persons.Select(x => x).ToListAsync();
+					persons = await insightContext.Persons.Select(x => x)?.ToListAsync();
 
 					foreach (Person person in persons)
 					{
 						person.Medical = GetMedicalByPersonId(person, insightContext);
 						person.Personnel = GetPersonnelByPersonId(person, insightContext);
 						person.Training = GetTrainingByPersonId(person, insightContext);
-						//person.PEX = GetPEXByPersonId(person, insightContext);
 					}
 				}
 			}
