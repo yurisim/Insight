@@ -67,7 +67,7 @@
                     <StackPanel x:Name="propertiesGroup1" RelativePanel.Below="itemHero">
                         <StackPanel x:Name="statusGroup" Margin="{StaticResource SmallTopMargin}">
                             <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Squadron Readiness" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="95%" />
+                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="75%" />
                         </StackPanel>
 
                         <StackPanel x:Name="orderDateGroup" Margin="{StaticResource SmallTopMargin}">
@@ -94,10 +94,14 @@
                         <!--TODO WTS:
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
-                        <tg:DataGridTextColumn Header="Organization" PropertyName="Name" />
-                        <tg:DataGridTextColumn Header="Medical" PropertyName="Flight" />
-                        <tg:DataGridTextColumn Header="Training"  PropertyName="SSN" />
-                        <tg:DataGridTextColumn Header="Personnel" PropertyName="Medical.OverallStatus" />
+                        <tg:DataGridTextColumn Header="960" PropertyName="RowName"/>
+                        <tg:DataGridTextColumn Header="960 Total" PropertyName="ValueAll"/>
+                        <tg:DataGridTextColumn Header="A Flight" PropertyName="FlightA"/>
+                        <tg:DataGridTextColumn Header="B Flight" PropertyName="FlightB"/>
+                        <tg:DataGridTextColumn Header="C Flight" PropertyName="FlightC"/>
+                        <tg:DataGridTextColumn Header="D Flight" PropertyName="FlightD"/>
+                        <tg:DataGridTextColumn Header="E Flight" PropertyName="FlightE"/>
+                        <tg:DataGridTextColumn Header="F Flight" PropertyName="FlightF"/>
                         <!--<tg:DataGridTemplateColumn Header="Symbol">
                         <tg:DataGridTemplateColumn.CellContentTemplate>
                             <DataTemplate x:DataType="model:SampleOrder">
