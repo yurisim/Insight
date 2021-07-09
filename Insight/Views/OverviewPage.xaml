@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Insight.Core.Models"
     xmlns:helpers="using:Insight.Helpers"
+        xmlns:views="using:Insight.Views"
+
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
@@ -30,27 +32,28 @@
             DesiredWidth="180"
             ItemHeight="160"
             IsItemClickEnabled="True"
-            ItemClickCommand="{x:Bind ViewModel.ItemClickCommand}"
-            ItemsSource="{x:Bind ViewModel.Source,Mode=OneWay}"
             SelectionMode="None"
             StretchContentForSingleRow="False">
-            <controls:AdaptiveGridView.ItemTemplate>
-                <DataTemplate x:DataType="models:SampleOrder">
-                    <Grid
-                        x:Name="itemThumbnail"
+            <!--<controls:AdaptiveGridView.ItemTemplate>
+                <DataTemplate x:DataType="models:SampleOrder">-->
+            <Grid x:Name="itemThumbnail"
                         Padding="{StaticResource XSmallLeftTopRightBottomMargin}"
                         Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <FontIcon Glyph="{x:Bind Symbol}" />
-                            <TextBlock
-                                Margin="{StaticResource XXSmallTopMargin}"
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" PointerPressed="StackPanel_PointerPressed">
+                    <SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <SymbolIcon.RenderTransform>
+                            <CompositeTransform ScaleX="2" ScaleY="2"/>
+                        </SymbolIcon.RenderTransform>
+                    </SymbolIcon>
+
+                    <TextBlock Margin="{StaticResource XXSmallTopMargin}"
                                 HorizontalAlignment="Center"
-                                Style="{ThemeResource BodyTextStyle}"
-                                Text="{x:Bind Organization}" />
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </controls:AdaptiveGridView.ItemTemplate>
+                                Text="960 AACS"
+                                Style="{ThemeResource BodyTextStyle}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+            <!--</DataTemplate>
+            </controls:AdaptiveGridView.ItemTemplate>-->
         </controls:AdaptiveGridView>
     </StackPanel>
 </Page>

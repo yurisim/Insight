@@ -21,10 +21,7 @@ namespace Insight.Views
         {
             base.OnNavigatedTo(e);
             this.RegisterElementForConnectedAnimation("animationKeyOverview", itemHero);
-            if (e.Parameter is long orderID)
-            {
-                await ViewModel.InitializeAsync(orderID);
-            }
+                await ViewModel.LoadDataAsync();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
