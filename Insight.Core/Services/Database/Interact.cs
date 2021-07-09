@@ -12,22 +12,15 @@ namespace Insight.Core.Services.Database
 {
 	public static class Interact
 	{
+		/// <summary>
+		/// Ensures database has been created.
+		/// </summary>
 		public static void EnsureDatabase()
 		{
 			using (InsightContext insightContext = new InsightContext())
 			{
 				//Ensure database is created
 				_ = insightContext.Database.EnsureCreated();
-			}
-		}
-
-		public static async void AddPerson(Person person)
-		{
-			using (InsightContext insightContext = new InsightContext())
-			{
-				_ = insightContext.Persons.Add(person);
-
-				_ = await insightContext.SaveChangesAsync();
 			}
 		}
 
@@ -61,6 +54,11 @@ namespace Insight.Core.Services.Database
 			return persons;
 		}
 
+		/// <summary>
+		/// Get all persons that are apart of the given org
+		/// </summary>
+		/// <param name="org"></param>
+		/// <returns></returns>
 		public static async Task<List<Person>> GetAllPersons(Org org)
 		{
 			List<Person> persons;
@@ -80,6 +78,7 @@ namespace Insight.Core.Services.Database
 			return persons;
 		}
 
+		#region GetPersonByProperty
 		/// <summary>
 		/// Returns person that matches First/Last name or null if none exist
 		/// </summary>
@@ -171,7 +170,6 @@ namespace Insight.Core.Services.Database
 						foundPerson.Training = GetTrainingByPersonId(foundPerson, insightContext);
 					}
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception e)
@@ -213,7 +211,6 @@ namespace Insight.Core.Services.Database
 						person.Training = GetTrainingByPersonId(person, insightContext);
 					}
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception)
@@ -223,7 +220,34 @@ namespace Insight.Core.Services.Database
 			//returns person or null if none exist
 			return persons.FirstOrDefault();
 		}
+		#endregion
 
+		/// <summary>
+		/// Add entity to database
+		/// </summary>
+		/// <param name="person"></param>
+		public static async void Add<T>(T t)
+		{
+			try
+			{
+				using (InsightContext insightContext = new InsightContext())
+				{
+					_ = insightContext.Add(t);
+					_ = await insightContext.SaveChangesAsync();
+				}
+			}
+			//TODO implement exception
+			catch (Exception)
+			{
+				throw new Exception("Insight.db access error");
+			}
+		}
+
+		/// <summary>
+		/// Update entity in database
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t"></param>
 		public static async void Update<T>(T t)
 		{
 			try
@@ -233,7 +257,6 @@ namespace Insight.Core.Services.Database
 					_ = insightContext.Update(t);
 					_ = await insightContext.SaveChangesAsync();
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception)
@@ -243,27 +266,49 @@ namespace Insight.Core.Services.Database
 		}
 
 		#region GetEntityByPersonID
+		/// <summary>
+		/// Gets Medical object associated with given Person
+		/// </summary>
+		/// <param name="person"></param>
+		/// <param name="insightContext"></param>
+		/// <returns></returns>
 		private static Medical GetMedicalByPersonId(Person person, InsightContext insightContext)
 		{
-			return insightContext?.Medicals.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
-
+			return (insightContext?.Medicals).FirstOrDefault(x => x.PersonId == person.PersonId);
 		}
 
+		/// <summary>
+		/// Gets Training object associated with given Person
+		/// </summary>
+		/// <param name="person"></param>
+		/// <param name="insightContext"></param>
+		/// <returns></returns>
 		private static Training GetTrainingByPersonId(Person person, InsightContext insightContext)
 		{
-			return insightContext?.Trainings.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+			return (insightContext?.Trainings).FirstOrDefault(x => x.PersonId == person.PersonId);
 		}
 
+		/// <summary>
+		/// Gets Personnel object associated with given Person
+		/// </summary>
+		/// <param name="person"></param>
+		/// <param name="insightContext"></param>
+		/// <returns></returns>
 		private static Personnel GetPersonnelByPersonId(Person person, InsightContext insightContext)
 		{
-			return insightContext?.Personnels.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+			return (insightContext?.Personnels).FirstOrDefault(x => x.PersonId == person.PersonId);
 		}
 
+		/// <summary>
+		/// Gets PEX object associated with given Person
+		/// </summary>
+		/// <param name="person"></param>
+		/// <param name="insightContext"></param>
+		/// <returns></returns>
 		private static PEX GetPEXByPersonId(Person person, InsightContext insightContext)
 		{
-			return insightContext?.PEXs.Where(x => x.Id == person.PEX.Id).FirstOrDefault();
+			return (insightContext?.PEXs).FirstOrDefault(x => x.Id == person.PEX.Id);
 		}
-
 		#endregion
 	}
 }

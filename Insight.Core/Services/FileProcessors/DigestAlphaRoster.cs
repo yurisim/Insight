@@ -68,7 +68,7 @@ namespace Insight.Core.Services.FileProcessors
             person.Phone = digestedLines[43];
             person.DateOnStation = digestedLines[17];
 
-            Interact.AddPerson(person);
+            Interact.Add(person);
           }
         }
     }
