@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Insight.Core.Services
 {
-   public interface IDigest
-   {
-      void DigestLines();
-   }
+	public interface IDigest
+	{
+		void DigestLines();
+	}
 }

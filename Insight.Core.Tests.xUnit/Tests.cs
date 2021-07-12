@@ -4,42 +4,42 @@ using Xunit;
 
 namespace Insight.Core.Tests.XUnit
 {
-   // TODO WTS: Add appropriate unit tests.
-   public class Tests
-   {
-      [Fact]
-      public void Test1()
-      {
-      }
+	// TODO WTS: Add appropriate unit tests.
+	public class Tests
+	{
+		[Fact]
+		public void Test1()
+		{
+		}
 
-      // Remove or update this once your app is using real data and not the SampleDataService.
-      // This test serves only as a demonstration of testing functionality in the Core library.
-      [Fact]
-      public async Task EnsureSampleDataServiceReturnsContentGridDataAsync()
-      {
-         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetContentGridDataAsync();
+		// Remove or update this once your app is using real data and not the SampleDataService.
+		// This test serves only as a demonstration of testing functionality in the Core library.
+		[Fact]
+		public async Task EnsureSampleDataServiceReturnsContentGridDataAsync()
+		{
+			System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetContentGridDataAsync();
 
-         Assert.NotEmpty(actual);
-      }
+			Assert.NotEmpty(actual);
+		}
 
-      // Remove or update this once your app is using real data and not the SampleDataService.
-      // This test serves only as a demonstration of testing functionality in the Core library.
-      [Fact]
-      public async Task EnsureSampleDataServiceReturnsGridDataAsync()
-      {
-         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetGridDataAsync();
+		// Remove or update this once your app is using real data and not the SampleDataService.
+		// This test serves only as a demonstration of testing functionality in the Core library.
+		[Fact]
+		public async Task EnsureSampleDataServiceReturnsGridDataAsync()
+		{
+			System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetGridDataAsync();
 
-         Assert.NotEmpty(actual);
-      }
+			Assert.NotEmpty(actual);
+		}
 
-      // Remove or update this once your app is using real data and not the SampleDataService.
-      // This test serves only as a demonstration of testing functionality in the Core library.
-      [Fact]
-      public async Task EnsureSampleDataServiceReturnsListDetailDataAsync()
-      {
-         System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetListDetailDataAsync();
+		// Remove or update this once your app is using real data and not the SampleDataService.
+		// This test serves only as a demonstration of testing functionality in the Core library.
+		[Fact]
+		public async Task EnsureSampleDataServiceReturnsListDetailDataAsync()
+		{
+			System.Collections.Generic.IEnumerable<Models.SampleOrder> actual = await SampleDataService.GetListDetailDataAsync();
 
-         Assert.NotEmpty(actual);
-      }
-   }
+			Assert.NotEmpty(actual);
+		}
+	}
 }
