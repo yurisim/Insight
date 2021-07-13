@@ -6,11 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Insight.Core.Models
 {
-  public class Training
-  {
-    [Key, ForeignKey("Person"), Required]
-    public int PersonId { get; set; }
+	public class Training
+	{
+		[Key, ForeignKey("Person"), Required]
+		public int PersonId { get; set; }
 
-    public Status OverallStatus { get; set; }
-  }
+		public Status OverallStatus { get; set; }
+	}
 }

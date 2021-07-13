@@ -8,71 +8,71 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Insight.Tests.XUnit
 {
-   public sealed partial class App : Application
-   {
-      public App()
-      {
-         InitializeComponent();
-         Suspending += OnSuspending;
-      }
+	public sealed partial class App : Application
+	{
+		public App()
+		{
+			InitializeComponent();
+			Suspending += OnSuspending;
+		}
 
-      protected override void OnLaunched(LaunchActivatedEventArgs e)
-      {
+		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		{
 #if DEBUG
-         if (System.Diagnostics.Debugger.IsAttached)
-         {
-            DebugSettings.EnableFrameRateCounter = true;
-         }
+			if (System.Diagnostics.Debugger.IsAttached)
+			{
+				DebugSettings.EnableFrameRateCounter = true;
+			}
 #endif
 
-         Frame rootFrame = Window.Current.Content as Frame;
+			Frame rootFrame = Window.Current.Content as Frame;
 
-         // Do not repeat app initialization when the Window already has content,
-         // just ensure that the window is active
-         if (rootFrame == null)
-         {
-            // Create a Frame to act as the navigation context and navigate to the first page
-            rootFrame = new Frame();
+			// Do not repeat app initialization when the Window already has content,
+			// just ensure that the window is active
+			if (rootFrame == null)
+			{
+				// Create a Frame to act as the navigation context and navigate to the first page
+				rootFrame = new Frame();
 
-            rootFrame.NavigationFailed += OnNavigationFailed;
+				rootFrame.NavigationFailed += OnNavigationFailed;
 
-            if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-            {
-               // In a regular app, this is where you would
-               // Load state from previously suspended application
-               // But this should not be necessary in a test app
-            }
+				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+				{
+					// In a regular app, this is where you would
+					// Load state from previously suspended application
+					// But this should not be necessary in a test app
+				}
 
-            // Place the frame in the current Window
-            Window.Current.Content = rootFrame;
-         }
+				// Place the frame in the current Window
+				Window.Current.Content = rootFrame;
+			}
 
-         Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
+			Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
 
-         // Ensure the current window is active
-         Window.Current.Activate();
+			// Ensure the current window is active
+			Window.Current.Activate();
 
-         Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(e.Arguments);
-      }
+			Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(e.Arguments);
+		}
 
-      private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-      {
-         throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-      }
+		private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+		{
+			throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+		}
 
-      private void OnSuspending(object sender, SuspendingEventArgs e)
-      {
-         SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
+		private void OnSuspending(object sender, SuspendingEventArgs e)
+		{
+			SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
 
-         // In a regular app, this is where you would
-         // Save application state and stop any background activity
-         // But this should not be necessary in a test app
-         deferral.Complete();
-      }
-   }
+			// In a regular app, this is where you would
+			// Save application state and stop any background activity
+			// But this should not be necessary in a test app
+			deferral.Complete();
+		}
+	}
 
-   // This type is defined to force the compiler to add the necessary references and allows tests to run
-   public class WinUiReference : Windows.UI.Xaml.Controls.Button
-   {
-   }
+	// This type is defined to force the compiler to add the necessary references and allows tests to run
+	public class WinUiReference : Windows.UI.Xaml.Controls.Button
+	{
+	}
 }
