@@ -52,7 +52,12 @@ namespace Insight.Views
                         var digestPEX = new DigestPEX(filesLines);
                         digestPEX.DigestLines();
                         break;
-                    default:
+					case "ETMS":
+						Debug.WriteLine(FileType);
+						var digestETMS = new DigestPEX(filesLines);
+						digestETMS.DigestLines();
+						break;
+					default:
                         Debug.WriteLine("OOPS");
                         break;
                 }
