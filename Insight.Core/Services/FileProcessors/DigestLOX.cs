@@ -20,6 +20,7 @@ namespace Insight.Core.Services.FileProcessors
 		int RankIndex;
 		int FlightIndex;
 
+
 		bool HeadersProcessed = false;
 
 		public DigestLOX(IList<string> input)
@@ -42,26 +43,32 @@ namespace Insight.Core.Services.FileProcessors
 			//Assumptions about the data:
 			//Any person with "E-3G(II)" (opposed to "E-3G") can be disregarded.
 
-			for (int i = 5; i < input.Count; i++)
+			string Squadon;
+
+			for (int i = 0; i < input.Count; i++)
 			{
 				List<string> data = new List<string>(input[i].Split(','));
 				int offset = 1; //this offset is to account for the comma in the Name field
 				if (!HeadersProcessed)
 				{
-					//if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-					//&& !input[i].Contains("(Controlled with Standard Dissemination)")
-					//&& !input[i].Contains("Letter of Certifications")
-					//&& !input[i].Contains("Squadron: ")
-					//&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
-					//{
-					//	continue;
-					//}
+					Regex regexSquadron = new Regex(@"^Squadron: (.+?),");
+					if (regexSquadron.IsMatch(input[i]))
+					{
+						Squadon = regexSquadron.Match(input[i]).Groups[1].Value;
+					}
+
+					if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+					&& !input[i].Contains("(Controlled with Standard Dissemination)")
+					&& !input[i].Contains("Letter of Certifications")
+					&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
+					{
 						//TODO handle column mising
 						NameIndex = data.IndexOf("Name");
 						MDSndex = data.IndexOf("MDS");
 						RankIndex = data.IndexOf("Rank");
 						FlightIndex = data.IndexOf("Flight");
 						HeadersProcessed = true;
+					}
 				}
 				else if (new Regex("^,+$").IsMatch(input[i]))
 				{
