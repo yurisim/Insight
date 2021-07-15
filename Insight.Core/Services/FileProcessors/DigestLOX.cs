@@ -58,9 +58,9 @@ namespace Insight.Core.Services.FileProcessors
 					}
 
 					if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-					&& !input[i].Contains("(Controlled with Standard Dissemination)")
-					&& !input[i].Contains("Letter of Certifications")
-					&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
+						&& !input[i].Contains("(Controlled with Standard Dissemination)")
+						&& !input[i].Contains("Letter of Certifications")
+						&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
 					{
 						//TODO handle column mising
 						NameIndex = data.IndexOf("Name");
@@ -83,17 +83,30 @@ namespace Insight.Core.Services.FileProcessors
 					string Rank = data[RankIndex + offset].Trim();
 					string Flight = data[FlightIndex + offset].Trim();
 
+					//skips people who have a MDS of "E-3G(II)"
 					if (MDS == "E-3G(II)")
 					{
 						break;
 					}
 					var person = Interact.GetPersonByName(FirstName, LastName);
 
-					if (person != null)
+					//This will assume if person is null at this point that a new one needs to be created.
+					if (person == null)
 					{
-
+						person = new Person()
+						{
+							FirstName = FirstName,
+							LastName = LastName,
+						};
+						Interact.Add(person);
 					}
-
+					else
+					{
+						person.Flight = Flight;
+						//person.Organization = ;
+						//person.Rank = ;
+					}
+					Interact.Update(person);
 				}
 			}
 		}
