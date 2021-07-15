@@ -25,6 +25,8 @@ namespace Insight.Core.Services
 
 		public DbSet<Org> Orgs { get; set; }
 
+		public DbSet<OrgAlias> OrgAliases { get; set; }
+
 		public DbSet<Person> Persons { get; set; }
 
 		public DbSet<PEX> PEXs { get; set; }
@@ -35,7 +37,7 @@ namespace Insight.Core.Services
 		///
 		/// </summary>
 		private const string DBName = "Insight.db";
-
+		
 		/// <summary>
 		///
 		/// </summary>
@@ -57,6 +59,7 @@ namespace Insight.Core.Services
 			modelBuilder.Entity<Training>().ToTable("Trainings");
 			modelBuilder.Entity<Personnel>().ToTable("Personnels");
 			modelBuilder.Entity<Org>().ToTable("Orgs");
+			modelBuilder.Entity<OrgAlias>().ToTable("OrgAliases");
 			modelBuilder.Entity<Person>().ToTable("Persons");
 			modelBuilder.Entity<PEX>().ToTable("PEXs");
 			modelBuilder.Entity<TBA>().ToTable("TBAs");
@@ -90,9 +93,13 @@ namespace Insight.Core.Services
 			//    .Property(entity => entity.Id)
 			//    .ValueGeneratedOnAdd();
 
-			modelBuilder.Entity<Org>()
-				.Property(entity => entity.Id)
-				.ValueGeneratedOnAdd();
+			//modelBuilder.Entity<Org>()
+			//	.Property(entity => entity.Id)
+			//	.ValueGeneratedOnAdd();
+
+			//modelBuilder.Entity<OrgAlias>()
+			//	.Property(entity => entity.Id)
+			//	.ValueGeneratedOnAdd();
 
 			modelBuilder.Entity<PEX>()
 				.Property(entity => entity.Id)

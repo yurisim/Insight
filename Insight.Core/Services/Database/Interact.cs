@@ -78,6 +78,65 @@ namespace Insight.Core.Services.Database
 			return persons;
 		}
 
+		/// <summary>
+		/// Returns all OrgAlias objects from database
+		/// </summary>
+		/// <returns></returns>
+		public static async Task<List<OrgAlias>> GetAllOrgAliases()
+		{
+			List<OrgAlias> orgAliases;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext())
+				{
+					orgAliases = await insightContext.OrgAliases.Select(x => x)?.ToListAsync();
+
+				}
+			}
+			catch (Exception)
+			{
+				throw new Exception("Insight.db access error");
+			}
+
+			return orgAliases;
+		}
+
+		/// <summary>
+		/// Returns OrgAlias that matches name
+		/// </summary>
+		/// <param alias="alias"></param>
+		/// <returns></returns>
+		public static Org GetOrgByAlias(string alias)
+		{
+			List<Org> orgs = new List<Org>();
+
+			Org org = null;
+			try
+			{
+				using (InsightContext insightContext = new InsightContext())
+				{
+					orgs = insightContext.OrgAliases
+						.Where(x => x.Name.ToLower() == alias.ToLower())?
+						.Select(x => x.Org).ToList();
+					//TODO implement exception
+					if (orgs.Count > 1)
+					{
+						throw new Exception("Too many Aliases found, count should not be greater than 1");
+					}
+					org = orgs.FirstOrDefault();
+				}
+
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				throw new Exception("Insight.db access error");
+			}
+			//returns org or null if none exist
+			return org;
+		}
+
 		#region GetPersonByProperty
 		/// <summary>
 		/// Returns person that matches First/Last name or null if none exist
