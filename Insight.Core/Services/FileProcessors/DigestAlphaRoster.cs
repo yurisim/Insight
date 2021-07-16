@@ -37,7 +37,7 @@ namespace Insight.Core.Services.FileProcessors
 				string SSN = digestedLines[2].Replace("-", "");
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = Interact.GetPersonByNameSSN(FirstName, LastName, SSN);
+				var person = Interact.GetPersonByName(FirstName, LastName);
 
 				if (person == null)
 				{
@@ -46,13 +46,10 @@ namespace Insight.Core.Services.FileProcessors
 					{
 						LastName = LastName,
 						FirstName = FirstName,
-						Phone = digestedLines[43],
-						SSN = SSN,
-						DateOnStation = digestedLines[17],
-						Medical = new Medical(),
-						Training = new Training(),
-						Personnel = new Personnel(),
-						PEX = new PEX()
+						//Medical = new Medical(),
+						//Training = new Training(),
+						//Personnel = new Personnel(),
+						//PEX = new PEX()
 
 						// TODO get AFSC from alpha roster and create/use existing in database
 						//AFSC =
@@ -64,12 +61,13 @@ namespace Insight.Core.Services.FileProcessors
 					//Interact.AddPerson(person);
 					//Interact.AddMedical(person.Medical, person);
 				}
-
+				person.SSN = SSN;
+				person.DateOnStation = digestedLines[17];
 				person.Phone = digestedLines[43];
 				person.DateOnStation = digestedLines[17];
 
-            Interact.Add(person);
-          }
-        }
-    }
+				Interact.Add(person);
+			}
+		}
+	}
 }
