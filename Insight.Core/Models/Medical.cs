@@ -5,8 +5,8 @@ namespace Insight.Core.Models
 {
 	public class Medical
 	{
-		[Key, ForeignKey("Person"), Required]
-		public int PersonId { get; set; }
+		[Key, Required]
+		public int Id { get; set; }
 
 		public Status OverallStatus { get; set; }
 
