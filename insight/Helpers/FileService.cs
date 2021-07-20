@@ -6,6 +6,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
+using System.Collections.Generic;
 
 namespace Insight.Helpers
 {
@@ -37,15 +38,19 @@ namespace Insight.Helpers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static string RememberFile(StorageFile file)
+        public static List<string> RememberFiles(StorageFile[] files)
         {
-            // Generates a unique token ID
-            var token = Guid.NewGuid().ToString();
+			var tokenStrings = new List<string>();
 
-            // Adds to future access list
-            StorageApplicationPermissions.MostRecentlyUsedList.AddOrReplace(token, file);
+			foreach (var file in files)
+			{
+				var token = Guid.NewGuid().ToString();
+				tokenStrings.Add(token);
 
-            return token;
+				StorageApplicationPermissions.MostRecentlyUsedList.AddOrReplace(token, file);
+			}
+
+            return tokenStrings;
         }
 
         /// <summary>
@@ -53,7 +58,7 @@ namespace Insight.Helpers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<StorageFile> GetFileForToken(string token)
+        public static async Task<StorageFile> GetFilesForToken(string token)
         {
             return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token);
         }
