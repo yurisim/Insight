@@ -94,14 +94,10 @@
                         <!--TODO WTS:
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
-                        <tg:DataGridTextColumn Header="960" PropertyName="RowName"/>
-                        <tg:DataGridTextColumn Header="960 Total" PropertyName="ValueAll"/>
-                        <tg:DataGridTextColumn Header="A Flight" PropertyName="FlightA"/>
-                        <tg:DataGridTextColumn Header="B Flight" PropertyName="FlightB"/>
-                        <tg:DataGridTextColumn Header="C Flight" PropertyName="FlightC"/>
-                        <tg:DataGridTextColumn Header="D Flight" PropertyName="FlightD"/>
-                        <tg:DataGridTextColumn Header="E Flight" PropertyName="FlightE"/>
-                        <tg:DataGridTextColumn Header="F Flight" PropertyName="FlightF"/>
+                        <tg:DataGridTextColumn Header="0960" PropertyName="RowName"/>
+                        <tg:DataGridTextColumn Header="Medical" PropertyName="ValueMed"/>
+                        <tg:DataGridTextColumn Header="Personnel" PropertyName="ValuePersonnel"/>
+                        <tg:DataGridTextColumn Header="Training" PropertyName="ValueTraining"/>
                         <!--<tg:DataGridTemplateColumn Header="Symbol">
                         <tg:DataGridTemplateColumn.CellContentTemplate>
                             <DataTemplate x:DataType="model:SampleOrder">
