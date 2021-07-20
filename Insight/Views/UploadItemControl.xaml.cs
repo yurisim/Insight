@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Insight.Views
 {
@@ -32,7 +33,7 @@ namespace Insight.Views
 
         private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            var filesLines = await GetFile();
+            var filesLines = await GetFiles();
             if (filesLines != null)
             {
                 switch (FileType)
@@ -69,7 +70,7 @@ namespace Insight.Views
             }
         }
 
-        private static async Task<IList<string>> GetFile()
+        private static async Task<IList<string>> GetFiles()
         {
             //TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
             var picker = new FileOpenPicker
@@ -80,13 +81,15 @@ namespace Insight.Views
 
             picker.FileTypeFilter.Add(".csv");
 
-            var file = await picker.PickSingleFileAsync();
+			// Allow user to pick multiple files
+            var file = await picker.PickMultipleFilesAsync();
 
             if (file != null)
             {
                 // Move file to Future Access List
-                string fileToken = FileService.RememberFile(file);
+                var fileToken = FileService.RememberFiles(file.ToArray());
 
+				// ----> Complete this tomorrow <----
                 var fileObject = await FileService.GetFileForToken(fileToken);
 
                 var fileLines = await FileIO.ReadLinesAsync(fileObject);

@@ -198,6 +198,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
 						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
+
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
@@ -219,7 +220,7 @@ namespace Insight.Core.Services.Database
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Add entity
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
@@ -233,6 +234,7 @@ namespace Insight.Core.Services.Database
 					_ = await insightContext.SaveChangesAsync();
 				}
 			}
+
 			//TODO implement exception
 			catch (Exception e)
 			{
