@@ -57,7 +57,7 @@ namespace Insight.Core.Services.FileProcessors
 						Squadon = regexSquadron.Match(input[i]).Groups[1].Value;
 					}
 
-					if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+					else if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
 						&& !input[i].Contains("(Controlled with Standard Dissemination)")
 						&& !input[i].Contains("Letter of Certifications")
 						&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
