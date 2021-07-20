@@ -57,6 +57,11 @@ namespace Insight.Views
 						var digestETMS = new DigestPEX(filesLines);
 						digestETMS.DigestLines();
 						break;
+					case "LoX":
+						Debug.WriteLine(FileType);
+						var digestLOX = new DigestLOX(filesLines);
+						digestLOX.DigestLines();
+						break;
 					default:
                         Debug.WriteLine("OOPS");
                         break;

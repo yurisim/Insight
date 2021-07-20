@@ -7,7 +7,7 @@ namespace Insight.Core.Models
 	public class Person
 	{
 		[Key, Required]
-		public int PersonId { get; set; }
+		public int Id { get; set; }
 
 		public string FirstName { get; set; }
 
