@@ -10,14 +10,28 @@ using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
-	public static class Interact
+	public class InsightController
 	{
+		private static DbContextOptions<InsightContext> _dbContextOptions;
+
+		public InsightController(DbContextOptions<InsightContext> dbContextOptions)
+		{
+			_dbContextOptions = dbContextOptions;
+		}
+
+		public InsightController()
+		{
+			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+			.UseSqlite("Filename={Insight.db}")
+			.Options;
+		}
+
 		/// <summary>
 		/// Ensures database has been created.
 		/// </summary>
-		public static void EnsureDatabase()
+		public void EnsureDatabase()
 		{
-			using (InsightContext insightContext = new InsightContext())
+			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 			{
 				//Ensure database is created
 				_ = insightContext.Database.EnsureCreated();
@@ -28,13 +42,13 @@ namespace Insight.Core.Services.Database
 		/// Returns all Person objects from database
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<List<Person>> GetAllPersons()
+		public async Task<List<Person>> GetAllPersons()
 		{
 			List<Person> persons;
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons
 						.Include(p => p.Medical)
@@ -63,7 +77,7 @@ namespace Insight.Core.Services.Database
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons.Where(x => x.Organization == org).Select(x => x).ToListAsync();
 				}
@@ -89,7 +103,7 @@ namespace Insight.Core.Services.Database
 			Person person;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = insightContext.Persons
 						.Include(p => p.Medical)
@@ -149,7 +163,7 @@ namespace Insight.Core.Services.Database
 			Person foundPerson = new Person();
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					var foundPeople = insightContext.Persons
 						.Include(p => p.Medical)
@@ -190,7 +204,7 @@ namespace Insight.Core.Services.Database
 			Person person;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = insightContext.Persons
 						.Include(p => p.Medical)
@@ -227,7 +241,7 @@ namespace Insight.Core.Services.Database
 		{
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					_ = insightContext.Add(t);
 					_ = await insightContext.SaveChangesAsync();
@@ -249,7 +263,7 @@ namespace Insight.Core.Services.Database
 		{
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					_ = insightContext.Update(t);
 					_ = await insightContext.SaveChangesAsync();

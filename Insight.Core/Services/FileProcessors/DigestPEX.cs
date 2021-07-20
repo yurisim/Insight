@@ -35,12 +35,12 @@ namespace Insight.Core.Services.FileProcessors
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
-				var foundPerson = Interact.GetPersonByShortName(shortName);
+				var foundPerson = InsightController.GetPersonByShortName(shortName);
 
 				// try to find the PEX Account
 				foundPerson.Flight = digestedLines[1];
 
-				Interact.Update(foundPerson);
+				InsightController.Update(foundPerson);
 
 			}
 		}

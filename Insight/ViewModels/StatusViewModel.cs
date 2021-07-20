@@ -11,6 +11,8 @@ namespace Insight.ViewModels
     {
         public ObservableCollection<Person> Source { get; } = new ObservableCollection<Person>();
 
+
+
         public StatusViewModel()
         {
         }
@@ -19,10 +21,12 @@ namespace Insight.ViewModels
         {
             Source.Clear();
 
-            // Replace this with your actual data
-            //var data = await SampleDataService.GetGridDataAsync();
+			// Replace this with your actual data
+			//var data = await SampleDataService.GetGridDataAsync();
 
-            var data = await Interact.GetAllPersons();
+			InsightController controller = new InsightController();
+
+			var data = await controller.GetAllPersons();
 
 
             foreach (var item in data)

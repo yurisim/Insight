@@ -37,7 +37,7 @@ namespace Insight.Core.Services.FileProcessors
 				string SSN = digestedLines[2].Replace("-", "");
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = Interact.GetPersonByName(FirstName, LastName);
+				var person = InsightController.GetPersonByName(FirstName, LastName);
 
 				if (person == null)
 				{
@@ -66,7 +66,7 @@ namespace Insight.Core.Services.FileProcessors
 				person.Phone = digestedLines[43];
 				person.DateOnStation = digestedLines[17];
 
-				Interact.Add(person);
+				InsightController.Add(person);
 			}
 		}
 	}
