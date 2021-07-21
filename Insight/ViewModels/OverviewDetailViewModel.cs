@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Insight.Core.Helpers;
 
 namespace Insight.ViewModels
 {
@@ -51,7 +52,7 @@ namespace Insight.ViewModels
                 }
             }
 
-            ReadyPercentages OverallPercentages = new ReadyPercentages("960", GetMedical(data), GetPersonnel(data), GetTraining(data));
+            ReadyPercentages OverallPercentages = new ReadyPercentages("960", DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
             Source.Add(OverallPercentages);
 
             foreach (var item in allFlightNames)
@@ -64,66 +65,11 @@ namespace Insight.ViewModels
 
         private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
         {
-            ReadyPercentages flightPercentages = new ReadyPercentages(flight, GetMedical(data), GetPersonnel(data), GetTraining(data));
+            ReadyPercentages flightPercentages = new ReadyPercentages(flight, DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
             return flightPercentages;
         }
 
-        private string GetMedical(List<Person> data)
-        {
-            string medicalPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal medicalPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
-                    {
-                        medicalPercentage++;
-                    }
-                }
-                medicalPercentage /= data.Count;
-                medicalPercentageOutput = string.Format("{0:P}", medicalPercentage);
-            }
-            return medicalPercentageOutput;
-        }
-
-        private string GetPersonnel(List<Person> data)
-        {
-            string personnelPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal personnelPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
-                    {
-                        personnelPercentage++;
-                    }
-                }
-                personnelPercentage /= data.Count;
-                personnelPercentageOutput = string.Format("{0:P}", personnelPercentage);
-            }
-            return personnelPercentageOutput;
-        }
-
-        private string GetTraining(List<Person> data)
-        {
-            string trainingPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal trainingPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
-                    {
-                        trainingPercentage++;
-                    }
-                }
-                trainingPercentage /= data.Count;
-                trainingPercentageOutput = string.Format("{0:P}", trainingPercentage);
-            }
-            return trainingPercentageOutput;
-        }
+        
 
         // Fix naming of this
         public struct ReadyPercentages
