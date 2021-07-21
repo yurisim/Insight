@@ -3,16 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Insight.Core.Models
 {
-   public class PEX
-   {
-      [Key]
-      public int Id { get; set; }
+	public class PEX
+	{
+		[Key]
+		public int Id { get; set; }
 
-      // Not sure, does each PEX account belong to an organization?
-      public Org Organization { get; set; }
+		// Not sure, does each PEX account belong to an organization?
+		public Org Organization { get; set; }
 
-      public string Name { get; set; }
+		public string Name { get; set; }
 
-      public ICollection<Person> Persons { get; set; }
-   }
+		public ICollection<Person> Persons { get; set; }
+	}
 }

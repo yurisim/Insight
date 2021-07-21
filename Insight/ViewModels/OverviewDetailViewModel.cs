@@ -19,8 +19,6 @@ namespace Insight.ViewModels
             set { SetProperty(ref _item, value); }
         }
 
-
-
         public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
 
         public OverviewDetailViewModel()
@@ -31,7 +29,8 @@ namespace Insight.ViewModels
         {
             Source.Clear();
 
-            var data = await Interact.GetAllPersons();
+			var insightController = new InsightController();
+			var data = await insightController.GetAllPersons();
 
             List<string> allFlightNames = new List<string>();
 

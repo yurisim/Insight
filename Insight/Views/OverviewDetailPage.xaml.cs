@@ -21,7 +21,7 @@ namespace Insight.Views
         {
             base.OnNavigatedTo(e);
             this.RegisterElementForConnectedAnimation("animationKeyOverview", itemHero);
-                await ViewModel.LoadDataAsync();
+            await ViewModel.LoadDataAsync();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
