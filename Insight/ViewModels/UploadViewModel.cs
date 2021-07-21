@@ -25,7 +25,7 @@ namespace Insight.ViewModels
 
         public UploadViewModel()
         {
-            
+
         }
 
         public async Task LoadDataAsync()

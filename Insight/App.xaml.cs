@@ -17,7 +17,10 @@ namespace Insight
 
         public App()
         {
-            Interact.EnsureDatabase();
+			var insightController = new InsightController();
+
+			insightController.EnsureDatabase();
+
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
 

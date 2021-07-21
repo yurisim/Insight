@@ -32,7 +32,7 @@ namespace Insight.Core.Services.FileProcessors
 				string unit = data[5];
 				string AFSC = data[7];
 
-				Person person = Interact.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
+				Person person = InsightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)
@@ -85,7 +85,7 @@ namespace Insight.Core.Services.FileProcessors
 					personnel.OverallStatus = StringManipulation.StatusReader(data[10]);
 				}
 
-				Interact.Update(person);
+				InsightController.Update(person);
 
 			}
 		}

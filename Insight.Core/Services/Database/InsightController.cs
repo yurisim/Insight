@@ -10,24 +10,31 @@ using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
-	public static class Interact
+	public class InsightController
 	{
-		public static void EnsureDatabase()
+		private static DbContextOptions<InsightContext> _dbContextOptions;
+
+		public InsightController(DbContextOptions<InsightContext> dbContextOptions)
 		{
-			using (InsightContext insightContext = new InsightContext())
+			_dbContextOptions = dbContextOptions;
+		}
+
+		public InsightController()
+		{
+			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+			.UseSqlite("Filename={Insight.db}")
+			.Options;
+		}
+
+		/// <summary>
+		/// Ensures database has been created.
+		/// </summary>
+		public void EnsureDatabase()
+		{
+			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 			{
 				//Ensure database is created
 				_ = insightContext.Database.EnsureCreated();
-			}
-		}
-
-		public static async void AddPerson(Person person)
-		{
-			using (InsightContext insightContext = new InsightContext())
-			{
-				_ = insightContext.Persons.Add(person);
-
-				_ = await insightContext.SaveChangesAsync();
 			}
 		}
 
@@ -35,22 +42,20 @@ namespace Insight.Core.Services.Database
 		/// Returns all Person objects from database
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<List<Person>> GetAllPersons()
+		public async Task<List<Person>> GetAllPersons()
 		{
 			List<Person> persons;
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = await insightContext.Persons.Select(x => x)?.ToListAsync();
-
-					foreach (Person person in persons)
-					{
-						person.Medical = GetMedicalByPersonId(person, insightContext);
-						person.Personnel = GetPersonnelByPersonId(person, insightContext);
-						person.Training = GetTrainingByPersonId(person, insightContext);
-					}
+					persons = await insightContext.Persons
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Select(x => x)?.ToListAsync();
 				}
 			}
 			catch (Exception)
@@ -61,13 +66,18 @@ namespace Insight.Core.Services.Database
 			return persons;
 		}
 
+		/// <summary>
+		/// Get all persons that are apart of the given org
+		/// </summary>
+		/// <param name="org"></param>
+		/// <returns></returns>
 		public static async Task<List<Person>> GetAllPersons(Org org)
 		{
 			List<Person> persons;
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons.Where(x => x.Organization == org).Select(x => x).ToListAsync();
 				}
@@ -80,6 +90,7 @@ namespace Insight.Core.Services.Database
 			return persons;
 		}
 
+		#region GetPersonByProperty
 		/// <summary>
 		/// Returns person that matches First/Last name or null if none exist
 		/// </summary>
@@ -89,35 +100,35 @@ namespace Insight.Core.Services.Database
 		public static Person GetPersonByName(string firstName, string lastName)
 		{
 			List<Person> persons = new List<Person>();
+			Person person;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower()).ToList();
+					persons = insightContext.Persons
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
+
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-
-					Person person = persons.FirstOrDefault();
-
-					if (person != null)
-					{
-						person.Medical = GetMedicalByPersonId(person, insightContext);
-						person.Personnel = GetPersonnelByPersonId(person, insightContext);
-						person.Training = GetTrainingByPersonId(person, insightContext);
-					}
+					
+					person = persons.FirstOrDefault();
 				}
 
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
 				throw new Exception("Insight.db access error");
 			}
 			//returns person or null if none exist
-			return persons.FirstOrDefault();
+			return person;
 		}
 
 		/// <summary>
@@ -152,9 +163,14 @@ namespace Insight.Core.Services.Database
 			Person foundPerson = new Person();
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundPeople = insightContext.Persons.Where(person => person.FirstName.Contains(firstLetters) && person.LastName == lastName);
+					var foundPeople = insightContext.Persons
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Where(person => person.FirstName.Contains(firstLetters) && person.LastName == lastName);
 
 					//TODO implement better exceptions
 					if (foundPeople.Count() > 1)
@@ -162,16 +178,8 @@ namespace Insight.Core.Services.Database
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
 
-					foundPerson = foundPeople.First();
-
-					if (foundPerson != null)
-					{
-						foundPerson.Medical = GetMedicalByPersonId(foundPerson, insightContext);
-						foundPerson.Personnel = GetPersonnelByPersonId(foundPerson, insightContext);
-						foundPerson.Training = GetTrainingByPersonId(foundPerson, insightContext);
-					}
+					foundPerson = foundPeople.FirstOrDefault();
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception e)
@@ -193,27 +201,26 @@ namespace Insight.Core.Services.Database
 		{
 			//TODO refactor to reuse code more and have better methods
 			List<Person> persons = new List<Person>();
+			Person person;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
+					persons = insightContext.Persons
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
 
-					Person person = persons.FirstOrDefault();
+					person = persons.FirstOrDefault();
 
-					if (person != null)
-					{
-						person.Medical = GetMedicalByPersonId(person, insightContext);
-						person.Personnel = GetPersonnelByPersonId(person, insightContext);
-						person.Training = GetTrainingByPersonId(person, insightContext);
-					}
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception)
@@ -221,19 +228,46 @@ namespace Insight.Core.Services.Database
 				throw new Exception("Insight.db access error");
 			}
 			//returns person or null if none exist
-			return persons.FirstOrDefault();
+			return person;
+		}
+		#endregion
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t"></param>
+		public static async void Add<T>(T t)
+		{
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					_ = insightContext.Add(t);
+					_ = await insightContext.SaveChangesAsync();
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				throw new Exception("Insight.db access error");
+			}
 		}
 
+		/// <summary>
+		/// Update entity in database
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t"></param>
 		public static async void Update<T>(T t)
 		{
 			try
 			{
-				using (InsightContext insightContext = new InsightContext())
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					_ = insightContext.Update(t);
 					_ = await insightContext.SaveChangesAsync();
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception)
@@ -241,29 +275,5 @@ namespace Insight.Core.Services.Database
 				throw new Exception("Insight.db access error");
 			}
 		}
-
-		#region GetEntityByPersonID
-		private static Medical GetMedicalByPersonId(Person person, InsightContext insightContext)
-		{
-			return insightContext?.Medicals.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
-
-		}
-
-		private static Training GetTrainingByPersonId(Person person, InsightContext insightContext)
-		{
-			return insightContext?.Trainings.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
-		}
-
-		private static Personnel GetPersonnelByPersonId(Person person, InsightContext insightContext)
-		{
-			return insightContext?.Personnels.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
-		}
-
-		private static PEX GetPEXByPersonId(Person person, InsightContext insightContext)
-		{
-			return insightContext?.PEXs.Where(x => x.Id == person.PEX.Id).FirstOrDefault();
-		}
-
-		#endregion
 	}
 }
