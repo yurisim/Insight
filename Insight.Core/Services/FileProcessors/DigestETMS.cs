@@ -22,13 +22,13 @@ namespace Insight.Core.Services.FileProcessors
 		public void DigestLines()
 		{
 
-			var person = Interact.GetPersonByName("", "");
+			var person = InsightController.GetPersonByName("", "");
 
 			if (person == null)
 			{
 			}
 
-			Interact.Add(person);
+			InsightController.Add(person);
 		}
 	}
 }

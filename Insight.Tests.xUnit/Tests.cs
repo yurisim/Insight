@@ -48,13 +48,13 @@ namespace Insight.Tests.XUnit
 			Assert.NotNull(vm);
 		}
 
-		// TODO WTS: Add tests for functionality you add to WebViewViewModel.
-		[Fact]
-		public void TestWebViewViewModelCreation()
-		{
-			// This test is trivial. Add your own tests for the logic you add to the ViewModel.
-			WebViewViewModel vm = new WebViewViewModel();
-			Assert.NotNull(vm);
-		}
+		//// TODO WTS: Add tests for functionality you add to WebViewViewModel.
+		//[Fact]
+		//public void TestWebViewViewModelCreation()
+		//{
+		//	// This test is trivial. Add your own tests for the logic you add to the ViewModel.
+		//	WebViewViewModel vm = new WebViewViewModel();
+		//	Assert.NotNull(vm);
+		//}
 	}
 }

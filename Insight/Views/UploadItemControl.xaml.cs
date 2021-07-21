@@ -70,10 +70,14 @@ namespace Insight.Views
             }
         }
 
-        private static async Task<IList<string>> GetFiles()
+        private static async Task<List<IList<string>>> GetFiles()
         {
-            //TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
-            var picker = new FileOpenPicker
+			// Represents the collection of files, with each element being their contents as an IList
+			// of strings
+			var fileCollection = new List<IList<string>>();
+
+			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
+			var picker = new FileOpenPicker
             {
                 ViewMode = PickerViewMode.Thumbnail,
                 SuggestedStartLocation = PickerLocationId.Downloads
@@ -82,30 +86,31 @@ namespace Insight.Views
             picker.FileTypeFilter.Add(".csv");
 
 			// Allow user to pick multiple files
-            var file = await picker.PickMultipleFilesAsync();
+            var files = await picker.PickMultipleFilesAsync();
 
-            if (file != null)
+            if (files != null)
             {
                 // Move file to Future Access List
-                var fileToken = FileService.RememberFiles(file.ToArray());
+                var fileTokens = FileService.RememberFiles(files.ToArray());
 
-				// ----> Complete this tomorrow <----
-                var fileObject = await FileService.GetFileForToken(fileToken);
+				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
+				foreach (var fileToken in fileTokens)
+				{
+					// get the file object
+					var fileObject = await FileService.GetFileFromToken(fileToken);
 
-                var fileLines = await FileIO.ReadLinesAsync(fileObject);
+					// get the lines from the file object
+					var fileLines = await FileIO.ReadLinesAsync(fileObject);
 
-                FileService.ForgetFile(fileToken);
+					// add to collection
+					fileCollection.Add(fileLines.ToList());
 
-                return fileLines;
+					// forget the file
+					FileService.ForgetFile(fileToken);
+				}
             }
-            else
-            {
-                Debug.WriteLine("File is null.");
 
-                return null;
-
-                //    this.textBlock.Text = "Operation cancelled.";
-            }
-        }
-    }
+			return fileCollection;
+		}
+	}
 }
