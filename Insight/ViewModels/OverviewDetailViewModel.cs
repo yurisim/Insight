@@ -19,8 +19,6 @@ namespace Insight.ViewModels
             set { SetProperty(ref _item, value); }
         }
 
-
-
         public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
 
         public OverviewDetailViewModel()
@@ -29,132 +27,118 @@ namespace Insight.ViewModels
 
         public async Task LoadDataAsync()
         {
-            //System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetContentGridDataAsync();
-            //Item = data.First(i => i.DoDID == orderID);
-
             Source.Clear();
 
-            var data = await Interact.GetAllPersons();
+			var insightController = new InsightController();
+			var data = await insightController.GetAllPersons();
 
-            List<Person> aFlight = new List<Person>();
-            List<Person> bFlight = new List<Person>();
-            List<Person> cFlight = new List<Person>();
-            List<Person> dFlight = new List<Person>();
-            List<Person> eFlight = new List<Person>();
-            List<Person> fFlight = new List<Person>();
+            List<string> allFlightNames = new List<string>();
 
-            //TODO: MAKE SWITCH
+            List<List<Person>> allFlights = new List<List<Person>>();
 
             foreach (var item in data)
             {
-                if (item.Flight?.ToUpper() == "A")
+                if (allFlightNames.Contains(item.Flight.ToUpper()))
                 {
-                    aFlight.Add(item);
+                    allFlights[allFlightNames.IndexOf(item.Flight.ToUpper())].Add(item);
                 }
-                else if (item.Flight?.ToUpper() == "B")
+                else
                 {
-                    bFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "C")
-                {
-                    cFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "D")
-                {
-                    dFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "E")
-                {
-                    eFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "F")
-                {
-                    fFlight.Add(item);
+                    allFlightNames.Add(item.Flight.ToUpper());
+                    List<Person> newFlight = new List<Person>();
+                    allFlights.Add(newFlight);
                 }
             }
 
-            ReadyPercentages medPercentages = new ReadyPercentages("Medical Overall", string.Format("{0:P}", GetMedical(data)), string.Format("{0:P}",
-                GetMedical(aFlight)), string.Format("{0:P}", GetMedical(bFlight)), string.Format("{0:P}", GetMedical(cFlight)), string.Format("{0:P}",
-                GetMedical(dFlight)), string.Format("{0:P}", GetMedical(eFlight)), string.Format("{0:P}", GetMedical(fFlight)));
-            Source.Add(medPercentages);
+            ReadyPercentages OverallPercentages = new ReadyPercentages("960", GetMedical(data), GetPersonnel(data), GetTraining(data));
+            Source.Add(OverallPercentages);
 
-            ReadyPercentages personnelPercentages = new ReadyPercentages("Personnel Overall", string.Format("{0:P}", GetPersonnel(data)), string.Format("{0:P}",
-                GetPersonnel(aFlight)), string.Format("{0:P}", GetPersonnel(bFlight)), string.Format("{0:P}", GetPersonnel(cFlight)), string.Format("{0:P}",
-                GetPersonnel(dFlight)), string.Format("{0:P}", GetPersonnel(eFlight)), string.Format("{0:P}", GetPersonnel(fFlight)));
-            Source.Add(personnelPercentages);
+            foreach (var item in allFlightNames)
+            {
+                Source.Add(FlightPercentageBuilder(item, allFlights[allFlightNames.IndexOf(item)]));
+            }
 
-            ReadyPercentages trainingPercentages = new ReadyPercentages("Training Overall", string.Format("{0:P}", GetTraining(data)), string.Format("{0:P}",
-                GetTraining(aFlight)), string.Format("{0:P}", GetTraining(bFlight)), string.Format("{0:P}", GetTraining(cFlight)), string.Format("{0:P}",
-                GetTraining(dFlight)), string.Format("{0:P}", GetTraining(eFlight)), string.Format("{0:P}", GetTraining(fFlight)));
-            Source.Add(trainingPercentages);
         }
 
-        private decimal GetMedical(List<Person> data)
-        {
-            decimal medicalPercentage = 0;
-            foreach (var item in data)
-            {
-                if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
-                {
-                    medicalPercentage++;
-                }
-            }
 
-            medicalPercentage /= data.Count;
-            return medicalPercentage;
+        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
+        {
+            ReadyPercentages flightPercentages = new ReadyPercentages(flight, GetMedical(data), GetPersonnel(data), GetTraining(data));
+            return flightPercentages;
         }
 
-        private decimal GetPersonnel(List<Person> data)
+        private string GetMedical(List<Person> data)
         {
-            decimal personnelPercentage = 0;
-            foreach (var item in data)
+            string medicalPercentageOutput = "Unknown";
+            if (data.Count != 0)
             {
-                if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
+                decimal medicalPercentage = 0;
+                foreach (var item in data)
                 {
-                    personnelPercentage++;
+                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    {
+                        medicalPercentage++;
+                    }
                 }
+                medicalPercentage /= data.Count;
+                medicalPercentageOutput = string.Format("{0:P}", medicalPercentage);
             }
-            personnelPercentage = personnelPercentage / data.Count;
-            return personnelPercentage;
+            return medicalPercentageOutput;
         }
 
-        private decimal GetTraining(List<Person> data)
+        private string GetPersonnel(List<Person> data)
         {
-            decimal trainingPercentage = 0;
-            foreach (var item in data)
+            string personnelPercentageOutput = "Unknown";
+            if (data.Count != 0)
             {
-                if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
+                decimal personnelPercentage = 0;
+                foreach (var item in data)
                 {
-                    trainingPercentage++;
+                    if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
+                    {
+                        personnelPercentage++;
+                    }
                 }
+                personnelPercentage /= data.Count;
+                personnelPercentageOutput = string.Format("{0:P}", personnelPercentage);
             }
-            trainingPercentage = trainingPercentage / data.Count;
-            return trainingPercentage;
+            return personnelPercentageOutput;
+        }
+
+        private string GetTraining(List<Person> data)
+        {
+            string trainingPercentageOutput = "Unknown";
+            if (data.Count != 0)
+            {
+                decimal trainingPercentage = 0;
+                foreach (var item in data)
+                {
+                    if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
+                    {
+                        trainingPercentage++;
+                    }
+                }
+                trainingPercentage /= data.Count;
+                trainingPercentageOutput = string.Format("{0:P}", trainingPercentage);
+            }
+            return trainingPercentageOutput;
         }
 
         // Fix naming of this
         public struct ReadyPercentages
         {
             public string RowName { get; }
-            public string ValueAll { get; }
-            public string FlightA { get; }
-            public string FlightB { get; }
-            public string FlightC { get; }
-            public string FlightD { get; }
-            public string FlightE { get; }
-            public string FlightF { get; }
+            public string ValueMed { get; }
+            public string ValuePersonnel { get; }
+            public string ValueTraining { get; }
 
 
-            public ReadyPercentages(string rowName, string value1, string valueA, string valueB, string valueC, string valueD, string valueE, string valueF)
+            public ReadyPercentages(string rowName, string valueMed, string valuePersonnel, string valueTraining)
             {
                 RowName = rowName;
-                ValueAll = value1;
-                FlightA = valueA;
-                FlightB = valueB;
-                FlightC = valueC;
-                FlightD = valueD;
-                FlightE = valueE;
-                FlightF = valueF;
+                ValueMed = valueMed;
+                ValuePersonnel = valuePersonnel;
+                ValueTraining = valueTraining;
             }
         }
     }

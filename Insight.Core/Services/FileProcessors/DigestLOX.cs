@@ -57,7 +57,7 @@ namespace Insight.Core.Services.FileProcessors
 						Squadon = regexSquadron.Match(input[i]).Groups[1].Value;
 					}
 
-					if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+					else if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
 						&& !input[i].Contains("(Controlled with Standard Dissemination)")
 						&& !input[i].Contains("Letter of Certifications")
 						&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
@@ -88,7 +88,7 @@ namespace Insight.Core.Services.FileProcessors
 					{
 						break;
 					}
-					var person = Interact.GetPersonByName(FirstName, LastName);
+					var person = InsightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -98,7 +98,7 @@ namespace Insight.Core.Services.FileProcessors
 							FirstName = FirstName,
 							LastName = LastName,
 						};
-						Interact.Add(person);
+						InsightController.Add(person);
 					}
 					else
 					{
@@ -106,7 +106,7 @@ namespace Insight.Core.Services.FileProcessors
 						//person.Organization = ;
 						//person.Rank = ;
 					}
-					Interact.Update(person);
+					InsightController.Update(person);
 				}
 			}
 		}
