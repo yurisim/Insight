@@ -8,7 +8,7 @@ using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services.FileProcessors
+namespace Insight.Core.Services.File
 {
 	public class DigestAlphaRoster : IDigest
 	{

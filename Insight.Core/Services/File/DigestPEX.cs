@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services.FileProcessors
+namespace Insight.Core.Services.File
 {
 	public class DigestPEX : IDigest
 	{

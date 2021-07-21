@@ -5,7 +5,7 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services.FileProcessors
+namespace Insight.Core.Services.File
 {
 	public class DigestAEF : IDigest
 	{

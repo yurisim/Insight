@@ -12,32 +12,12 @@ namespace Insight.Helpers
 {
     public static class FileService
     {
-        //public static void HandleFile(StorageFile file)
-        //{
-        //    string filePath = file.Path;
-
-        //    Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".") + 1));
-
-        //    switch (filePath.Substring(filePath.LastIndexOf(".")))
-        //    {
-        //        case ".xlsx":
-        //            break;
-
-        //        case ".xls":
-        //            ReadXLSX(filePath);
-        //            break;
-
-        //        default:
-        //            break;
-        //    }
-        //}
-
         /// <summary>
         /// This remembers the file that the user selects so that it can be accessed
         /// by the program. It returns a token so that it can be accessed at a later date. 
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <param name="files"></param>
+        /// <returns>A list of token strings corresponding to the files that were placed there</returns>
         public static List<string> RememberFiles(StorageFile[] files)
         {
 			var tokenStrings = new List<string>();
@@ -58,7 +38,7 @@ namespace Insight.Helpers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<StorageFile> GetFilesForToken(string token)
+        public static async Task<StorageFile> GetFileFromToken(string token)
         {
             return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token);
         }

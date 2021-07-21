@@ -4,7 +4,7 @@ using Insight.ViewModels;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Insight.Helpers;
-using Insight.Core.Services.FileProcessors;
+using Insight.Core.Services.File;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -70,11 +70,11 @@ namespace Insight.Views
             }
         }
 
-        private static async Task<List<IList<string>>> GetFiles()
+        private static async Task<List<List<string>>> GetFiles()
         {
 			// Represents the collection of files, with each element being their contents as an IList
 			// of strings
-			var fileCollection = new List<IList<string>>();
+			var fileCollection = new List<List<string>>();
 
 			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
 			var picker = new FileOpenPicker
