@@ -3,16 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services
 {
-	internal class InsightContext : DbContext
+	public class InsightContext : DbContext
 	{
-		/// <summary>
-		///
-		/// </summary>
+		public InsightContext(DbContextOptions<InsightContext> options) : base(options)
+		{
+		}
+
 		public DbSet<AFSC> AFSCs { get; set; }
 
-		/// <summary>
-		///
-		/// </summary>
 		public DbSet<Course> Courses { get; set; }
 
 		public DbSet<CourseInstance> CourseInstances { get; set; }
@@ -31,21 +29,16 @@ namespace Insight.Core.Services
 
 		public DbSet<TBA> TBAs { get; set; }
 
-		/// <summary>
-		///
-		/// </summary>
-		private const string DBName = "Insight.db";
+		///// <summary>
+		/////
+		///// </summary>
+		///// <param name="optionsBuilder"></param>
+		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		//{
+		//	optionsBuilder.UseSqlite($"Filename={DBName}");
 
-		/// <summary>
-		///
-		/// </summary>
-		/// <param name="optionsBuilder"></param>
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			optionsBuilder.UseSqlite($"Filename={DBName}");
-
-			base.OnConfiguring(optionsBuilder);
-		}
+		//	base.OnConfiguring(optionsBuilder);
+		//}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

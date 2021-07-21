@@ -88,7 +88,7 @@ namespace Insight.Core.Services.FileProcessors
 					{
 						break;
 					}
-					var person = Interact.GetPersonByName(FirstName, LastName);
+					var person = InsightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -98,7 +98,7 @@ namespace Insight.Core.Services.FileProcessors
 							FirstName = FirstName,
 							LastName = LastName,
 						};
-						Interact.Add(person);
+						InsightController.Add(person);
 					}
 					else
 					{
@@ -106,7 +106,7 @@ namespace Insight.Core.Services.FileProcessors
 						//person.Organization = ;
 						//person.Rank = ;
 					}
-					Interact.Update(person);
+					InsightController.Update(person);
 				}
 			}
 		}
