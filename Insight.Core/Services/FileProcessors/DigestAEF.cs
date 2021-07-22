@@ -60,7 +60,7 @@ namespace Insight.Core.Services.FileProcessors
 				{
 					Training training = new Training()
 					{
-						OverallStatus = StringManipulation.StatusReader(data[11])
+						OverallStatus = StringManipulation.StatusReader(data[12])
 					};
 					person.Training = training;
 				}
@@ -75,7 +75,7 @@ namespace Insight.Core.Services.FileProcessors
 				{
 					Personnel personnel = new Personnel()
 					{
-						OverallStatus = StringManipulation.StatusReader(data[11])
+						OverallStatus = StringManipulation.StatusReader(data[10])
 					};
 					person.Personnel = personnel;
 				}

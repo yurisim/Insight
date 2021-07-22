@@ -51,7 +51,7 @@ namespace Insight.ViewModels
                 }
             }
 
-            ReadyPercentages OverallPercentages = new ReadyPercentages("960", DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
+            ReadyPercentages OverallPercentages = new ReadyPercentages("960 Overall", DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
             Source.Add(OverallPercentages);
 
             foreach (var item in allFlightNames)
@@ -64,7 +64,7 @@ namespace Insight.ViewModels
 
         private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
         {
-            ReadyPercentages flightPercentages = new ReadyPercentages(flight, DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
+            ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
             return flightPercentages;
         }
 
@@ -73,18 +73,18 @@ namespace Insight.ViewModels
         // Fix naming of this
         public struct ReadyPercentages
         {
-            public string RowName { get; }
-            public string ValueMed { get; }
-            public string ValuePersonnel { get; }
-            public string ValueTraining { get; }
+            public string Organization { get; }
+            public string Medical { get; }
+            public string Personnel { get; }
+            public string Training { get; }
 
 
             public ReadyPercentages(string rowName, string valueMed, string valuePersonnel, string valueTraining)
             {
-                RowName = rowName;
-                ValueMed = valueMed;
-                ValuePersonnel = valuePersonnel;
-                ValueTraining = valueTraining;
+				Organization = rowName;
+				Medical = valueMed;
+				Personnel = valuePersonnel;
+				Training = valueTraining;
             }
         }
     }
