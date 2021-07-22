@@ -89,7 +89,7 @@ namespace Insight.Core.Services.FileProcessors
 						break;
 					}
 
-					Org org = Interact.GetOrgByAlias(Squadon);
+					Org org = InsightController.GetOrgByAlias(Squadon);
 					if(org == null)
 					{
 						//TODO ask user to define what org this is
@@ -110,10 +110,10 @@ namespace Insight.Core.Services.FileProcessors
 						};
 						orgNew.Aliases.Add(orgAlias);
 						orgNew.Aliases.Add(orgAlias2);
-						Interact.Add(orgNew);
+						InsightController.Add(orgNew);
 					}
 
-					var person = Interact.GetPersonByName(FirstName, LastName);
+					var person = InsightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -123,7 +123,7 @@ namespace Insight.Core.Services.FileProcessors
 							FirstName = FirstName,
 							LastName = LastName,
 						};
-						Interact.Add(person);
+						InsightController.Add(person);
 					}
 					else
 					{
@@ -131,7 +131,7 @@ namespace Insight.Core.Services.FileProcessors
 						person.Organization = org;
 						//person.Rank = ;
 					}
-					Interact.Update(person);
+					InsightController.Update(person);
 				}
 			}
 		}

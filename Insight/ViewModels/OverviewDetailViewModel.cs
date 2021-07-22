@@ -19,8 +19,6 @@ namespace Insight.ViewModels
             set { SetProperty(ref _item, value); }
         }
 
-
-
         public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
 
         public OverviewDetailViewModel()
@@ -34,7 +32,8 @@ namespace Insight.ViewModels
 
             Source.Clear();
 
-            var data = await Interact.GetAllPersons();
+			var insightController = new InsightController();
+			var data = await insightController.GetAllPersons();
 
             List<Person> aFlight = new List<Person>();
             List<Person> bFlight = new List<Person>();
@@ -73,63 +72,74 @@ namespace Insight.ViewModels
                 }
             }
 
-            ReadyPercentages medPercentages = new ReadyPercentages("Medical Overall", string.Format("{0:P}", GetMedical(data)), string.Format("{0:P}",
-                GetMedical(aFlight)), string.Format("{0:P}", GetMedical(bFlight)), string.Format("{0:P}", GetMedical(cFlight)), string.Format("{0:P}",
-                GetMedical(dFlight)), string.Format("{0:P}", GetMedical(eFlight)), string.Format("{0:P}", GetMedical(fFlight)));
+            ReadyPercentages medPercentages = new ReadyPercentages("Medical Overall", GetMedical(data), GetMedical(aFlight), GetMedical(bFlight), GetMedical(cFlight), GetMedical(dFlight),
+                GetMedical(eFlight), GetMedical(fFlight));
             Source.Add(medPercentages);
 
-            ReadyPercentages personnelPercentages = new ReadyPercentages("Personnel Overall", string.Format("{0:P}", GetPersonnel(data)), string.Format("{0:P}",
-                GetPersonnel(aFlight)), string.Format("{0:P}", GetPersonnel(bFlight)), string.Format("{0:P}", GetPersonnel(cFlight)), string.Format("{0:P}",
-                GetPersonnel(dFlight)), string.Format("{0:P}", GetPersonnel(eFlight)), string.Format("{0:P}", GetPersonnel(fFlight)));
+            ReadyPercentages personnelPercentages = new ReadyPercentages("Personnel Overall", GetPersonnel(data), GetPersonnel(aFlight), GetPersonnel(bFlight), GetPersonnel(cFlight),
+                GetPersonnel(dFlight), GetPersonnel(eFlight), GetPersonnel(fFlight));
             Source.Add(personnelPercentages);
 
-            ReadyPercentages trainingPercentages = new ReadyPercentages("Training Overall", string.Format("{0:P}", GetTraining(data)), string.Format("{0:P}",
-                GetTraining(aFlight)), string.Format("{0:P}", GetTraining(bFlight)), string.Format("{0:P}", GetTraining(cFlight)), string.Format("{0:P}",
-                GetTraining(dFlight)), string.Format("{0:P}", GetTraining(eFlight)), string.Format("{0:P}", GetTraining(fFlight)));
+            ReadyPercentages trainingPercentages = new ReadyPercentages("Training Overall", GetTraining(data), GetTraining(aFlight), GetTraining(bFlight), GetTraining(cFlight),
+                GetTraining(dFlight), GetTraining(eFlight), GetTraining(fFlight));
             Source.Add(trainingPercentages);
         }
 
-        private decimal GetMedical(List<Person> data)
+        private string GetMedical(List<Person> data)
         {
-            decimal medicalPercentage = 0;
-            foreach (var item in data)
+            string medicalPercentageOutput = "Unknown";
+            if (data.Count != 0)
             {
-                if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                decimal medicalPercentage = 0;
+                foreach (var item in data)
                 {
-                    medicalPercentage++;
+                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    {
+                        medicalPercentage++;
+                    }
                 }
+                medicalPercentage /= data.Count;
+                medicalPercentageOutput = string.Format("{0:P}", medicalPercentage);
             }
-
-            medicalPercentage /= data.Count;
-            return medicalPercentage;
+            return medicalPercentageOutput;
         }
 
-        private decimal GetPersonnel(List<Person> data)
+        private string GetPersonnel(List<Person> data)
         {
-            decimal personnelPercentage = 0;
-            foreach (var item in data)
+            string personnelPercentageOutput = "Unknown";
+            if (data.Count != 0)
             {
-                if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
+                decimal personnelPercentage = 0;
+                foreach (var item in data)
                 {
-                    personnelPercentage++;
+                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    {
+                        personnelPercentage++;
+                    }
                 }
+                personnelPercentage /= data.Count;
+                personnelPercentageOutput = string.Format("{0:P}", personnelPercentage);
             }
-            personnelPercentage = personnelPercentage / data.Count;
-            return personnelPercentage;
+            return personnelPercentageOutput;
         }
 
-        private decimal GetTraining(List<Person> data)
+        private string GetTraining(List<Person> data)
         {
-            decimal trainingPercentage = 0;
-            foreach (var item in data)
+            string trainingPercentageOutput = "Unknown";
+            if (data.Count != 0)
             {
-                if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
+                decimal trainingPercentage = 0;
+                foreach (var item in data)
                 {
-                    trainingPercentage++;
+                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    {
+                        trainingPercentage++;
+                    }
                 }
+                trainingPercentage /= data.Count;
+                trainingPercentageOutput = string.Format("{0:P}", trainingPercentage);
             }
-            trainingPercentage = trainingPercentage / data.Count;
-            return trainingPercentage;
+            return trainingPercentageOutput;
         }
 
         // Fix naming of this
