@@ -288,6 +288,31 @@ namespace Insight.Core.Services.Database
 		}
 
 		/// <summary>
+		/// Add entity
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t"></param>
+		public static async void Add<T, U, V>(T t, U u, V v)
+		{
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					insightContext.Attach(u);
+					insightContext.Attach(v);
+					_ = insightContext.Add(t);
+					_ = await insightContext.SaveChangesAsync();
+				}
+			}
+
+			//TODO implement exception
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
+			}
+		}
+
+		/// <summary>
 		/// Update entity in database
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
@@ -303,9 +328,9 @@ namespace Insight.Core.Services.Database
 				}
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
 		}
 	}

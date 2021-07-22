@@ -37,7 +37,7 @@ namespace Insight.Core.Services.File
 				}
 			}
 
-			FileContents =  inputToClean;
+			FileContents = inputToClean;
 			Debug.WriteLine("hahaha");
 		}
 
@@ -93,12 +93,16 @@ namespace Insight.Core.Services.File
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				InsightController.Add(courseInstance);
+				InsightController.Add(courseInstance, CourseType, foundPerson);
+
+				//courseInstance.Course = CourseType;
+				//courseInstance.Person = foundPerson;
+
+				InsightController.Update(courseInstance);
+
 
 			}
 		}
-
-
 
 	}
 }
