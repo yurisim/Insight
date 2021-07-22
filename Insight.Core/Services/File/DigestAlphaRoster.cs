@@ -22,7 +22,7 @@ namespace Insight.Core.Services.File
 		public void DigestLines()
 		{
 			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
+			if (!input[0].StartsWith(Resources.AlphaRosterExpected))
 			{
 				throw new NotImplementedException();
 			}

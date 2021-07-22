@@ -145,54 +145,6 @@
     <value>Organizations</value>
     <comment>Navigation view item name for Organizations</comment>
   </data>
-  <data name="WebView_FailedMessage.Text" xml:space="preserve">
-    <value>Page failed to load. Check connection and retry.</value>
-    <comment>Load failure message for WebView</comment>
-  </data>
-  <data name="WebView_Loading.Text" xml:space="preserve">
-    <value>Loading...</value>
-    <comment>Loading message for WebView</comment>
-  </data>
-  <data name="WebView_Retry.Content" xml:space="preserve">
-    <value>retry</value>
-    <comment>Retry button for WebView</comment>
-  </data>
-  <data name="WebView_BrowserBackButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Back</value>
-    <comment>WebView back button automation name property for WebView</comment>
-  </data>
-  <data name="WebView_BrowserBackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Back</value>
-    <comment>Back button automation tooltip property for WebView</comment>
-  </data>
-  <data name="WebView_BrowserForwardButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Forward</value>
-    <comment>Forward button automation name property for WebView</comment>
-  </data>
-  <data name="WebView_BrowserForwardButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Forward</value>
-    <comment>Forward button automation tooltip property for WebView</comment>
-  </data>
-  <data name="WebView_RefreshBrowserButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Refresh</value>
-    <comment>Refresh button automation name property for WebView</comment>
-  </data>
-  <data name="WebView_RefreshBrowserButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Refresh</value>
-    <comment>Refresh button automation tooltip property for WebView</comment>
-  </data>
-  <data name="WebView_OpenInBrowserButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Open in browser</value>
-    <comment>Open in browser button automation name property for WebView</comment>
-  </data>
-  <data name="WebView_OpenInBrowserButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Open in browser</value>
-    <comment>Open in browser button automation tooltip property for WebView</comment>
-  </data>
-  <data name="Shell_WebView.Content" xml:space="preserve">
-    <value>WebView</value>
-    <comment>Navigation view item name for WebView</comment>
-  </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
     <value>Choose Theme</value>
     <comment>Choose theme text for Settings</comment>

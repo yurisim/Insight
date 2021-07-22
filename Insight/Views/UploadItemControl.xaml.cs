@@ -33,41 +33,54 @@ namespace Insight.Views
 
         private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            var filesLines = await GetFiles();
-            if (filesLines != null)
+            var contentsOfFiles = await GetFiles();
+
+			Debug.WriteLine("FilesRead");
+
+            foreach (var linesOfFile in contentsOfFiles)
             {
-                switch (FileType)
-                {
-                    case "AEF":
-                        Debug.WriteLine(FileType);
-                        var digestAEF = new DigestAEF(filesLines);
-                        digestAEF.DigestLines();
-                        break;
-                    case "Alpha Roster":
-                        Debug.WriteLine(FileType);
-                        var digestAlpha = new DigestAlphaRoster(filesLines);
-                        digestAlpha.DigestLines();
-                        break;
-                    case "PEX":
-                        Debug.WriteLine(FileType);
-                        var digestPEX = new DigestPEX(filesLines);
-                        digestPEX.DigestLines();
-                        break;
-					case "ETMS":
-						Debug.WriteLine(FileType);
-						var digestETMS = new DigestPEX(filesLines);
-						digestETMS.DigestLines();
-						break;
-					case "LoX":
-						Debug.WriteLine(FileType);
-						var digestLOX = new DigestLOX(filesLines);
-						digestLOX.DigestLines();
-						break;
-					default:
-                        Debug.WriteLine("OOPS");
-                        break;
-                }
+                // Refactor this to be a static method
+                var detectMe = new Detector(linesOfFile);  // detect file type
+                var detectedFiletype = detectMe.DetectFileType();
+
+                var digestMe = new Digestor(fileType: detectedFiletype, fileContents: linesOfFile);
+                digestMe.Digest();
             }
+
+            // if (filesLines != null)
+            // {
+            //     switch (FileType)
+            //     {
+            //         case "AEF":
+            //             Debug.WriteLine(FileType);
+            //             var digestAEF = new DigestAEF(filesLines);
+            //             digestAEF.DigestLines();
+            //             break;
+            //         case "Alpha Roster":
+            //             Debug.WriteLine(FileType);
+            //             var digestAlpha = new DigestAlphaRoster(filesLines);
+            //             digestAlpha.DigestLines();
+            //             break;
+            //         case "PEX":
+            //             Debug.WriteLine(FileType);
+            //             var digestPEX = new DigestPEX(filesLines);
+            //             digestPEX.DigestLines();
+            //             break;
+			// 		case "ETMS":
+			// 			Debug.WriteLine(FileType);
+			// 			var digestETMS = new DigestPEX(filesLines);
+			// 			digestETMS.DigestLines();
+			// 			break;
+			// 		case "LoX":
+			// 			Debug.WriteLine(FileType);
+			// 			var digestLOX = new DigestLOX(filesLines);
+			// 			digestLOX.DigestLines();
+			// 			break;
+			// 		default:
+            //             Debug.WriteLine("OOPS");
+            //             break;
+            //     }
+            // }
         }
 
         private static async Task<List<List<string>>> GetFiles()

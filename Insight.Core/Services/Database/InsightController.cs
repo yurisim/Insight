@@ -22,7 +22,7 @@ namespace Insight.Core.Services.Database
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
-			.UseSqlite("Filename={Insight.db}")
+			.UseSqlite("Filename=Insight.db")
 			.Options;
 		}
 
@@ -123,7 +123,7 @@ namespace Insight.Core.Services.Database
 
 			}
 			//TODO implement exception
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw new Exception("Insight.db access error");
 			}
@@ -252,7 +252,7 @@ namespace Insight.Core.Services.Database
 			//TODO implement exception
 			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
 		}
 

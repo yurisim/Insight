@@ -17,7 +17,7 @@ namespace Insight.Core.Services.File
 		public void DigestLines()
 		{
 			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.PEXExpectedSchema))
+			if (!input[0].StartsWith(Resources.PEXExpected))
 			{
 				throw new NotImplementedException();
 			}
