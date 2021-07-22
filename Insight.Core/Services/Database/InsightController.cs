@@ -190,6 +190,37 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
+		public static Course GetCourseByName(string courseName)
+		{
+			// now try to find the course with the name
+			Course foundCourse = null;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
+
+					//TODO implement better exceptions
+					if (foundCourses.Count() > 1)
+					{
+						throw new Exception("Too many found, should be null or 1");
+					}
+
+					foundCourse = foundCourses.FirstOrDefault();
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				Debug.WriteLine(e);
+			}
+
+			//returns person or null if none exist
+			return foundCourse;
+		}
+
+
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>

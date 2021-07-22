@@ -9,6 +9,7 @@ namespace Insight.Core.Services.File
 	{
 		int Priority {  get; }
 
+
 		void DigestLines();
 
 	}

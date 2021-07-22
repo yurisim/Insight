@@ -18,9 +18,7 @@ namespace Insight.Core.Services.File
 				case FileType.AEF:
 					return new DigestAEF(fileContents);
 				case FileType.ETMS:
-					// TODO: Implement ETMS
-					// Instead of returning null, do try/catch and throw custom exception of digestor not implemented (or something similar)
-					return null;
+					return new DigestETMS(fileContents);
 				case FileType.LOX:
 					return new DigestLOX(fileContents);
 				default:

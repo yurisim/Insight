@@ -15,40 +15,85 @@ namespace Insight.Core.Services.File
 	{
 		int IDigest.Priority { get => 3; }
 
-		private readonly IList<string> FileContents = new List<string>();
+		private IList<string> FileContents;
+
+		public Course CourseType { get; set; }
 
 		public DigestETMS(IList<string> input)
 		{
-			this.input = CleanInput(input);
+			CleanInput(input);
 		}
 
-		private IList<string> CleanInput(IList<string> inputToClean)
+		private void CleanInput(IList<string> inputToClean)
 		{
-			foreach (var line in inputToClean)
+			for (var i = 0; i < inputToClean.Count; i++)
 			{
-				var splitLine = line.Split(',');
+				var splitLine = inputToClean[i].Split(',');
 
 				if (string.IsNullOrEmpty(splitLine[4]))
 				{
-					inputToClean.Remove(line);
+					inputToClean.Remove(inputToClean[i]);
+					i--;
 				}
 			}
 
-			return inputToClean;
+			FileContents =  inputToClean;
+			Debug.WriteLine("hahaha");
+		}
+
+		public void DetectETMSType()
+		{
+			// Use Distinct Column to get the file type in case the first row is blank
+			var courseName = FileContents[1].Split(',')[1];
+
+			var foundCourse = InsightController.GetCourseByName(courseName);
+
+			// If the course is not found, it will be null, so create the course
+			if (foundCourse == null)
+			{
+				var newCourse = new Course()
+				{
+					Name = courseName
+				};
+
+				InsightController.Add(newCourse);
+
+				CourseType = InsightController.GetCourseByName(newCourse.Name);
+			}
+			else
+			{
+				CourseType = foundCourse;
+			}
 		}
 
 		public void DigestLines()
 		{
-			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.AlphaRosterExpected))
-			{
-				throw new NotImplementedException();
-			}
+			DetectETMSType();
 
 			// We start at i = 1 so that we ignore the initial schema.
-			for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+			for (var lineIndex = 1; lineIndex < FileContents.Count; lineIndex++)
 			{
-				
+				var splitLine = FileContents[lineIndex].Split(',');
+				var squadron = splitLine[0];
+
+				var lastName = splitLine[2];
+				var firstName = splitLine[3];
+				var completionDate = splitLine[4];
+
+				// TODO: Exception if person is not found
+				var foundPerson = InsightController.GetPersonByName(firstName, lastName);
+
+				CourseInstance courseInstance = new CourseInstance()
+				{
+					Course = CourseType,
+					Person = foundPerson,
+					Completion = DateTime.Parse(completionDate),
+
+					// TODO: Make custom expiration by JSON object
+					//Expiration = DateTime.Parse(completionDate).AddYears(1)
+				};
+
+				InsightController.Add(courseInstance);
 
 			}
 		}

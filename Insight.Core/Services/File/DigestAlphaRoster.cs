@@ -12,8 +12,7 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAlphaRoster : IDigest
 	{
-
-		int IDigest.Priority { get => 1; }
+		int IDigest.Priority => 1;
 
 		private readonly IList<string> input = new List<string>();
 
