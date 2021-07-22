@@ -48,6 +48,8 @@ namespace Insight.Core.Services.File
 					Debug.WriteLine(FileType.AEF);
 					break;
 				case FileType.ETMS:
+					var digestETMS = new DigestETMS(FileContents);
+					digestETMS.DigestLines();
 					break;
 				case FileType.LOX:
 					var digestLOX = new DigestLOX(FileContents);

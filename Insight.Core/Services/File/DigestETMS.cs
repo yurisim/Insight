@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Insight.Core.Helpers;
 using Insight.Core.Models;
@@ -16,19 +17,41 @@ namespace Insight.Core.Services.File
 
 		public DigestETMS(IList<string> input)
 		{
-			this.input = input;
+			this.input = CleanInput(input);
+		}
+
+		private IList<string> CleanInput(IList<string> inputToClean)
+		{
+			foreach (var line in inputToClean)
+			{
+				var splitLine = line.Split(',');
+
+				if (string.IsNullOrEmpty(splitLine[4]))
+				{
+					inputToClean.Remove(line);
+				}
+			}
+
+			return inputToClean;
 		}
 
 		public void DigestLines()
 		{
-
-			var person = InsightController.GetPersonByName("", "");
-
-			if (person == null)
+			// TODO dialog exception for schema differences
+			if (!input[0].StartsWith(Resources.AlphaRosterExpected))
 			{
+				throw new NotImplementedException();
 			}
 
-			InsightController.Add(person);
+			// We start at i = 1 so that we ignore the initial schema.
+			for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+			{
+				
+
+			}
 		}
+
+
+
 	}
 }

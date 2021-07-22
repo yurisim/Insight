@@ -7,5 +7,6 @@ namespace Insight.Core.Services.File
 	public interface IDigest
 	{
 		void DigestLines();
+
 	}
 }
