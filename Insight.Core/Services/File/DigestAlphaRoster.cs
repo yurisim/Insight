@@ -12,6 +12,9 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAlphaRoster : IDigest
 	{
+
+		int IDigest.Priority { get => 1; }
+
 		private readonly IList<string> input = new List<string>();
 
 		public DigestAlphaRoster(IList<string> input)
@@ -58,7 +61,7 @@ namespace Insight.Core.Services.File
 						//Organization =
 					};
 
-					//Interact.AddPerson(person);
+					InsightController.Add(person);
 					//Interact.AddMedical(person.Medical, person);
 				}
 				person.SSN = SSN;
@@ -66,7 +69,7 @@ namespace Insight.Core.Services.File
 				person.Phone = digestedLines[43];
 				person.DateOnStation = digestedLines[17];
 
-				InsightController.Add(person);
+				InsightController.Update(person);
 			}
 		}
 	}

@@ -13,7 +13,9 @@ namespace Insight.Core.Services.File
 {
 	public class DigestETMS : IDigest
 	{
-		private readonly IList<string> input = new List<string>();
+		int IDigest.Priority { get => 3; }
+
+		private readonly IList<string> FileContents = new List<string>();
 
 		public DigestETMS(IList<string> input)
 		{

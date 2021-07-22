@@ -13,7 +13,9 @@ namespace Insight.Core.Services.File
 {
 	public class DigestLOX : IDigest
 	{
-		private readonly IList<string> input = new List<string>();
+		int IDigest.Priority { get => 0; }
+
+		private readonly IList<string> FileContents = new List<string>();
 
 		int NameIndex;
 		int MDSndex;
@@ -25,7 +27,7 @@ namespace Insight.Core.Services.File
 
 		public DigestLOX(IList<string> input)
 		{
-			this.input = input;
+			this.FileContents = input;
 		}
 
 		public void DigestLines()
@@ -45,22 +47,22 @@ namespace Insight.Core.Services.File
 
 			string Squadon;
 
-			for (int i = 0; i < input.Count; i++)
+			for (int i = 0; i < FileContents.Count; i++)
 			{
-				List<string> data = new List<string>(input[i].Split(','));
+				List<string> data = new List<string>(FileContents[i].Split(','));
 				int offset = 1; //this offset is to account for the comma in the Name field
 				if (!HeadersProcessed)
 				{
 					Regex regexSquadron = new Regex(@"^Squadron: (.+?),");
-					if (regexSquadron.IsMatch(input[i]))
+					if (regexSquadron.IsMatch(FileContents[i]))
 					{
-						Squadon = regexSquadron.Match(input[i]).Groups[1].Value;
+						Squadon = regexSquadron.Match(FileContents[i]).Groups[1].Value;
 					}
 
-					else if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-						&& !input[i].Contains("(Controlled with Standard Dissemination)")
-						&& !input[i].Contains("Letter of Certifications")
-						&& !(input[i].Contains("Flight Quals") && input[i].Contains("Dual Qual")))
+					else if (!FileContents[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+						&& !FileContents[i].Contains("(Controlled with Standard Dissemination)")
+						&& !FileContents[i].Contains("Letter of Certifications")
+						&& !(FileContents[i].Contains("Flight Quals") && FileContents[i].Contains("Dual Qual")))
 					{
 						//TODO handle column mising
 						NameIndex = data.IndexOf("Name");
@@ -70,12 +72,12 @@ namespace Insight.Core.Services.File
 						HeadersProcessed = true;
 					}
 				}
-				else if (new Regex("^,+$").IsMatch(input[i]))
+				else if (new Regex("^,+$").IsMatch(FileContents[i]))
 				{
 
 					break;
 				}
-				else if (input[i].StartsWith("\""))
+				else if (FileContents[i].StartsWith("\""))
 				{
 					string LastName = data[NameIndex].Replace("\"", "").Trim();
 					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim();
