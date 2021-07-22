@@ -97,11 +97,22 @@ namespace Insight.Core.Services.FileProcessors
 						{
 							FirstName = FirstName,
 							LastName = LastName,
+							Medical = new Medical(),
+							Training = new Training(),
+							Personnel = new Personnel(),
+							PEX = new PEX(),
+							Organization = new Org(),
 						};
 						InsightController.Add(person);
 					}
 					else
 					{
+						//check if name casing is different
+						if (person.FirstName != FirstName || person.LastName != LastName)
+						{
+							person.FirstName = FirstName;
+							person.LastName = LastName;
+						}
 						person.Flight = Flight;
 						//person.Organization = ;
 						//person.Rank = ;
