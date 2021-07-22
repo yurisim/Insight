@@ -33,19 +33,25 @@ namespace Insight.Views
 
         private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            var contentsOfFiles = await GetFiles();
+			List<List<string>> contentsOfFiles = await GetFiles();
 
 			Debug.WriteLine("FilesRead");
+
+			List<IDigest> FileDigest = new List<IDigest>();
 
             foreach (var linesOfFile in contentsOfFiles)
             {
                 // Refactor this to be a static method
                 var detectMe = new Detector(linesOfFile);  // detect file type
-                var detectedFiletype = detectMe.DetectFileType();
+				Core.Models.FileType detectedFiletype = detectMe.DetectFileType();
 
-                var digestMe = new Digestor(fileType: detectedFiletype, fileContents: linesOfFile);
-                digestMe.Digest();
-            }
+				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile));
+			}
+			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+			foreach (var digest in FileDigest)
+			{
+				digest.DigestLines();
+			}
 
             // if (filesLines != null)
             // {

@@ -9,11 +9,14 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAEF : IDigest
 	{
-		private readonly IList<string> File = new List<string>();
+
+		private readonly IList<string> FileContents = new List<string>();
+
+		int IDigest.Priority { get => 2; }
 
 		public DigestAEF(IList<string> input)
 		{
-			this.File = input;
+			this.FileContents = input;
 		}
 
 		/// <summary>
@@ -22,9 +25,9 @@ namespace Insight.Core.Services.File
 		/// <param name="File"></param>
 		public void DigestLines()
 		{
-			for (int i = 3; i < File.Count - 1; i++)
+			for (int i = 3; i < FileContents.Count - 1; i++)
 			{
-				string[] data = File[i].Split(',');
+				string[] data = FileContents[i].Split(',');
 
 				//TODO refact to better handle format changes
 				//Check variables
