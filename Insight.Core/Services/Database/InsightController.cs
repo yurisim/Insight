@@ -71,7 +71,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <param name="org"></param>
 		/// <returns></returns>
-		public static async Task<List<Person>> GetAllPersons(Org org)
+		public async Task<List<Person>> GetAllPersons(Org org)
 		{
 			List<Person> persons;
 
@@ -237,7 +237,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
-		public static async void Add<T>(T t)
+		public async void Add<T>(T t)
 		{
 			try
 			{
@@ -259,7 +259,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
-		public static async void Update<T>(T t)
+		public async void Update<T>(T t)
 		{
 			try
 			{
