@@ -8,10 +8,12 @@ using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services.FileProcessors
+namespace Insight.Core.Services.File
 {
 	public class DigestAlphaRoster : IDigest
 	{
+		int IDigest.Priority => 1;
+
 		private readonly IList<string> input = new List<string>();
 
 		public DigestAlphaRoster(IList<string> input)
@@ -22,7 +24,7 @@ namespace Insight.Core.Services.FileProcessors
 		public void DigestLines()
 		{
 			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.AlphaRosterExpectedSchema))
+			if (!input[0].StartsWith(Resources.AlphaRosterExpected))
 			{
 				throw new NotImplementedException();
 			}
@@ -58,7 +60,7 @@ namespace Insight.Core.Services.FileProcessors
 						//Organization =
 					};
 
-					//Interact.AddPerson(person);
+					InsightController.Add(person);
 					//Interact.AddMedical(person.Medical, person);
 				}
 				person.SSN = SSN;
@@ -66,7 +68,7 @@ namespace Insight.Core.Services.FileProcessors
 				person.Phone = digestedLines[43];
 				person.DateOnStation = digestedLines[17];
 
-				InsightController.Add(person);
+				InsightController.Update(person);
 			}
 		}
 	}

@@ -161,7 +161,6 @@
     <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="ViewModels\UploadItemViewModel.cs" />
     <Compile Include="ViewModels\UploadViewModel.cs" />
-    <Compile Include="ViewModels\WebViewViewModel.cs" />
     <Compile Include="Views\OrganizationsDetailControl.xaml.cs">
       <DependentUpon>OrganizationsDetailControl.xaml</DependentUpon>
     </Compile>
@@ -188,9 +187,6 @@
     </Compile>
     <Compile Include="Views\UploadPage.xaml.cs">
       <DependentUpon>UploadPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WebViewPage.xaml.cs">
-      <DependentUpon>WebViewPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -255,10 +251,6 @@
     <Page Include="Views\UploadPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\WebViewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

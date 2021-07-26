@@ -6,46 +6,31 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
+using System.Collections.Generic;
 
 namespace Insight.Helpers
 {
     public static class FileService
     {
-        //public static void HandleFile(StorageFile file)
-        //{
-        //    string filePath = file.Path;
-
-        //    Debug.WriteLine(filePath.Substring(filePath.LastIndexOf(".") + 1));
-
-        //    switch (filePath.Substring(filePath.LastIndexOf(".")))
-        //    {
-        //        case ".xlsx":
-        //            break;
-
-        //        case ".xls":
-        //            ReadXLSX(filePath);
-        //            break;
-
-        //        default:
-        //            break;
-        //    }
-        //}
-
         /// <summary>
         /// This remembers the file that the user selects so that it can be accessed
         /// by the program. It returns a token so that it can be accessed at a later date. 
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public static string RememberFile(StorageFile file)
+        /// <param name="files"></param>
+        /// <returns>A list of token strings corresponding to the files that were placed there</returns>
+        public static List<string> RememberFiles(StorageFile[] files)
         {
-            // Generates a unique token ID
-            var token = Guid.NewGuid().ToString();
+			var tokenStrings = new List<string>();
 
-            // Adds to future access list
-            StorageApplicationPermissions.MostRecentlyUsedList.AddOrReplace(token, file);
+			foreach (var file in files)
+			{
+				var token = Guid.NewGuid().ToString();
+				tokenStrings.Add(token);
 
-            return token;
+				StorageApplicationPermissions.MostRecentlyUsedList.AddOrReplace(token, file);
+			}
+
+            return tokenStrings;
         }
 
         /// <summary>
@@ -53,7 +38,7 @@ namespace Insight.Helpers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<StorageFile> GetFileForToken(string token)
+        public static async Task<StorageFile> GetFileFromToken(string token)
         {
             return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token);
         }

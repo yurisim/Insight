@@ -22,7 +22,7 @@ namespace Insight.Core.Services.Database
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
-			.UseSqlite("Filename={Insight.db}")
+			.UseSqlite("Filename=Insight.db")
 			.Options;
 		}
 
@@ -182,7 +182,7 @@ namespace Insight.Core.Services.Database
 
 			}
 			//TODO implement exception
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw new Exception("Insight.db access error");
 			}
@@ -249,6 +249,37 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
+		public static Course GetCourseByName(string courseName)
+		{
+			// now try to find the course with the name
+			Course foundCourse = null;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
+
+					//TODO implement better exceptions
+					if (foundCourses.Count() > 1)
+					{
+						throw new Exception("Too many found, should be null or 1");
+					}
+
+					foundCourse = foundCourses.FirstOrDefault();
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				Debug.WriteLine(e);
+			}
+
+			//returns person or null if none exist
+			return foundCourse;
+		}
+
+
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>
@@ -271,6 +302,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
 						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
+
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
@@ -292,7 +324,7 @@ namespace Insight.Core.Services.Database
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Add entity
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
@@ -306,10 +338,36 @@ namespace Insight.Core.Services.Database
 					_ = await insightContext.SaveChangesAsync();
 				}
 			}
+
 			//TODO implement exception
 			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
+			}
+		}
+
+		/// <summary>
+		/// Add entity
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="t"></param>
+		public static async void Add<T, U, V>(T t, U u, V v)
+		{
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					insightContext.Attach(u);
+					insightContext.Attach(v);
+					_ = insightContext.Add(t);
+					_ = await insightContext.SaveChangesAsync();
+				}
+			}
+
+			//TODO implement exception
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
 			}
 		}
 
@@ -329,9 +387,9 @@ namespace Insight.Core.Services.Database
 				}
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
 		}
 	}
