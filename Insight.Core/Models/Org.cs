@@ -11,5 +11,21 @@ namespace Insight.Core.Models
 		public string Name { get; set; }
 
 		public List<Org> SubOrgs { get; set; }
+
+		public string PASCode { get; set; }
+
+		public ICollection<OrgAlias> Aliases { get; set; }
+	}
+
+	public class OrgAlias
+	{
+		[Key,Required]
+		public int Id { get; set; }
+
+		[Required]
+		public Org Org { get; set; }
+
+		[Required]
+		public string Name { get; set; }
 	}
 }
