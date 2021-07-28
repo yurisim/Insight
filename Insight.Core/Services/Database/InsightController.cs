@@ -19,6 +19,9 @@ namespace Insight.Core.Services.Database
 			_dbContextOptions = dbContextOptions;
 		}
 
+		/// <summary>
+		/// Whenever the blank constructor is used, it will use the default insight solution. 
+		/// </summary>
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
@@ -117,7 +120,7 @@ namespace Insight.Core.Services.Database
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-					
+
 					person = persons.FirstOrDefault();
 				}
 
