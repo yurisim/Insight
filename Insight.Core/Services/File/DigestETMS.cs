@@ -15,7 +15,9 @@ namespace Insight.Core.Services.File
 	{
 		int IDigest.Priority { get => 3; }
 
-		private IList<string> FileContents;
+		private IList<string> FileContents = new List<string>();
+
+		InsightController insightController = new InsightController();
 
 		public Course CourseType { get; set; }
 
@@ -46,7 +48,7 @@ namespace Insight.Core.Services.File
 			// Use Distinct Column to get the file type in case the first row is blank
 			var courseName = FileContents[1].Split(',')[1];
 
-			var foundCourse = InsightController.GetCourseByName(courseName);
+			var foundCourse = insightController.GetCourseByName(courseName);
 
 			// If the course is not found, it will be null, so create the course
 			if (foundCourse == null)
@@ -56,9 +58,9 @@ namespace Insight.Core.Services.File
 					Name = courseName
 				};
 
-				InsightController.Add(newCourse);
+				insightController.Add(newCourse);
 
-				CourseType = InsightController.GetCourseByName(newCourse.Name);
+				CourseType = insightController.GetCourseByName(newCourse.Name);
 			}
 			else
 			{
@@ -81,7 +83,7 @@ namespace Insight.Core.Services.File
 				var completionDate = splitLine[4];
 
 				// TODO: Exception if person is not found
-				var foundPerson = InsightController.GetPersonByName(firstName, lastName);
+				var foundPerson = insightController.GetPersonByName(firstName, lastName);
 
 				CourseInstance courseInstance = new CourseInstance()
 				{
@@ -93,12 +95,12 @@ namespace Insight.Core.Services.File
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				InsightController.Add(courseInstance, CourseType, foundPerson);
+				insightController.Add(courseInstance, CourseType, foundPerson);
 
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;
 
-				InsightController.Update(courseInstance);
+				insightController.Update(courseInstance);
 
 
 			}

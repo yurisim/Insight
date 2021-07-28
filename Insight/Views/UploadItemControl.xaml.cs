@@ -33,17 +33,16 @@ namespace Insight.Views
 
         private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-			List<List<string>> contentsOfFiles = await GetFiles();
+			List<IList<string>> contentsOfFiles = await GetFiles();
 
 			Debug.WriteLine("FilesRead");
 
 			List<IDigest> FileDigest = new List<IDigest>();
 
-            foreach (var linesOfFile in contentsOfFiles)
+            foreach (List<string> linesOfFile in contentsOfFiles)
             {
                 // Refactor this to be a static method
-                var detectMe = new Detector(linesOfFile);  // detect file type
-				Core.Models.FileType detectedFiletype = detectMe.DetectFileType();
+				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
 
 				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile));
 			}
@@ -90,11 +89,11 @@ namespace Insight.Views
             // }
         }
 
-        private static async Task<List<List<string>>> GetFiles()
+        private static async Task<List<IList<string>>> GetFiles()
         {
 			// Represents the collection of files, with each element being their contents as an IList
 			// of strings
-			var fileCollection = new List<List<string>>();
+			var fileCollection = new List<IList<string>>();
 
 			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
 			var picker = new FileOpenPicker

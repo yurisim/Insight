@@ -15,7 +15,9 @@ namespace Insight.Core.Services.File
 	{
 		int IDigest.Priority { get => 0; }
 
-		private readonly IList<string> FileContents = new List<string>();
+		IList<string> FileContents = new List<string>();
+
+		InsightController insightController = new InsightController();
 
 		int NameIndex;
 		int MDSndex;
@@ -91,7 +93,7 @@ namespace Insight.Core.Services.File
 						break;
 					}
 
-					Org org = InsightController.GetOrgByAlias(Squadon);
+					Org org = insightController.GetOrgByAlias(Squadon);
 					if(org == null)
 					{
 						//TODO ask user to define what org this is
@@ -112,10 +114,10 @@ namespace Insight.Core.Services.File
 						};
 						orgNew.Aliases.Add(orgAlias);
 						orgNew.Aliases.Add(orgAlias2);
-						InsightController.Add(orgNew);
+						insightController.Add(orgNew);
 					}
 
-					var person = InsightController.GetPersonByName(FirstName, LastName);
+					var person = insightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -125,7 +127,7 @@ namespace Insight.Core.Services.File
 							FirstName = FirstName,
 							LastName = LastName,
 						};
-						InsightController.Add(person);
+						insightController.Add(person);
 					}
 					else
 					{
@@ -133,7 +135,7 @@ namespace Insight.Core.Services.File
 						person.Organization = org;
 						//person.Rank = ;
 					}
-					InsightController.Update(person);
+					insightController.Update(person);
 				}
 			}
 		}

@@ -12,29 +12,21 @@ using FluentAssertions;
 
 namespace Insight.Core.Tests.xUnit
 {
-	public class InsightControllerTests
+	public class InsightControllerTests : IDisposable
 	{
 		private DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
 			.UseInMemoryDatabase(databaseName: "InsightTestDB")
 			.Options;
 
 		private InsightController controller;
+		private bool disposedValue;
 
 		public InsightControllerTests()
 		{
 			SeedDb();
 
 			controller = new InsightController(dbContextOptions);
-		}
 
-		[Fact]
-		public async Task GetPeopleTest()
-		{
-			using var context = new InsightContext(dbContextOptions);
-
-			var people = await controller.GetAllPersons();
-
-			people.Count().Should().Be(5);
 		}
 
 		private void SeedDb()
@@ -53,6 +45,79 @@ namespace Insight.Core.Tests.xUnit
 			context.AddRange(persons);
 
 			context.SaveChanges();
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					controller.EnsureDatabaseDeleted();
+				}
+
+				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
+				// TODO: set large fields to null
+				disposedValue = true;
+			}
+		}
+
+		// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+		// ~InsightControllerTests()
+		// {
+		//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		//     Dispose(disposing: false);
+		// }
+
+		public void Dispose()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
+
+		[Fact]
+		public async Task GetPeople()
+		{
+			using var context = new InsightContext(dbContextOptions);
+
+			var people = await controller.GetAllPersons();
+
+			people.Count().Should().Be(5);
+		}
+
+		[Fact]
+		public async Task GetNullPerson()
+		{
+			var person = controller.GetPersonByName("I should", "not exist");
+
+			person.Should().BeNull();
+		}
+
+		[Fact]
+		public async Task AddPerson()
+		{
+			var person = new Person { FirstName = "Jonathan", LastName = "Xander" };
+
+			controller.Add(person);
+
+			var personFromDB = controller.GetPersonByName("Jonathan", "Xander");
+
+			person.Id.Should().Be(personFromDB.Id);
+		}
+
+		[Fact]
+		public async Task UpdatePerson()
+		{
+			var person = controller.GetPersonByName("John", "Smith");
+
+			person.FirstName = "Johnathan";
+
+			controller.Update(person);
+
+			var personFromDB = controller.GetPersonByName("Johnathan", "Smith");
+
+			personFromDB.Id.Should().Be(person.Id);
 		}
 	}
 }

@@ -12,6 +12,8 @@ namespace Insight.Core.Services.File
 
 		private readonly IList<string> FileContents = new List<string>();
 
+		InsightController insightController = new InsightController();
+
 		int IDigest.Priority { get => 2; }
 
 		public DigestAEF(IList<string> input)
@@ -35,7 +37,7 @@ namespace Insight.Core.Services.File
 				string unit = data[5];
 				string AFSC = data[7];
 
-				Person person = InsightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
+				Person person = insightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)
@@ -64,7 +66,7 @@ namespace Insight.Core.Services.File
 				}
 				person.Training.OverallStatus = StringManipulation.StatusReader(data[12]);
 
-				InsightController.Update(person);
+				insightController.Update(person);
 			}
 		}
 	}

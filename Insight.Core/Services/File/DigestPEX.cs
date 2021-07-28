@@ -11,6 +11,7 @@ namespace Insight.Core.Services.File
 
 		private readonly IList<string> FileContents = new List<string>();
 
+		InsightController insightController = new InsightController();
 		public DigestPEX(IList<string> input)
 		{
 			this.FileContents = input;
@@ -37,12 +38,12 @@ namespace Insight.Core.Services.File
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
-				var foundPerson = InsightController.GetPersonByShortName(shortName);
+				var foundPerson = insightController.GetPersonByShortName(shortName);
 
 				// try to find the PEX Account
 				foundPerson.Flight = digestedLines[1];
 
-				InsightController.Update(foundPerson);
+				insightController.Update(foundPerson);
 
 			}
 		}

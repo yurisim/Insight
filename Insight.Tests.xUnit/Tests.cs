@@ -7,10 +7,6 @@ namespace Insight.Tests.XUnit
 	// TODO WTS: Add appropriate tests
 	public class Tests
 	{
-		[Fact]
-		public void TestMethod1()
-		{
-		}
 
 		// TODO WTS: Add tests for functionality you add to OrganizationsViewModel.
 		[Fact]

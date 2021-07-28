@@ -16,6 +16,8 @@ namespace Insight.Core.Services.File
 
 		private readonly IList<string> input = new List<string>();
 
+		InsightController insightController = new InsightController();
+
 		public DigestAlphaRoster(IList<string> input)
 		{
 			this.input = input;
@@ -39,7 +41,7 @@ namespace Insight.Core.Services.File
 				string SSN = digestedLines[2].Replace("-", "");
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = InsightController.GetPersonByName(FirstName, LastName);
+				var person = insightController.GetPersonByName(FirstName, LastName);
 
 				if (person == null)
 				{
@@ -60,7 +62,7 @@ namespace Insight.Core.Services.File
 						//Organization =
 					};
 
-					InsightController.Add(person);
+					insightController.Add(person);
 					//Interact.AddMedical(person.Medical, person);
 				}
 				person.SSN = SSN;
@@ -68,7 +70,7 @@ namespace Insight.Core.Services.File
 				person.Phone = digestedLines[43];
 				person.DateOnStation = digestedLines[17];
 
-				InsightController.Update(person);
+				insightController.Update(person);
 			}
 		}
 	}

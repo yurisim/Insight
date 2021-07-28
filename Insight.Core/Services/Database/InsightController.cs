@@ -29,7 +29,7 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Ensures database has been created.
 		/// </summary>
-		public void EnsureDatabase()
+		public void EnsureDatabaseCreated()
 		{
 			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 			{
@@ -37,6 +37,19 @@ namespace Insight.Core.Services.Database
 				_ = insightContext.Database.EnsureCreated();
 			}
 		}
+
+		/// <summary>
+		/// Ensures database has been deleted.
+		/// </summary>
+		public void EnsureDatabaseDeleted()
+		{
+			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+			{
+				//Ensure database is created
+				_ = insightContext.Database.EnsureDeleted();
+			}
+		}
+
 
 		/// <summary>
 		/// Returns all Person objects from database
@@ -94,7 +107,7 @@ namespace Insight.Core.Services.Database
 		/// Returns all OrgAlias objects from database
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<List<OrgAlias>> GetAllOrgAliases()
+		public async Task<List<OrgAlias>> GetAllOrgAliases()
 		{
 			List<OrgAlias> orgAliases;
 
@@ -119,7 +132,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <param alias="alias"></param>
 		/// <returns></returns>
-		public static Org GetOrgByAlias(string alias)
+		public Org GetOrgByAlias(string alias)
 		{
 			List<Org> orgs = new List<Org>();
 
@@ -156,7 +169,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public static Person GetPersonByName(string firstName, string lastName)
+		public Person GetPersonByName(string firstName, string lastName)
 		{
 			List<Person> persons = new List<Person>();
 			Person person;
@@ -197,7 +210,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <returns></returns>
 		/// 
-		public static Person GetPersonByShortName(string shortName)
+		public Person GetPersonByShortName(string shortName)
 		{
 
 			// break up shortname into first letters and last name
@@ -249,7 +262,7 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
-		public static Course GetCourseByName(string courseName)
+		public Course GetCourseByName(string courseName)
 		{
 			// now try to find the course with the name
 			Course foundCourse = null;
@@ -287,7 +300,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <param name="SSN"></param>
 		/// <returns></returns>
-		public static Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
+		public Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
 		{
 			//TODO refactor to reuse code more and have better methods
 			List<Person> persons = new List<Person>();
@@ -351,7 +364,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
-		public static async void Add<T, U, V>(T t, U u, V v)
+		public async void Add<T, U, V>(T t, U u, V v)
 		{
 			try
 			{
