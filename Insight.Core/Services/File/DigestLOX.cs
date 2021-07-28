@@ -8,16 +8,13 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
 	public class DigestLOX : IDigest
 	{
 		int IDigest.Priority { get => 0; }
-
-		IList<string> FileContents = new List<string>();
-
-		InsightController insightController = new InsightController();
 
 		int NameIndex;
 		int MDSndex;
@@ -27,9 +24,20 @@ namespace Insight.Core.Services.File
 
 		bool HeadersProcessed = false;
 
-		public DigestLOX(IList<string> input)
+		private readonly IList<string> FileContents = new List<string>();
+
+		private InsightController insightController;
+
+		public DigestLOX(IList<string> FileContents)
 		{
-			this.FileContents = input;
+			this.FileContents = FileContents;
+			insightController = new InsightController();
+		}
+
+		public DigestLOX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
+		{
+			this.FileContents = FileContents;
+			insightController = new InsightController(dbContextOptions);
 		}
 
 		public void DigestLines()

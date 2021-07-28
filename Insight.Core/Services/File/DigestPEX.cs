@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -11,10 +12,18 @@ namespace Insight.Core.Services.File
 
 		private readonly IList<string> FileContents = new List<string>();
 
-		InsightController insightController = new InsightController();
-		public DigestPEX(IList<string> input)
+		private InsightController insightController;
+
+		public DigestPEX(IList<string> FileContents)
 		{
-			this.FileContents = input;
+			this.FileContents = FileContents;
+			insightController = new InsightController();
+		}
+
+		public DigestPEX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
+		{
+			this.FileContents = FileContents;
+			insightController = new InsightController(dbContextOptions);
 		}
 
 		public void DigestLines()

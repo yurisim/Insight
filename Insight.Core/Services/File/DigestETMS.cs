@@ -8,6 +8,7 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -17,14 +18,21 @@ namespace Insight.Core.Services.File
 
 		private IList<string> FileContents = new List<string>();
 
-		InsightController insightController = new InsightController();
+		private InsightController insightController;
 
+		public DigestETMS(IList<string> FileContents)
+		{
+			CleanInput(FileContents);
+			insightController = new InsightController();
+		}
+
+		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
+		{
+			CleanInput(FileContents);
+			insightController = new InsightController(dbContextOptions);
+		}
 		public Course CourseType { get; set; }
 
-		public DigestETMS(IList<string> input)
-		{
-			CleanInput(input);
-		}
 
 		private void CleanInput(IList<string> inputToClean)
 		{

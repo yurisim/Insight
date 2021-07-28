@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Insight.Core.Helpers
 {
-	class StringManipulation
+	public class StringManipulation
 	{
 		/// <summary>
 		/// Converts string to have proper title case.

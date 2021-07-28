@@ -7,6 +7,7 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -14,27 +15,34 @@ namespace Insight.Core.Services.File
 	{
 		int IDigest.Priority => 1;
 
-		private readonly IList<string> input = new List<string>();
+		private readonly IList<string> FileContents = new List<string>();
 
-		InsightController insightController = new InsightController();
+		private InsightController insightController;
 
-		public DigestAlphaRoster(IList<string> input)
+		public DigestAlphaRoster(IList<string> FileContents)
 		{
-			this.input = input;
+			this.FileContents = FileContents;
+			insightController = new InsightController();
+		}
+
+		public DigestAlphaRoster(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
+		{
+			this.FileContents = FileContents;
+			insightController = new InsightController(dbContextOptions);
 		}
 
 		public void DigestLines()
 		{
 			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.AlphaRosterExpected))
+			if (!FileContents[0].StartsWith(Resources.AlphaRosterExpected))
 			{
 				throw new NotImplementedException();
 			}
 
 			// We start at i = 1 so that we ignore the initial schema.
-			for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+			for (var lineIndex = 1; lineIndex < FileContents.Count; lineIndex++)
 			{
-				string[] digestedLines = input[lineIndex].Split(',');
+				string[] digestedLines = FileContents[lineIndex].Split(',');
 
 				string LastName = StringManipulation.ConvertToTitleCase(digestedLines[0].Substring(1));
 				string FirstName = StringManipulation.ConvertToTitleCase(digestedLines[1].Substring(0, digestedLines[1].Length - 1));

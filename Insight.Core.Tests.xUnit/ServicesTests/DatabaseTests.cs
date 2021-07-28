@@ -1,37 +1,35 @@
-﻿using System;
+﻿using Insight.Core.Models;
+using Insight.Core.Services.Database;
+using Insight.Core.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Insight.Core.Services;
-using Insight.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using Insight.Core.Services.Database;
 using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using FluentAssertions;
 
-namespace Insight.Core.Tests.xUnit
+namespace Insight.Core.Tests.xUnit.ServicesTests
 {
 	public class InsightControllerTests : IDisposable
 	{
-		private DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
-			.UseInMemoryDatabase(databaseName: "InsightTestDB")
-			.Options;
-
 		private InsightController controller;
 		private bool disposedValue;
 
 		public InsightControllerTests()
 		{
-			SeedDb();
-
+			DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+				.UseInMemoryDatabase(databaseName: "InsightTestDB")
+				.Options;
 			controller = new InsightController(dbContextOptions);
+
+			SeedDb();
 
 		}
 
 		private void SeedDb()
 		{
-			using var context = new InsightContext(dbContextOptions);
 
 			var persons = new List<Person>
 			{
@@ -42,9 +40,10 @@ namespace Insight.Core.Tests.xUnit
 				new Person { Id = 5, FirstName = "Graham", LastName = "Soyer" },
 			};
 
-			context.AddRange(persons);
-
-			context.SaveChanges();
+			foreach(var person in persons)
+			{
+				controller.Add(person);
+			}
 		}
 
 		protected virtual void Dispose(bool disposing)
@@ -79,15 +78,13 @@ namespace Insight.Core.Tests.xUnit
 		[Fact]
 		public async Task GetPeople()
 		{
-			using var context = new InsightContext(dbContextOptions);
-
 			var people = await controller.GetAllPersons();
 
 			people.Count().Should().Be(5);
 		}
 
 		[Fact]
-		public async Task GetNullPerson()
+		public void GetNullPerson()
 		{
 			var person = controller.GetPersonByName("I should", "not exist");
 
@@ -95,7 +92,7 @@ namespace Insight.Core.Tests.xUnit
 		}
 
 		[Fact]
-		public async Task AddPerson()
+		public void AddPerson()
 		{
 			var person = new Person { FirstName = "Jonathan", LastName = "Xander" };
 
@@ -107,7 +104,7 @@ namespace Insight.Core.Tests.xUnit
 		}
 
 		[Fact]
-		public async Task UpdatePerson()
+		public void UpdatePerson()
 		{
 			var person = controller.GetPersonByName("John", "Smith");
 
