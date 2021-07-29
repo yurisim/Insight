@@ -39,7 +39,7 @@ namespace Insight.Core.Models
 
 		public PEX PEX { get; set; }
 
-		public List<CourseInstance> CourseInstances { get; set; }
+		public ICollection<CourseInstance> CourseInstances { get; set; }
 
 	}
 }

@@ -81,7 +81,7 @@ namespace Insight.Core.Services.File
 				var completionDate = splitLine[4];
 
 				// TODO: Exception if person is not found
-				var foundPerson = InsightController.GetPersonByName(firstName, lastName);
+				var foundPerson = InsightController.GetPersonByName(firstName, lastName, includeSubref: false);
 
 				CourseInstance courseInstance = new CourseInstance()
 				{
