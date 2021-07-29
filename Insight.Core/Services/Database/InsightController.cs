@@ -97,7 +97,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public static Person GetPersonByName(string firstName, string lastName)
+		public static Person GetPersonByName(string firstName, string lastName, bool includeSubref = true)
 		{
 			List<Person> persons = new List<Person>();
 			Person person;
@@ -105,12 +105,14 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					persons = includeSubref ? insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
+						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList()
+						: insightContext.Persons
+							.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
@@ -290,26 +292,24 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Add entity
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="t"></param>
-		public static async void Add<T, U, V>(T t, U u, V v)
+		/// <param name="courseInstance"></param>
+		/// <param name="course"></param>
+		/// <param name="person"></param>
+		public static async void Add(CourseInstance courseInstance, Course course, Person person)
 		{
-			try
+			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
-				{
-					insightContext.Attach(u);
-					insightContext.Attach(v);
-					_ = insightContext.Add(t);
-					_ = await insightContext.SaveChangesAsync();
-				}
-			}
+				_ = insightContext.Add(courseInstance);
 
-			//TODO implement exception
-			catch (Exception e)
-			{
-				throw new Exception(e.Message);
+				course.CourseInstances.Add(courseInstance);
+				person.CourseInstances.Add(courseInstance);
+
+				insightContext.Courses.Attach(course);
+				insightContext.Persons.Attach(person);
+
+				_ = await insightContext.SaveChangesAsync();
 			}
+			//TODO implement exception
 		}
 
 		/// <summary>
