@@ -9,10 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
-namespace Insight.Core.Tests.xUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests
 {
 
 	public class Helper
@@ -34,16 +33,17 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 		}
 	}
 
+	[TestFixture]
 	public class ReadFilesTest
 	{
 		/// <summary>
 		/// Tests that a file is read properly and that the returned List<string> as expected
 		/// </summary>
 		/// <returns></returns>
-		[Fact]
+		[Test]
 		public void ReadGoodFile()
 		{
-			IList<string> fileContents = Helper.ReadFile(@"Test Moc\k Data\short_file_test.csv");
+			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\short_file_test.csv");
 
 
 			IList<string> Result = new List<string>();
@@ -62,7 +62,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 		/// Tests reading a file that does not exist
 		/// </summary>
 		/// <returns></returns>
-		[Fact]
+		[Test]
 		public void ReadFileThatDoesNotExist()
 		{
 			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\this_file_does_not_exist.csv");
@@ -74,23 +74,24 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 		/// Tests reading an empty file
 		/// </summary>
 		/// <returns></returns>
-		[Fact]
+		[Test]
 		public void ReadEmptyFile()
 		{
 			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\empty_file.csv");
 
-			fileContents.Should().BeNull();
+			fileContents.Should().BeNullOrEmpty();
 		}
 	}
 
 	public class FileTests
 	{
+		[TestFixture]
 		public class DetectorTests
 		{
 			/// <summary>
 			/// Tests that a LoX file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectLoX()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\LoX_good_input.csv");
@@ -103,7 +104,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that an AEF file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectAEF()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\AEF_good_input.csv");
@@ -116,7 +117,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that a Alpha Roster file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectAlphaRoster()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\Alpha_good_input.csv");
@@ -129,7 +130,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that a ETMS file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectETMS()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\ETMS_good_input.csv");
@@ -142,7 +143,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that a PEX file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectPEX()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\PEX_good_input.csv");
@@ -155,7 +156,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that an unknown type file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectUnknown()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\random_text.txt");
@@ -168,7 +169,7 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that an unknown type file is detected properly
 			/// </summary>
-			[Fact]
+			[Test]
 			public void DetectEmptyFile()
 			{
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\empty_file.csv");
@@ -181,8 +182,8 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests that a file with null contents is handled properly
 			/// </summary>
-			[Fact]
-			public void NullfileContents()
+			[Test]
+			public void DetectNullfileContents()
 			{
 				FileType detectedFiletype = Detector.DetectFileType(null);
 
@@ -190,17 +191,22 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			}
 		}
 
+		[TestFixture]
 		public class DigestFactoryTests
 		{
+			DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+				.UseInMemoryDatabase(databaseName: "InsightTestDB")
+				.Options;
+
 			/// <summary>
 			/// Tests factory creating IDgest for AlphaRoster FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryAlphaRoster()
 			{
 				FileType fileType = FileType.AlphaRoster;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeOfType<DigestAlphaRoster>();
 			}
@@ -208,12 +214,12 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests factory creating IDgest for PEX FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryPEX()
 			{
 				FileType fileType = FileType.PEX;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeOfType<DigestPEX>();
 			}
@@ -221,12 +227,12 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests factory creating IDgest for AEF FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryAEF()
 			{
 				FileType fileType = FileType.AEF;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeOfType<DigestAEF>();
 			}
@@ -234,12 +240,12 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests factory creating IDgest for ETMS FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryETMS()
 			{
 				FileType fileType = FileType.ETMS;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeOfType<DigestETMS>();
 			}
@@ -247,12 +253,12 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests factory creating IDgest for LOX FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryLOX()
 			{
 				FileType fileType = FileType.LOX;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeOfType<DigestLOX>();
 			}
@@ -260,23 +266,23 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 			/// <summary>
 			/// Tests factory creating IDgest for Unknownk FileType
 			/// </summary>
-			[Fact]
+			[Test]
 			public void FactoryUnkown()
 			{
 				FileType fileType = FileType.Unknown;
 
-				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>());
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
 				digest.Should().BeNull();
 			}
 		}
 
+		[TestFixture]
 		public class DigestAlphaRosterTests : IDisposable
 		{
 			private InsightController controller;
 			private bool disposedValue;
-
-			DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+			private DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
 					.UseInMemoryDatabase(databaseName: "InsightTestDB")
 					.Options;
 
@@ -286,48 +292,84 @@ namespace Insight.Core.Tests.xUnit.ServicesTests
 
 				controller = new InsightController(dbContextOptions);
 			}
-			protected virtual void Dispose(bool disposing)
-			{
-				if (!disposedValue)
-				{
-					if (disposing)
-					{
-						controller.EnsureDatabaseDeleted();
-					}
-
-					// TODO: free unmanaged resources (unmanaged objects) and override finalizer
-					// TODO: set large fields to null
-					disposedValue = true;
-				}
-			}
-
-			// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-			// ~DigestAlphaRosterTests()
-			// {
-			//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-			//     Dispose(disposing: false);
-			// }
 
 			public void Dispose()
 			{
-				// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-				Dispose(disposing: true);
-				GC.SuppressFinalize(this);
+				controller.EnsureDatabaseDeleted();
 			}
 
-			[Fact]
-			public void GoodAlphaRoster()
+			[Test]
+			public void LoXTest()
 			{
+				//TODO test Flight and org once org is implemented
+
 				//Set up for test
-				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\Alpha_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\LoX_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
 				IDigest digest = DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: fileContents, dbContextOptions);
 				digest.DigestLines();
 
+				//Check database is in expected state
+				Person person1 = controller.GetPersonByName("Sophie", "Alsop");
+				person1.Should().NotBeNull();
+				person1.Rank.Should().Be(Rank.E2);
+				//person1.Flight
+				//person1.org
 
+				Person person2 = controller.GetPersonByName("Neil", "Chapman");
+				person2.Should().NotBeNull();
+				person2.Rank.Should().Be(Rank.Unknown);
 
+				Person person3 = controller.GetPersonByName("Olivia", "Churchill");
+				person3.Should().NotBeNull();
+				person3.Rank.Should().Be(Rank.E8);
+
+				Person person4 = controller.GetPersonByName("Joshua", "Clark");
+				person4.Should().NotBeNull();
+				person4.Rank.Should().Be(Rank.E1);
+
+				Person person5 = controller.GetPersonByName("Anthony", "Hart");
+				person5.Should().NotBeNull();
+				person5.Rank.Should().Be(Rank.E6);
+
+				Person person6 = controller.GetPersonByName("Grace", "McCloud");
+				person6.Should().NotBeNull();
+				person6.Rank.Should().Be(Rank.E3);
+
+				Person person7 = controller.GetPersonByName("Dean", "St. Onge");
+				person7.Should().NotBeNull();
+				person7.Rank.Should().Be(Rank.E7);
+
+				Person person8 = controller.GetPersonByName("Jean", "St. Onge");
+				person8.Should().NotBeNull();
+				person8.Rank.Should().Be(Rank.O9);
+
+				Person person9 = controller.GetPersonByName("Julian", "Underwood");
+				person9.Should().NotBeNull();
+				person9.Rank.Should().Be(Rank.O8);
+
+				Person person10= controller.GetPersonByName("First", "Last Name");
+				person10.Should().NotBeNull();
+				person10.Rank.Should().Be(Rank.O2);
+
+				Person person11 = controller.GetPersonByName("Sim", "Yura-Sim");
+				person11.Should().NotBeNull();
+				person11.Rank.Should().Be(Rank.O1);
+
+				Person person12 = controller.GetPersonByName("LeKeith", "McLean");
+				person12.Should().NotBeNull();
+				person12.Rank.Should().Be(Rank.O3);
+
+				Person person13 = controller.GetPersonByName("Charles", "Nichols");
+				person13.Should().NotBeNull();
+				person13.Rank.Should().Be(Rank.O10);
+
+				Person person14 = controller.GetPersonByName("Katherine", "Thomson");
+				person14.Should().NotBeNull();
+				person14.Rank.Should().Be(Rank.E7);
+			
 			}
 
 			

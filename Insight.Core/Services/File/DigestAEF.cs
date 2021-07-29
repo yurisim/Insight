@@ -8,24 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestAEF : IDigest
+	public class DigestAEF : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 2; }
 
-		private readonly IList<string> FileContents = new List<string>();
-
-		private InsightController insightController;
-
-		public DigestAEF(IList<string> FileContents)
+		public DigestAEF(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = FileContents;
-			insightController = new InsightController();
-		}
 
-		public DigestAEF(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
-		{
-			this.FileContents = FileContents;
-			insightController = new InsightController(dbContextOptions);
 		}
 
 		/// <summary>

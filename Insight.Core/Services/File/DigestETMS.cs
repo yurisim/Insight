@@ -12,24 +12,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestETMS : IDigest
+	public class DigestETMS : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 3; }
 
-		private IList<string> FileContents = new List<string>();
-
-		private InsightController insightController;
-
-		public DigestETMS(IList<string> FileContents)
+		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
 			CleanInput(FileContents);
-			insightController = new InsightController();
-		}
-
-		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
-		{
-			CleanInput(FileContents);
-			insightController = new InsightController(dbContextOptions);
 		}
 		public Course CourseType { get; set; }
 

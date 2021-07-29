@@ -12,7 +12,7 @@ namespace Insight.Core.Services.Database
 {
 	public class InsightController
 	{
-		private static DbContextOptions<InsightContext> _dbContextOptions;
+		private DbContextOptions<InsightContext> _dbContextOptions;
 
 		public InsightController(DbContextOptions<InsightContext> dbContextOptions)
 		{

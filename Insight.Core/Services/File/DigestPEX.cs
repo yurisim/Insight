@@ -6,24 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestPEX : IDigest
+	public class DigestPEX : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 4; }
 
-		private readonly IList<string> FileContents = new List<string>();
-
-		private InsightController insightController;
-
-		public DigestPEX(IList<string> FileContents)
+		public DigestPEX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = FileContents;
-			insightController = new InsightController();
-		}
 
-		public DigestPEX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
-		{
-			this.FileContents = FileContents;
-			insightController = new InsightController(dbContextOptions);
 		}
 
 		public void DigestLines()

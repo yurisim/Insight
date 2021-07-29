@@ -10,6 +10,7 @@
 
 	public enum Rank
 	{
+		Unknown,
 		E1,
 		E2,
 		E3,

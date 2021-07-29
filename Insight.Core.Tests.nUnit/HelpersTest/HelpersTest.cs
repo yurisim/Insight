@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Insight.Core.Helpers;
-using Xunit;
+using NUnit.Framework;
 
-namespace Insight.Core.Tests.xUnit.HelpersTest
+namespace Insight.Core.Tests.nUnit.HelpersTest
 {
 	public class HelpersTest
 	{
+		[TestFixture]
 		public class ConvertToTitleCaseTests
 		{
-			[Fact]
+			[Test]
 			public void AllCaps()
 			{
 				string value = "ALL CAPS";
@@ -26,7 +27,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 
 			}
 
-			[Fact]
+			[Test]
 			public void AllLower()
 			{
 				string value = "all lower";
@@ -39,7 +40,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 
 			}
 
-			[Fact]
+			[Test]
 			public void Null()
 			{
 				string value = null;
@@ -50,7 +51,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 
 			}
 
-			[Fact]
+			[Test]
 			public void Empty()
 			{
 				string value = "";
@@ -64,9 +65,10 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 			}
 		}
 
+		[TestFixture]
 		public class StatusReaderTests
 		{
-			[Fact]
+			[Test]
 			public void Current()
 			{
 				string value = "g";
@@ -78,7 +80,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 				result.Should().Be(expected);
 			}
 
-			[Fact]
+			[Test]
 			public void Upcoming()
 			{
 				string value = "y";
@@ -90,7 +92,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 				result.Should().Be(expected);
 			}
 
-			[Fact]
+			[Test]
 			public void Overdue()
 			{
 				string value = "r";
@@ -102,7 +104,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 				result.Should().Be(expected);
 			}
 
-			[Fact]
+			[Test]
 			public void Null()
 			{
 				string value = null;
@@ -114,7 +116,7 @@ namespace Insight.Core.Tests.xUnit.HelpersTest
 				result.Should().Be(expected);
 			}
 
-			[Fact]
+			[Test]
 			public void Empty()
 			{
 				string value = "";

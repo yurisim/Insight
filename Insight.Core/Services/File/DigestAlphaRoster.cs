@@ -11,24 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestAlphaRoster : IDigest
+	public class DigestAlphaRoster : AbstractDigest, IDigest
 	{
 		int IDigest.Priority => 1;
 
-		private readonly IList<string> FileContents = new List<string>();
-
-		private InsightController insightController;
-
-		public DigestAlphaRoster(IList<string> FileContents)
+		public DigestAlphaRoster(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = FileContents;
-			insightController = new InsightController();
-		}
 
-		public DigestAlphaRoster(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
-		{
-			this.FileContents = FileContents;
-			insightController = new InsightController(dbContextOptions);
 		}
 
 		public void DigestLines()

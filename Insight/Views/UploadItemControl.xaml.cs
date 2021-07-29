@@ -44,7 +44,7 @@ namespace Insight.Views
                 // Refactor this to be a static method
 				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
 
-				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile));
+				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions:null));
 			}
 			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 

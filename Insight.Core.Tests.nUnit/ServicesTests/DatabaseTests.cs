@@ -1,0 +1,115 @@
+﻿using Insight.Core.Models;
+using Insight.Core.Services.Database;
+using Insight.Core.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using System.Linq;
+using FluentAssertions;
+
+namespace Insight.Core.Tests.nUnit.ServicesTests
+{
+	[TestFixture]
+	public class InsightControllerTests
+	{
+		public InsightController controller;
+
+		[SetUp]
+		public void SetUp()
+		{
+			DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+				.UseInMemoryDatabase(databaseName: "InsightTestDB")
+				.Options;
+
+			controller = new InsightController(dbContextOptions);
+
+			SeedDb();
+
+		}
+
+		private void SeedDb()
+		{
+			var persons = new List<Person>
+			{
+				new Person { FirstName = "John", LastName = "Smith" },
+				new Person { FirstName = "Jacob", LastName = "Smith" },
+				new Person { FirstName = "Constantine", LastName = "Quintrell" },
+				new Person { FirstName = "Annabell", LastName = "Turner" },
+				new Person { FirstName = "Graham", LastName = "Soyer" },
+			};
+
+			foreach (var person in persons)
+			{
+				controller.Add(person);
+			}
+		}
+
+
+		[Test]
+		public async Task GetPeople()
+		{
+			var people = await controller.GetAllPersons();
+
+			people.Count().Should().Be(5);
+		}
+
+		[Test]
+		public void GetPersonByName()
+		{
+			var person = controller.GetPersonByName("John", "Smith");
+
+			person.Should().NotBeNull();
+		}
+
+		[Test]
+		public void GetPersonCaps()
+		{
+			var person = controller.GetPersonByName("JOHN", "SMITH");
+
+			person.Should().NotBeNull();
+		}
+
+		[Test]
+		public void GetNullPerson()
+		{
+			var person = controller.GetPersonByName("I should", "not exist");
+
+			person.Should().BeNull();
+		}
+
+		[Test]
+		public void AddPerson()
+		{
+			var person = new Person { FirstName = "Jonathan", LastName = "Xander" };
+
+			controller.Add(person);
+
+			var personFromDB = controller.GetPersonByName("Jonathan", "Xander");
+
+			person.Id.Should().Be(personFromDB.Id);
+		}
+
+		[Test]
+		public void UpdatePerson()
+		{
+			var person = controller.GetPersonByName("John", "Smith");
+
+			person.FirstName = "Johnathan";
+
+			controller.Update(person);
+
+			var personFromDB = controller.GetPersonByName("Johnathan", "Smith");
+
+			personFromDB.Id.Should().Be(person.Id);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			controller.EnsureDatabaseDeleted();
+		}
+	}
+}
