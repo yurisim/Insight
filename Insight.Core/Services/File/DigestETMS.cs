@@ -20,19 +20,32 @@ namespace Insight.Core.Services.File
 		/// </summary>
 		private IList<string> FileContents;
 
+
+		/// <summary>
+		/// The course that the ETMS document represents, each ETMS document is a diff course
+		/// </summary>
 		public Course CourseType { get; set; }
 
+		/// <summary>
+		/// Constructor for ETMS, cleans the input of ETMS to clear up duplicate records, fix data to be readable
+		/// </summary>
+		/// <param name="input"></param>
 		public DigestETMS(IList<string> input)
 		{
 			CleanInput(input);
 		}
 
+		/// <summary>
+		/// Removed duplicate lines in the ETMS Report as well as any other formatting
+		/// </summary>
+		/// <param name="inputToClean"></param>
 		private void CleanInput(IList<string> inputToClean)
 		{
 			for (var i = 0; i < inputToClean.Count; i++)
 			{
 				var splitLine = inputToClean[i].Split(',');
 
+				// Remove the lines that have empty courses
 				if (string.IsNullOrEmpty(splitLine[4]))
 				{
 					inputToClean.Remove(inputToClean[i]);

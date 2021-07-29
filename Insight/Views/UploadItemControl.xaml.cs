@@ -47,6 +47,7 @@ namespace Insight.Views
 
 				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile));
 			}
+
 			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
 			foreach (var digest in FileDigest)
