@@ -302,13 +302,10 @@ namespace Insight.Core.Services.Database
 		{
 			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
-				_ = insightContext.Add(courseInstance);
-
 				course.CourseInstances.Add(courseInstance);
 				person.CourseInstances.Add(courseInstance);
 
-				insightContext.Courses.Attach(course);
-				insightContext.Persons.Attach(person);
+				_ = insightContext.Update(courseInstance);
 
 				_ = await insightContext.SaveChangesAsync();
 			}

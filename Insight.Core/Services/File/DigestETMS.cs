@@ -13,8 +13,11 @@ namespace Insight.Core.Services.File
 {
 	public class DigestETMS : IDigest
 	{
-		int IDigest.Priority { get => 3; }
+		int IDigest.Priority => 3;
 
+		/// <summary>
+		/// This stores the file contents after they have been cleaned in the constructor
+		/// </summary>
 		private IList<string> FileContents;
 
 		public Course CourseType { get; set; }
@@ -98,7 +101,7 @@ namespace Insight.Core.Services.File
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;
 
-				InsightController.Update(courseInstance);
+				//InsightController.Update(courseInstance);
 
 
 			}
