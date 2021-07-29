@@ -15,6 +15,10 @@ namespace Insight.Core.Helpers
 		/// <returns></returns>
 		public static string ConvertToTitleCase(string improperCase)
 		{
+			if(improperCase == null)
+			{
+				return null;
+			}
 			var ti = CultureInfo.CurrentCulture.TextInfo;
 
 			return ti.ToTitleCase(improperCase.ToLower().Trim());
@@ -27,23 +31,17 @@ namespace Insight.Core.Helpers
 		/// <returns></returns>
 		public static Status StatusReader(string input)
 		{
-			Status status;
-			switch (input.ToLower())
+			switch (input?.ToLower())
 			{
 				case "g":
-					status = Status.Current;
-					break;
+					return Status.Current;
 				case "y":
-					status = Status.Upcoming;
-					break;
+					return Status.Upcoming;
 				case "r":
-					status = Status.Overdue;
-					break;
+					return Status.Overdue;
 				default:
-					status = Status.Unknown;
-					break;
+					return Status.Unknown;
 			}
-			return status;
 		}
 	}
 }
