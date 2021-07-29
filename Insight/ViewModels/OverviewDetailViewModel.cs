@@ -14,63 +14,80 @@ namespace Insight.ViewModels
     {
         private SampleOrder _item;
 
+		/// <summary>
+		/// 
+		/// </summary>
         public SampleOrder Item
         {
             get { return _item; }
             set { SetProperty(ref _item, value); }
         }
 
+		/// <summary>
+		/// 
+		/// </summary>
         public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
 
         public OverviewDetailViewModel()
         {
         }
-
+		/// <summary>
+		/// Loads the table
+		/// </summary>
+		/// <returns></returns>
         public async Task LoadDataAsync()
         {
             Source.Clear();
 
-			var insightController = new InsightController();
-			var data = await insightController.GetAllPersons();
+			InsightController insightController = new InsightController();
+			List<Person> persons = await insightController.GetAllPersons();
 
             List<string> allFlightNames = new List<string>();
 
             List<List<Person>> allFlights = new List<List<Person>>();
 
-            foreach (var item in data)
+            foreach (var person in persons)
             {
-                if (allFlightNames.Contains(item.Flight.ToUpper()))
+                if (!allFlightNames.Contains(person.Flight.ToUpper()))
                 {
-                    allFlights[allFlightNames.IndexOf(item.Flight.ToUpper())].Add(item);
-                }
-                else
-                {
-                    allFlightNames.Add(item.Flight.ToUpper());
+                    allFlightNames.Add(person.Flight.ToUpper());
                     List<Person> newFlight = new List<Person>();
                     allFlights.Add(newFlight);
                 }
-            }
+				//The index of the flight it is trying to access
+				int flightNameIndex = allFlightNames.IndexOf(person.Flight.ToUpper());
+				allFlights[flightNameIndex].Add(person);
+			}
 
-            ReadyPercentages OverallPercentages = new ReadyPercentages("960 Overall", DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
+			//TODO When orgs are implemented make more dynamic
+            ReadyPercentages OverallPercentages = new ReadyPercentages("960 Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             Source.Add(OverallPercentages);
 
-            foreach (var item in allFlightNames)
+            foreach (var flightName in allFlightNames)
             {
-                Source.Add(FlightPercentageBuilder(item, allFlights[allFlightNames.IndexOf(item)]));
+				//The flight names are in a seperate List so this gets the people in each flight via a syncronized index
+				Source.Add(FlightPercentageBuilder(flightName, allFlights[allFlightNames.IndexOf(flightName)]));
             }
 
         }
 
-
-        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
+		/// <summary>
+		/// puts the data into an object 
+		/// </summary>
+		/// <param name="flight">The name of the Flight</param>
+		/// <param name="persons">The list of people in the flight</param>
+		/// <returns></returns>
+        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> persons)
         {
-            ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(data), DataCalculation.GetPersonnel(data), DataCalculation.GetTraining(data));
+            ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             return flightPercentages;
         }
 
         
 
-        // Fix naming of this
+        /// <summary>
+		/// Organizes the information
+		/// </summary>
         public struct ReadyPercentages
         {
             public string Organization { get; }
