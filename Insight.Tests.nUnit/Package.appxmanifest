@@ -5,15 +5,15 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="a5eacb7d-2beb-431f-ad49-da9e2722c05c"
-            Publisher="CN=Administrator"
+  <Identity Name="e1866b4e-efe4-4e44-bdd4-57447a3d8d24"
+            Publisher="CN=Cater"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="a5eacb7d-2beb-431f-ad49-da9e2722c05c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="e1866b4e-efe4-4e44-bdd4-57447a3d8d24" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Insight.Tests.xUnit</DisplayName>
-    <PublisherDisplayName>Administrator</PublisherDisplayName>
+    <DisplayName>Insight.Tests.nUnit</DisplayName>
+    <PublisherDisplayName>Cater</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -27,12 +27,12 @@
   <Applications>
     <Application Id="vstest.executionengine.universal.App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="Insight.Tests.xUnit.App">
+        EntryPoint="Insight.Tests.nUnit.App">
       <uap:VisualElements
-        DisplayName="Insight.Tests.xUnit"
+        DisplayName="Insight.Tests.nUnit"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Insight.Tests.xUnit Unit Test Project"
+        Description="Insight.Tests.nUnit"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

@@ -1,15 +1,17 @@
-﻿using Insight.ViewModels;
+﻿using System;
+using NUnit.Framework;
+using Insight.ViewModels;
 
-using Xunit;
 
-namespace Insight.Tests.XUnit
+namespace Insight.Tests.nUnit
 {
+	[TestFixture]
 	// TODO WTS: Add appropriate tests
 	public class Tests
 	{
 
 		// TODO WTS: Add tests for functionality you add to OrganizationsViewModel.
-		[Fact]
+		[Test]
 		public void TestOrganizationsViewModelCreation()
 		{
 			// This test is trivial. Add your own tests for the logic you add to the ViewModel.
@@ -18,7 +20,7 @@ namespace Insight.Tests.XUnit
 		}
 
 		// TODO WTS: Add tests for functionality you add to OverviewViewModel.
-		[Fact]
+		[Test]
 		public void TestOverviewViewModelCreation()
 		{
 			// This test is trivial. Add your own tests for the logic you add to the ViewModel.
@@ -27,7 +29,7 @@ namespace Insight.Tests.XUnit
 		}
 
 		// TODO WTS: Add tests for functionality you add to SettingsViewModel.
-		[Fact]
+		[Test]
 		public void TestSettingsViewModelCreation()
 		{
 			// This test is trivial. Add your own tests for the logic you add to the ViewModel.
@@ -36,7 +38,7 @@ namespace Insight.Tests.XUnit
 		}
 
 		// TODO WTS: Add tests for functionality you add to StatusViewModel.
-		[Fact]
+		[Test]
 		public void TestStatusViewModelCreation()
 		{
 			// This test is trivial. Add your own tests for the logic you add to the ViewModel.
@@ -45,7 +47,7 @@ namespace Insight.Tests.XUnit
 		}
 
 		//// TODO WTS: Add tests for functionality you add to WebViewViewModel.
-		//[Fact]
+		//[Test]
 		//public void TestWebViewViewModelCreation()
 		//{
 		//	// This test is trivial. Add your own tests for the logic you add to the ViewModel.
