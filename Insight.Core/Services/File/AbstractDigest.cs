@@ -15,7 +15,8 @@ namespace Insight.Core.Services.File
 		public AbstractDigest(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
 		{
 			this.FileContents = FileContents;
-			insightController = dbContextOptions == null ? new InsightController() : new InsightController(dbContextOptions);
+			//default InsightController() constructor uses the live/production database. The dbContextOptions constructor can specify either - uses in tests
+			insightController = (dbContextOptions == null) ? new InsightController() : new InsightController(dbContextOptions);
 		}
 	}
 }

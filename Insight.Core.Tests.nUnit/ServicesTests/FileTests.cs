@@ -278,28 +278,27 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		}
 
 		[TestFixture]
-		public class DigestAlphaRosterTests : IDisposable
+		public class DigestTests
 		{
 			private InsightController controller;
-			private bool disposedValue;
 			private DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
 					.UseInMemoryDatabase(databaseName: "InsightTestDB")
 					.Options;
 
-			public DigestAlphaRosterTests()
+			[SetUp]
+			public void SetUp()
 			{
-				
-
 				controller = new InsightController(dbContextOptions);
 			}
 
+			[TearDown]
 			public void Dispose()
 			{
 				controller.EnsureDatabaseDeleted();
 			}
 
 			[Test]
-			public void LoXTest()
+			public void DigestLOXTest()
 			{
 				//TODO test Flight and org once org is implemented
 
