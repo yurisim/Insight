@@ -67,9 +67,11 @@ namespace Insight.Core.Services.File
 			// If the course is not found, it will be null, so create the course
 			if (foundCourse == null)
 			{
+				// TODO make custom intervals for each course. Default is hard coded to 1 year
 				var newCourse = new Course()
 				{
-					Name = courseName
+					Name = courseName,
+					Interval = 1
 				};
 
 				InsightController.Add(newCourse);
@@ -99,11 +101,17 @@ namespace Insight.Core.Services.File
 				// TODO: Exception if person is not found
 				var foundPerson = InsightController.GetPersonByName(firstName, lastName, includeSubref: false);
 
+				bool sdfsd = true;
+
+				// TODO: Make this a try parse
+				var parsedCompletion = DateTime.Parse(completionDate);
+
 				CourseInstance courseInstance = new CourseInstance()
 				{
 					Course = CourseType,
 					Person = foundPerson,
-					Completion = DateTime.Parse(completionDate),
+					Completion = parsedCompletion,
+					Expiration = parsedCompletion.AddDays(CourseType.Interval * 365)
 
 					// TODO: Make custom expiration by JSON object
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
