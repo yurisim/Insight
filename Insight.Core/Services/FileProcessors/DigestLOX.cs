@@ -43,7 +43,7 @@ namespace Insight.Core.Services.FileProcessors
 			//Assumptions about the data:
 			//Any person with "E-3G(II)" (opposed to "E-3G") can be disregarded.
 
-			string Squadon;
+			string Squadon = "";
 
 			for (int i = 0; i < input.Count; i++)
 			{
@@ -54,7 +54,7 @@ namespace Insight.Core.Services.FileProcessors
 					Regex regexSquadron = new Regex(@"^Squadron: (.+?),");
 					if (regexSquadron.IsMatch(input[i]))
 					{
-						Squadon = regexSquadron.Match(input[i]).Groups[1].Value;
+						Squadon = regexSquadron.Match(input[i]).Groups[1].Value.Trim();
 					}
 
 					else if (!input[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
@@ -75,7 +75,7 @@ namespace Insight.Core.Services.FileProcessors
 
 					break;
 				}
-				else if (input[i].StartsWith("\""))
+				else //if (input[i].StartsWith("\""))
 				{
 					string LastName = data[NameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim().ToUpperInvariant();
@@ -88,6 +88,31 @@ namespace Insight.Core.Services.FileProcessors
 					{
 						break;
 					}
+
+					Org org = InsightController.GetOrgByAlias(Squadon);
+					if(org == null)
+					{
+						//TODO ask user to define what org this is
+						Org orgNew = new Org()
+						{
+							Name = "960 AACS",
+							Aliases = new List<OrgAlias>(),
+						};
+						OrgAlias orgAlias = new OrgAlias()
+						{
+							Name = "960 AIRBORNE AIR CTR",
+							Org = orgNew,
+						};
+						OrgAlias orgAlias2 = new OrgAlias()
+						{
+							Name = "960 AACS",
+							Org = orgNew,
+						};
+						orgNew.Aliases.Add(orgAlias);
+						orgNew.Aliases.Add(orgAlias2);
+						InsightController.Add(orgNew);
+					}
+
 					var person = InsightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
@@ -106,7 +131,7 @@ namespace Insight.Core.Services.FileProcessors
 						InsightController.Add(person);
 					}
 					person.Flight = Flight;
-					//person.Organization = ;
+					person.Organization = org;
 					//person.Rank = ;
 
 					InsightController.Update(person);
