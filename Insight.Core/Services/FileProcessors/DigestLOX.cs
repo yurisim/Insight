@@ -105,18 +105,10 @@ namespace Insight.Core.Services.FileProcessors
 						};
 						InsightController.Add(person);
 					}
-					else
-					{
-						//check if name casing is different
-						if (person.FirstName != FirstName || person.LastName != LastName)
-						{
-							person.FirstName = FirstName;
-							person.LastName = LastName;
-						}
-						person.Flight = Flight;
-						//person.Organization = ;
-						//person.Rank = ;
-					}
+					person.Flight = Flight;
+					//person.Organization = ;
+					//person.Rank = ;
+
 					InsightController.Update(person);
 				}
 			}
