@@ -110,7 +110,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToList();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
@@ -211,7 +211,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToList();
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
