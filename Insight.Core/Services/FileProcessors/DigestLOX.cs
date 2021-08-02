@@ -77,8 +77,8 @@ namespace Insight.Core.Services.FileProcessors
 				}
 				else //if (input[i].StartsWith("\""))
 				{
-					string LastName = data[NameIndex].Replace("\"", "").Trim();
-					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim();
+					string LastName = data[NameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim().ToUpperInvariant();
 					string MDS = data[MDSndex + offset].Trim();
 					string Rank = data[RankIndex + offset].Trim();
 					string Flight = data[FlightIndex + offset].Trim();
@@ -122,15 +122,18 @@ namespace Insight.Core.Services.FileProcessors
 						{
 							FirstName = FirstName,
 							LastName = LastName,
+							Medical = new Medical(),
+							Training = new Training(),
+							Personnel = new Personnel(),
+							PEX = new PEX(),
+							Organization = org,
 						};
 						InsightController.Add(person);
 					}
-					else
-					{
-						person.Flight = Flight;
-						person.Organization = org;
-						//person.Rank = ;
-					}
+					person.Flight = Flight;
+					person.Organization = org;
+					//person.Rank = ;
+
 					InsightController.Update(person);
 				}
 			}
