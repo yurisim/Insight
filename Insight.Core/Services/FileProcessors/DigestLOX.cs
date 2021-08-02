@@ -126,7 +126,7 @@ namespace Insight.Core.Services.FileProcessors
 							Training = new Training(),
 							Personnel = new Personnel(),
 							PEX = new PEX(),
-							Organization = new Org(),
+							Organization = org,
 						};
 						InsightController.Add(person);
 					}
