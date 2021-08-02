@@ -45,7 +45,7 @@ namespace Insight.Core.Services.File
 			//Assumptions about the data:
 			//Any person with "E-3G(II)" (opposed to "E-3G") can be disregarded.
 
-			string Squadon;
+			string Squadon = "";
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
@@ -79,8 +79,8 @@ namespace Insight.Core.Services.File
 				}
 				else if (FileContents[i].StartsWith("\""))
 				{
-					string LastName = data[NameIndex].Replace("\"", "").Trim();
-					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim();
+					string LastName = data[NameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim().ToUpperInvariant();
 					string MDS = data[MDSndex + offset].Trim();
 					string Rank = data[RankIndex + offset].Trim();
 					string Flight = data[FlightIndex + offset].Trim();
@@ -90,6 +90,31 @@ namespace Insight.Core.Services.File
 					{
 						continue;
 					}
+
+					Org org = InsightController.GetOrgByAlias(Squadon);
+					if(org == null)
+					{
+						//TODO ask user to define what org this is
+						Org orgNew = new Org()
+						{
+							Name = "960 AACS",
+							Aliases = new List<OrgAlias>(),
+						};
+						OrgAlias orgAlias = new OrgAlias()
+						{
+							Name = "960 AIRBORNE AIR CTR",
+							Org = orgNew,
+						};
+						OrgAlias orgAlias2 = new OrgAlias()
+						{
+							Name = "960 AACS",
+							Org = orgNew,
+						};
+						orgNew.Aliases.Add(orgAlias);
+						orgNew.Aliases.Add(orgAlias2);
+						InsightController.Add(orgNew);
+					}
+
 					var person = InsightController.GetPersonByName(FirstName, LastName);
 
 					//This will assume if person is null at this point that a new one needs to be created.
@@ -99,15 +124,18 @@ namespace Insight.Core.Services.File
 						{
 							FirstName = FirstName,
 							LastName = LastName,
+							Medical = new Medical(),
+							Training = new Training(),
+							Personnel = new Personnel(),
+							PEX = new PEX(),
+							Organization = org,
 						};
 						InsightController.Add(person);
 					}
-					else
-					{
-						person.Flight = Flight;
-						//person.Organization = ;
-						//person.Rank = ;
-					}
+					person.Flight = Flight;
+					person.Organization = org;
+					//person.Rank = ;
+
 					InsightController.Update(person);
 				}
 			}

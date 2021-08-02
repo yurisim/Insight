@@ -43,53 +43,28 @@ namespace Insight.Core.Services.File
 					continue;
 				}
 
+				//PERSONNEL
+				if (person.Personnel == null)
+				{
+					person.Personnel = new Personnel();
+				}
+				person.Personnel.OverallStatus = StringManipulation.StatusReader(data[10]);
+
 				//MEDICAL
 				if (person.Medical == null)
 				{
-					Medical medical = new Medical()
-					{
-						OverallStatus = StringManipulation.StatusReader(data[11])
-					};
-					person.Medical = medical;
+					person.Medical = new Medical();
 				}
-				else //entity already exists
-				{
-					Medical medical = person.Medical;
-					medical.OverallStatus = StringManipulation.StatusReader(data[11]);
-				}
+				person.Medical.OverallStatus = StringManipulation.StatusReader(data[11]);
 
 				//TRAINING
 				if (person.Training == null)
 				{
-					Training training = new Training()
-					{
-						OverallStatus = StringManipulation.StatusReader(data[11])
-					};
-					person.Training = training;
+					person.Training = new Training();
 				}
-				else //entity already exists
-				{
-					Training training = person.Training;
-					training.OverallStatus = StringManipulation.StatusReader(data[12]);
-				}
-
-				//PERSONNEL
-				if (person.Personnel == null)
-				{
-					Personnel personnel = new Personnel()
-					{
-						OverallStatus = StringManipulation.StatusReader(data[11])
-					};
-					person.Personnel = personnel;
-				}
-				else //entity already exists
-				{
-					Personnel personnel = person.Personnel;
-					personnel.OverallStatus = StringManipulation.StatusReader(data[10]);
-				}
+				person.Training.OverallStatus = StringManipulation.StatusReader(data[12]);
 
 				InsightController.Update(person);
-
 			}
 		}
 	}

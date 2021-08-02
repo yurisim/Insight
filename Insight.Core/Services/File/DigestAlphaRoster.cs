@@ -48,10 +48,11 @@ namespace Insight.Core.Services.File
 					{
 						LastName = LastName,
 						FirstName = FirstName,
-						//Medical = new Medical(),
-						//Training = new Training(),
-						//Personnel = new Personnel(),
-						//PEX = new PEX()
+						Medical = new Medical(),
+						Training = new Training(),
+						Personnel = new Personnel(),
+						PEX = new PEX(),
+						Organization = new Org(),
 
 						// TODO get AFSC from alpha roster and create/use existing in database
 						//AFSC =
