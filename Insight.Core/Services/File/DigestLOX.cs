@@ -87,7 +87,7 @@ namespace Insight.Core.Services.File
 					//skips people who have a MDS of "E-3G(II)"
 					if (MDS == "E-3G(II)")
 					{
-						break;
+						continue;
 					}
 
 					Org org = insightController.GetOrgByAlias(Squadon);

@@ -305,9 +305,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				//Set up for test
 				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\LoX_good_input.csv");
 
-				FileType detectedFiletype = Detector.DetectFileType(fileContents);
-
-				IDigest digest = DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: fileContents, dbContextOptions);
+				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
 				digest.DigestLines();
 
 				//Check database is in expected state
