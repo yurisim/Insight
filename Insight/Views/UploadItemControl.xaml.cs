@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Insight.Core.Models;
 
 namespace Insight.Views
 {
@@ -29,11 +30,17 @@ namespace Insight.Views
         }
 
         // Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
+		// TODO: No Longer need this.
         public static readonly DependencyProperty FileTypeProperty = DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
 
-        private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+		/// TODO: Need to move this to view model. No
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-			List<IList<string>> contentsOfFiles = await GetFiles();
+			var contentsOfFiles = await FileService.GetFiles();
 
 			Debug.WriteLine("FilesRead");
 
@@ -46,90 +53,15 @@ namespace Insight.Views
 
 				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions:null));
 			}
+
 			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
 			foreach (var digest in FileDigest)
 			{
 				digest.DigestLines();
 			}
-
-            // if (filesLines != null)
-            // {
-            //     switch (FileType)
-            //     {
-            //         case "AEF":
-            //             Debug.WriteLine(FileType);
-            //             var digestAEF = new DigestAEF(filesLines);
-            //             digestAEF.DigestLines();
-            //             break;
-            //         case "Alpha Roster":
-            //             Debug.WriteLine(FileType);
-            //             var digestAlpha = new DigestAlphaRoster(filesLines);
-            //             digestAlpha.DigestLines();
-            //             break;
-            //         case "PEX":
-            //             Debug.WriteLine(FileType);
-            //             var digestPEX = new DigestPEX(filesLines);
-            //             digestPEX.DigestLines();
-            //             break;
-			// 		case "ETMS":
-			// 			Debug.WriteLine(FileType);
-			// 			var digestETMS = new DigestPEX(filesLines);
-			// 			digestETMS.DigestLines();
-			// 			break;
-			// 		case "LoX":
-			// 			Debug.WriteLine(FileType);
-			// 			var digestLOX = new DigestLOX(filesLines);
-			// 			digestLOX.DigestLines();
-			// 			break;
-			// 		default:
-            //             Debug.WriteLine("OOPS");
-            //             break;
-            //     }
-            // }
         }
 
-        private static async Task<List<IList<string>>> GetFiles()
-        {
-			// Represents the collection of files, with each element being their contents as an IList
-			// of strings
-			var fileCollection = new List<IList<string>>();
 
-			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
-			var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.Downloads
-            };
-
-            picker.FileTypeFilter.Add(".csv");
-
-			// Allow user to pick multiple files
-            var files = await picker.PickMultipleFilesAsync();
-
-            if (files != null)
-            {
-                // Move file to Future Access List
-                var fileTokens = FileService.RememberFiles(files.ToArray());
-
-				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
-				foreach (var fileToken in fileTokens)
-				{
-					// get the file object
-					var fileObject = await FileService.GetFileFromToken(fileToken);
-
-					// get the lines from the file object
-					var fileLines = await FileIO.ReadLinesAsync(fileObject);
-
-					// add to collection
-					fileCollection.Add(fileLines.ToList());
-
-					// forget the file
-					FileService.ForgetFile(fileToken);
-				}
-            }
-
-			return fileCollection;
-		}
 	}
 }

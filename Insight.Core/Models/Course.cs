@@ -27,5 +27,10 @@ namespace Insight.Core.Models
 		public double Interval { get; set; }
 
 		public List<CourseInstance> CourseInstances { get; set; }
+
+		public Course()
+		{
+			CourseInstances = new List<CourseInstance>();
+		}
 	}
 }

@@ -19,6 +19,9 @@ namespace Insight.Core.Services.Database
 			_dbContextOptions = dbContextOptions;
 		}
 
+		/// <summary>
+		/// Whenever the blank constructor is used, it will use the default insight solution. 
+		/// </summary>
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
@@ -169,7 +172,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public Person GetPersonByName(string firstName, string lastName)
+		public Person GetPersonByName(string firstName, string lastName, bool includeSubref = true)
 		{
 			List<Person> persons = new List<Person>();
 			Person person;
@@ -177,19 +180,22 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					// TODO Make if else or make more readable
+					persons = includeSubref ? insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToList()
+						: insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
+							?.ToList();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-					
+
 					person = persons.FirstOrDefault();
 				}
 
@@ -314,8 +320,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
-
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToList();
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
@@ -362,26 +367,21 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Add entity
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="t"></param>
-		public async void Add<T, U, V>(T t, U u, V v)
+		/// <param name="courseInstance"></param>
+		/// <param name="course"></param>
+		/// <param name="person"></param>
+		public async void Add(CourseInstance courseInstance, Course course, Person person)
 		{
-			try
+			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
-				{
-					insightContext.Attach(u);
-					insightContext.Attach(v);
-					_ = insightContext.Add(t);
-					_ = await insightContext.SaveChangesAsync();
-				}
-			}
+				course.CourseInstances.Add(courseInstance);
+				person.CourseInstances.Add(courseInstance);
 
-			//TODO implement exception
-			catch (Exception e)
-			{
-				throw new Exception(e.Message);
+				_ = insightContext.Update(courseInstance);
+
+				_ = await insightContext.SaveChangesAsync();
 			}
+			//TODO implement exception
 		}
 
 		/// <summary>

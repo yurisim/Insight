@@ -14,7 +14,7 @@ namespace Insight.Core.Services.File
 {
 	public class DigestETMS : AbstractDigest, IDigest
 	{
-		int IDigest.Priority { get => 3; }
+		int IDigest.Priority => 3;
 
 		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
@@ -23,12 +23,17 @@ namespace Insight.Core.Services.File
 		public Course CourseType { get; set; }
 
 
+		/// <summary>
+		/// Removed duplicate lines in the ETMS Report as well as any other formatting
+		/// </summary>
+		/// <param name="inputToClean"></param>
 		private void CleanInput(IList<string> inputToClean)
 		{
 			for (var i = 0; i < inputToClean.Count; i++)
 			{
 				var splitLine = inputToClean[i].Split(',');
 
+				// Remove the lines that have empty courses
 				if (string.IsNullOrEmpty(splitLine[4]))
 				{
 					inputToClean.Remove(inputToClean[i]);
@@ -50,9 +55,11 @@ namespace Insight.Core.Services.File
 			// If the course is not found, it will be null, so create the course
 			if (foundCourse == null)
 			{
+				// TODO make custom intervals for each course. Default is hard coded to 1 year
 				var newCourse = new Course()
 				{
-					Name = courseName
+					Name = courseName,
+					Interval = 1
 				};
 
 				insightController.Add(newCourse);
@@ -80,13 +87,19 @@ namespace Insight.Core.Services.File
 				var completionDate = splitLine[4];
 
 				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName);
+				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false);
+
+				bool sdfsd = true;
+
+				// TODO: Make this a try parse
+				var parsedCompletion = DateTime.Parse(completionDate);
 
 				CourseInstance courseInstance = new CourseInstance()
 				{
 					Course = CourseType,
 					Person = foundPerson,
-					Completion = DateTime.Parse(completionDate),
+					Completion = parsedCompletion,
+					Expiration = parsedCompletion.AddDays(CourseType.Interval * 365)
 
 					// TODO: Make custom expiration by JSON object
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
@@ -97,7 +110,7 @@ namespace Insight.Core.Services.File
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;
 
-				insightController.Update(courseInstance);
+				//InsightController.Update(courseInstance);
 
 
 			}
