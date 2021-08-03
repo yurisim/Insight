@@ -19,7 +19,7 @@ namespace Insight
         {
 			var insightController = new InsightController();
 
-			insightController.EnsureDatabase();
+			insightController.EnsureDatabaseCreated();
 
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;

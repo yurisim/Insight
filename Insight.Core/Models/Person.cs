@@ -13,6 +13,8 @@ namespace Insight.Core.Models
 
 		public string LastName { get; set; }
 
+		public Rank Rank { get; set; }
+
 		public string Name => $"{LastName}, {FirstName}";
 
 		public string Phone { get; set; }

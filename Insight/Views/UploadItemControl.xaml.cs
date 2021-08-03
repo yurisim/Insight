@@ -46,13 +46,13 @@ namespace Insight.Views
 
 			List<IDigest> FileDigest = new List<IDigest>();
 
-            foreach (var linesOfFile in contentsOfFiles)
+            foreach (List<string> linesOfFile in contentsOfFiles)
             {
                 // Refactor this to be a static method
-                var detectMe = new Detector(linesOfFile);  // detect file type
-				FileType detectedFiletype = detectMe.DetectFileType();
+				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
 
-				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile));
+				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
+				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions:null));
 			}
 
 			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));

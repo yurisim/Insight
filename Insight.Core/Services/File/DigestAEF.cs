@@ -4,19 +4,17 @@ using System.Text;
 using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestAEF : IDigest
+	public class DigestAEF : AbstractDigest, IDigest
 	{
-
-		private readonly IList<string> FileContents = new List<string>();
-
 		int IDigest.Priority { get => 2; }
 
-		public DigestAEF(IList<string> input)
+		public DigestAEF(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = input;
+
 		}
 
 		/// <summary>
@@ -35,7 +33,7 @@ namespace Insight.Core.Services.File
 				string unit = data[5];
 				string AFSC = data[7];
 
-				Person person = InsightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
+				Person person = insightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim()).Result;
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)
@@ -64,7 +62,7 @@ namespace Insight.Core.Services.File
 				}
 				person.Training.OverallStatus = StringManipulation.StatusReader(data[12]);
 
-				InsightController.Update(person);
+				insightController.Update(person);
 			}
 		}
 	}

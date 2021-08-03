@@ -8,32 +8,20 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestETMS : IDigest
+	public class DigestETMS : AbstractDigest, IDigest
 	{
 		int IDigest.Priority => 3;
 
-		/// <summary>
-		/// This stores the file contents after they have been cleaned in the constructor
-		/// </summary>
-		private IList<string> FileContents;
-
-
-		/// <summary>
-		/// The course that the ETMS document represents, each ETMS document is a diff course
-		/// </summary>
+		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		{
+			CleanInput(FileContents);
+		}
 		public Course CourseType { get; set; }
 
-		/// <summary>
-		/// Constructor for ETMS, cleans the input of ETMS to clear up duplicate records, fix data to be readable
-		/// </summary>
-		/// <param name="input"></param>
-		public DigestETMS(IList<string> input)
-		{
-			CleanInput(input);
-		}
 
 		/// <summary>
 		/// Removed duplicate lines in the ETMS Report as well as any other formatting
@@ -62,7 +50,7 @@ namespace Insight.Core.Services.File
 			// Use Distinct Column to get the file type in case the first row is blank
 			var courseName = FileContents[1].Split(',')[1];
 
-			var foundCourse = InsightController.GetCourseByName(courseName);
+			var foundCourse = insightController.GetCourseByName(courseName);
 
 			// If the course is not found, it will be null, so create the course
 			if (foundCourse == null)
@@ -74,9 +62,9 @@ namespace Insight.Core.Services.File
 					Interval = 1
 				};
 
-				InsightController.Add(newCourse);
+				insightController.Add(newCourse);
 
-				CourseType = InsightController.GetCourseByName(newCourse.Name);
+				CourseType = insightController.GetCourseByName(newCourse.Name);
 			}
 			else
 			{
@@ -99,7 +87,7 @@ namespace Insight.Core.Services.File
 				var completionDate = splitLine[4];
 
 				// TODO: Exception if person is not found
-				var foundPerson = InsightController.GetPersonByName(firstName, lastName, includeSubref: false);
+				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false).Result;
 
 				bool sdfsd = true;
 
@@ -117,7 +105,7 @@ namespace Insight.Core.Services.File
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				InsightController.Add(courseInstance, CourseType, foundPerson);
+				insightController.Add(courseInstance, CourseType, foundPerson);
 
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;

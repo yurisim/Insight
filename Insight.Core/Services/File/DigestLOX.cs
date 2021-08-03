@@ -8,14 +8,13 @@ using Insight.Core.Helpers;
 using Insight.Core.Models;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestLOX : IDigest
+	public class DigestLOX : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 0; }
-
-		private readonly IList<string> FileContents = new List<string>();
 
 		int NameIndex;
 		int MDSndex;
@@ -25,9 +24,9 @@ namespace Insight.Core.Services.File
 
 		bool HeadersProcessed = false;
 
-		public DigestLOX(IList<string> input)
+		public DigestLOX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = input;
+
 		}
 
 		public void DigestLines()
@@ -91,7 +90,7 @@ namespace Insight.Core.Services.File
 						continue;
 					}
 
-					Org org = InsightController.GetOrgByAlias(Squadon);
+					Org org = insightController.GetOrgByAlias(Squadon);
 					if(org == null)
 					{
 						//TODO ask user to define what org this is
@@ -112,10 +111,10 @@ namespace Insight.Core.Services.File
 						};
 						orgNew.Aliases.Add(orgAlias);
 						orgNew.Aliases.Add(orgAlias2);
-						InsightController.Add(orgNew);
+						insightController.Add(orgNew);
 					}
 
-					var person = InsightController.GetPersonByName(FirstName, LastName);
+					var person = insightController.GetPersonByName(FirstName, LastName).Result;
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -130,13 +129,14 @@ namespace Insight.Core.Services.File
 							PEX = new PEX(),
 							//Organization = org,
 						};
-						InsightController.Add(person);
+						insightController.Add(person);
 					}
+
 					person.Flight = Flight;
 					person.Organization = org;
 					//person.Rank = ;
 
-					InsightController.Update(person);
+					insightController.Update(person);
 				}
 			}
 		}

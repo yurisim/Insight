@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestPEX : IDigest
+	public class DigestPEX : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 4; }
 
-		private readonly IList<string> FileContents = new List<string>();
-
-		public DigestPEX(IList<string> input)
+		public DigestPEX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			this.FileContents = input;
+
 		}
 
 		public void DigestLines()
@@ -37,12 +36,12 @@ namespace Insight.Core.Services.File
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
-				var foundPerson = InsightController.GetPersonByShortName(shortName);
+				var foundPerson = insightController.GetPersonByShortName(shortName);
 
 				// try to find the PEX Account
 				foundPerson.Flight = digestedLines[1];
 
-				InsightController.Update(foundPerson);
+				insightController.Update(foundPerson);
 
 			}
 		}

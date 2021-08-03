@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Insight.Core.Models;
+using System.Diagnostics;
 
 namespace Insight.Core.Services.File
 {
@@ -11,9 +12,7 @@ namespace Insight.Core.Services.File
 	/// </summary>
 	public class Detector
 	{
-		private List<string> _inputFile = new List<string>();
-
-		Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
+		private static Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
 			{
 				{FileType.AlphaRoster, Resources.AlphaRosterExpected},
 				{FileType.PEX, Resources.PEXExpected},
@@ -22,21 +21,19 @@ namespace Insight.Core.Services.File
 				{FileType.LOX, Resources.LOXExpected}
 			};
 
-		public Detector(List<string> inputFile)
-		{
-
-			_inputFile = inputFile;
-		}
-
 		/// <summary>
 		/// Detects the type of file based on the first line of the inputFile
 		/// </summary>
 		/// <returns></returns>
-		public FileType DetectFileType()
+		public static FileType DetectFileType(IList<string> inputFile)
 		{
+			if(inputFile == null || inputFile.Count == 0)
+			{
+				throw new ArgumentNullException("null or length 0");
+			}
 			var detectedFileType = FileType.Unknown;
 
-			string firstLine = _inputFile[0];
+			string firstLine = inputFile[0];
 
 			foreach (var supportedFileType in SupportedFileTypes)
 			{
