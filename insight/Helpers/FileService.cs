@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
 using System.Collections.Generic;
+using System.Linq;
+using Windows.Storage.Pickers;
 
 namespace Insight.Helpers
 {
@@ -55,26 +57,47 @@ namespace Insight.Helpers
             }
         }
 
-        //public static void ReadXLSX(string filePath)
-        //{
-        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+		public static async Task<List<List<string>>> GetFiles()
+		{
+			// Represents the collection of files, with each element being their contents as an List
+			// of strings
+			var fileCollection = new List<List<string>>();
 
-        //    using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
-        //    {
-        //        ExcelWorkbook workBook = package.Workbook;
-        //        Debug.WriteLine(package.File == null);
-        //        Debug.WriteLine("*" + package.File);
-        //        //var sheet = workBook.Names
+			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
+			var picker = new FileOpenPicker
+			{
+				ViewMode = PickerViewMode.Thumbnail,
+				SuggestedStartLocation = PickerLocationId.Downloads
+			};
 
-        //        //sheet.Cells["A2"].Value = "SIM, YURA";
+			picker.FileTypeFilter.Add(".csv");
 
-        //        ExcelWorksheet tempSheet = workBook.Worksheets.Add("Cater is Cool");
+			// Allow user to pick multiple files
+			var files = await picker.PickMultipleFilesAsync();
 
-        //        tempSheet.Cells["A1"].Value = "Cater is Even Cooler!";
+			if (files != null)
+			{
+				// Move file to Future Access List
+				var fileTokens = RememberFiles(files.ToArray());
 
-        //        package.Save();
-        //    }
-        //    //}
-        //}
-    }
+				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
+				foreach (var fileToken in fileTokens)
+				{
+					// get the file object
+					var fileObject = await GetFileFromToken(fileToken);
+
+					// get the lines from the file object
+					var fileLines = await FileIO.ReadLinesAsync(fileObject);
+
+					// add to collection
+					fileCollection.Add(fileLines.ToList());
+
+					// forget the file
+					ForgetFile(fileToken);
+				}
+			}
+
+			return fileCollection;
+		}
+	}
 }
