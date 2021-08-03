@@ -17,6 +17,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 	{
 		public InsightController controller;
 
+		/// <summary>
+		/// Set up run before every test
+		/// </summary>
 		[SetUp]
 		public void SetUp()
 		{
@@ -30,6 +33,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 
 		}
 
+		/// <summary>
+		/// Adds mock data to database
+		/// </summary>
 		private void SeedDb()
 		{
 			var persons = new List<Person>
@@ -106,6 +112,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			personFromDB.Id.Should().Be(person.Id);
 		}
 
+		/// <summary>
+		/// Teardown run after every test
+		/// </summary>
 		[TearDown]
 		public void TearDown()
 		{

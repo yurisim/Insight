@@ -285,18 +285,27 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 					.UseInMemoryDatabase(databaseName: "InsightTestDB")
 					.Options;
 
+			/// <summary>
+			/// Setup run before every test
+			/// </summary>
 			[SetUp]
 			public void SetUp()
 			{
 				controller = new InsightController(dbContextOptions);
 			}
 
+			/// <summary>
+			/// Tear down run after every test
+			/// </summary>
 			[TearDown]
 			public void Dispose()
 			{
 				controller.EnsureDatabaseDeleted();
 			}
 
+			/// <summary>
+			/// Tests that the data from a LoX file is added to the database properly
+			/// </summary>
 			[Test]
 			public void DigestLOXTest()
 			{
@@ -368,8 +377,6 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				person14.Rank.Should().Be(Rank.E7);
 			
 			}
-
-			
 		}
 	}
 }

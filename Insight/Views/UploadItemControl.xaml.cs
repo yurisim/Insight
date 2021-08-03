@@ -51,6 +51,7 @@ namespace Insight.Views
                 // Refactor this to be a static method
 				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
 
+				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
 				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions:null));
 			}
 
