@@ -128,7 +128,7 @@ namespace Insight.Core.Services.File
 							Training = new Training(),
 							Personnel = new Personnel(),
 							PEX = new PEX(),
-							Organization = org,
+							//Organization = org,
 						};
 						InsightController.Add(person);
 					}
