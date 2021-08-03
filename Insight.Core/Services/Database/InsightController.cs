@@ -19,10 +19,13 @@ namespace Insight.Core.Services.Database
 			_dbContextOptions = dbContextOptions;
 		}
 
+		/// <summary>
+		/// Whenever the blank constructor is used, it will use the default insight solution. 
+		/// </summary>
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
-			.UseSqlite("Filename={Insight.db}")
+			.UseSqlite("Filename=Insight.db")
 			.Options;
 		}
 
@@ -156,7 +159,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public static Person GetPersonByName(string firstName, string lastName)
+		public static Person GetPersonByName(string firstName, string lastName, bool includeSubref = true)
 		{
 			List<Person> persons = new List<Person>();
 			Person person;
@@ -164,25 +167,28 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					// TODO Make if else or make more readable
+					persons = includeSubref ? insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToList()
+						: insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
+							?.ToList();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-					
+
 					person = persons.FirstOrDefault();
 				}
 
 			}
 			//TODO implement exception
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw new Exception("Insight.db access error");
 			}
@@ -249,6 +255,37 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
+		public static Course GetCourseByName(string courseName)
+		{
+			// now try to find the course with the name
+			Course foundCourse = null;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
+
+					//TODO implement better exceptions
+					if (foundCourses.Count() > 1)
+					{
+						throw new Exception("Too many found, should be null or 1");
+					}
+
+					foundCourse = foundCourses.FirstOrDefault();
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				Debug.WriteLine(e);
+			}
+
+			//returns person or null if none exist
+			return foundCourse;
+		}
+
+
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>
@@ -292,7 +329,7 @@ namespace Insight.Core.Services.Database
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Add entity
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
@@ -306,11 +343,32 @@ namespace Insight.Core.Services.Database
 					_ = await insightContext.SaveChangesAsync();
 				}
 			}
+
 			//TODO implement exception
 			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
+		}
+
+		/// <summary>
+		/// Add entity
+		/// </summary>
+		/// <param name="courseInstance"></param>
+		/// <param name="course"></param>
+		/// <param name="person"></param>
+		public static async void Add(CourseInstance courseInstance, Course course, Person person)
+		{
+			using (var insightContext = new InsightContext(_dbContextOptions))
+			{
+				course.CourseInstances.Add(courseInstance);
+				person.CourseInstances.Add(courseInstance);
+
+				_ = insightContext.Update(courseInstance);
+
+				_ = await insightContext.SaveChangesAsync();
+			}
+			//TODO implement exception
 		}
 
 		/// <summary>
@@ -329,9 +387,9 @@ namespace Insight.Core.Services.Database
 				}
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
 		}
 	}

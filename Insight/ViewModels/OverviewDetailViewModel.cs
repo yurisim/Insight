@@ -27,62 +27,44 @@ namespace Insight.ViewModels
 
         public async Task LoadDataAsync()
         {
-            //System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetContentGridDataAsync();
-            //Item = data.First(i => i.DoDID == orderID);
-
             Source.Clear();
 
 			var insightController = new InsightController();
 			var data = await insightController.GetAllPersons();
 
-            List<Person> aFlight = new List<Person>();
-            List<Person> bFlight = new List<Person>();
-            List<Person> cFlight = new List<Person>();
-            List<Person> dFlight = new List<Person>();
-            List<Person> eFlight = new List<Person>();
-            List<Person> fFlight = new List<Person>();
+            List<string> allFlightNames = new List<string>();
 
-            //TODO: MAKE SWITCH
+            List<List<Person>> allFlights = new List<List<Person>>();
 
             foreach (var item in data)
             {
-                if (item.Flight?.ToUpper() == "A")
+                if (allFlightNames.Contains(item.Flight.ToUpper()))
                 {
-                    aFlight.Add(item);
+                    allFlights[allFlightNames.IndexOf(item.Flight.ToUpper())].Add(item);
                 }
-                else if (item.Flight?.ToUpper() == "B")
+                else
                 {
-                    bFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "C")
-                {
-                    cFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "D")
-                {
-                    dFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "E")
-                {
-                    eFlight.Add(item);
-                }
-                else if (item.Flight?.ToUpper() == "F")
-                {
-                    fFlight.Add(item);
+                    allFlightNames.Add(item.Flight.ToUpper());
+                    List<Person> newFlight = new List<Person>();
+                    allFlights.Add(newFlight);
                 }
             }
 
-            ReadyPercentages medPercentages = new ReadyPercentages("Medical Overall", GetMedical(data), GetMedical(aFlight), GetMedical(bFlight), GetMedical(cFlight), GetMedical(dFlight),
-                GetMedical(eFlight), GetMedical(fFlight));
-            Source.Add(medPercentages);
+            ReadyPercentages OverallPercentages = new ReadyPercentages("960", GetMedical(data), GetPersonnel(data), GetTraining(data));
+            Source.Add(OverallPercentages);
 
-            ReadyPercentages personnelPercentages = new ReadyPercentages("Personnel Overall", GetPersonnel(data), GetPersonnel(aFlight), GetPersonnel(bFlight), GetPersonnel(cFlight),
-                GetPersonnel(dFlight), GetPersonnel(eFlight), GetPersonnel(fFlight));
-            Source.Add(personnelPercentages);
+            foreach (var item in allFlightNames)
+            {
+                Source.Add(FlightPercentageBuilder(item, allFlights[allFlightNames.IndexOf(item)]));
+            }
 
-            ReadyPercentages trainingPercentages = new ReadyPercentages("Training Overall", GetTraining(data), GetTraining(aFlight), GetTraining(bFlight), GetTraining(cFlight),
-                GetTraining(dFlight), GetTraining(eFlight), GetTraining(fFlight));
-            Source.Add(trainingPercentages);
+        }
+
+
+        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
+        {
+            ReadyPercentages flightPercentages = new ReadyPercentages(flight, GetMedical(data), GetPersonnel(data), GetTraining(data));
+            return flightPercentages;
         }
 
         private string GetMedical(List<Person> data)
@@ -112,7 +94,7 @@ namespace Insight.ViewModels
                 decimal personnelPercentage = 0;
                 foreach (var item in data)
                 {
-                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
                     {
                         personnelPercentage++;
                     }
@@ -131,7 +113,7 @@ namespace Insight.ViewModels
                 decimal trainingPercentage = 0;
                 foreach (var item in data)
                 {
-                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
                     {
                         trainingPercentage++;
                     }
@@ -146,25 +128,17 @@ namespace Insight.ViewModels
         public struct ReadyPercentages
         {
             public string RowName { get; }
-            public string ValueAll { get; }
-            public string FlightA { get; }
-            public string FlightB { get; }
-            public string FlightC { get; }
-            public string FlightD { get; }
-            public string FlightE { get; }
-            public string FlightF { get; }
+            public string ValueMed { get; }
+            public string ValuePersonnel { get; }
+            public string ValueTraining { get; }
 
 
-            public ReadyPercentages(string rowName, string value1, string valueA, string valueB, string valueC, string valueD, string valueE, string valueF)
+            public ReadyPercentages(string rowName, string valueMed, string valuePersonnel, string valueTraining)
             {
                 RowName = rowName;
-                ValueAll = value1;
-                FlightA = valueA;
-                FlightB = valueB;
-                FlightC = valueC;
-                FlightD = valueD;
-                FlightE = valueE;
-                FlightF = valueF;
+                ValueMed = valueMed;
+                ValuePersonnel = valuePersonnel;
+                ValueTraining = valueTraining;
             }
         }
     }

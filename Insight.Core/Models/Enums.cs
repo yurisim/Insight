@@ -7,6 +7,7 @@
 		Upcoming = 2,
 		Overdue = 4
 	}
+
 	public enum Rank
 	{
 		E1,
@@ -28,5 +29,15 @@
 		O8,
 		O9,
 		O10,
+	}
+
+	public enum FileType
+	{
+		Unknown,
+		AlphaRoster,
+		PEX,
+		AEF,
+		ETMS,
+		LOX
 	}
 }

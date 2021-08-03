@@ -41,5 +41,10 @@ namespace Insight.Core.Models
 
 		public List<CourseInstance> CourseInstances { get; set; }
 
+		public Person()
+		{
+			CourseInstances = new List<CourseInstance>();
+		}
+
 	}
 }

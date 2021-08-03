@@ -3,29 +3,31 @@ using System.Collections.Generic;
 using Insight.Core.Properties;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Services.FileProcessors
+namespace Insight.Core.Services.File
 {
 	public class DigestPEX : IDigest
 	{
-		private readonly IList<string> input = new List<string>();
+		int IDigest.Priority { get => 4; }
+
+		private readonly IList<string> FileContents = new List<string>();
 
 		public DigestPEX(IList<string> input)
 		{
-			this.input = input;
+			this.FileContents = input;
 		}
 
 		public void DigestLines()
 		{
 			// TODO dialog exception for schema differences
-			if (!input[0].StartsWith(Resources.PEXExpectedSchema))
+			if (!FileContents[0].StartsWith(Resources.PEXExpected))
 			{
 				throw new NotImplementedException();
 			}
 
 			// We start at i = 1 so that we ignore the initial schema.
-			for (var lineIndex = 1; lineIndex < input.Count; lineIndex++)
+			for (var lineIndex = 1; lineIndex < FileContents.Count; lineIndex++)
 			{
-				string[] digestedLines = input[lineIndex].Split(',');
+				string[] digestedLines = FileContents[lineIndex].Split(',');
 
 				// short name of person, format is "SmithJ" if name is "John Smith"
 				string shortName = digestedLines[0];

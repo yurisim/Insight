@@ -21,6 +21,5 @@ namespace Insight.ViewModels
         ////Using a DependencyProperty as the backing store for FileType.This enables animation, styling, binding, etc...
         //public static readonly DependencyProperty FileTypeProperty =
         //     DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
-
     }
 }
