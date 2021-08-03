@@ -87,7 +87,7 @@ namespace Insight.Core.Services.File
 				var completionDate = splitLine[4];
 
 				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false);
+				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false).Result;
 
 				bool sdfsd = true;
 

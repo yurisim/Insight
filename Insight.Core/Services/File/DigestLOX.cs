@@ -114,7 +114,7 @@ namespace Insight.Core.Services.File
 						insightController.Add(orgNew);
 					}
 
-					var person = insightController.GetPersonByName(FirstName, LastName);
+					var person = insightController.GetPersonByName(FirstName, LastName).Result;
 
 					//This will assume if person is null at this point that a new one needs to be created.
 					if (person == null)
@@ -131,6 +131,7 @@ namespace Insight.Core.Services.File
 						};
 						insightController.Add(person);
 					}
+
 					person.Flight = Flight;
 					person.Organization = org;
 					//person.Rank = ;

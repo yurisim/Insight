@@ -65,7 +65,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void GetPersonByName()
 		{
-			var person = controller.GetPersonByName("John", "Smith");
+			var person = controller.GetPersonByName("John", "Smith").Result;
 
 			person.Should().NotBeNull();
 		}
@@ -73,7 +73,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void GetPersonCaps()
 		{
-			var person = controller.GetPersonByName("JOHN", "SMITH");
+			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
 
 			person.Should().NotBeNull();
 		}
@@ -81,7 +81,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void GetNullPerson()
 		{
-			var person = controller.GetPersonByName("I should", "not exist");
+			var person = controller.GetPersonByName("I should", "not exist").Result;
 
 			person.Should().BeNull();
 		}
@@ -93,7 +93,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 
 			controller.Add(person);
 
-			var personFromDB = controller.GetPersonByName("Jonathan", "Xander");
+			var personFromDB = controller.GetPersonByName("Jonathan", "Xander").Result;
 
 			person.Id.Should().Be(personFromDB.Id);
 		}
@@ -101,13 +101,13 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void UpdatePerson()
 		{
-			var person = controller.GetPersonByName("John", "Smith");
+			var person = controller.GetPersonByName("John", "Smith").Result;
 
 			person.FirstName = "Johnathan";
 
 			controller.Update(person);
 
-			var personFromDB = controller.GetPersonByName("Johnathan", "Smith");
+			var personFromDB = controller.GetPersonByName("Johnathan", "Smith").Result;
 
 			personFromDB.Id.Should().Be(person.Id);
 		}

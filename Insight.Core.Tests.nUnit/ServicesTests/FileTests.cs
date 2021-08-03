@@ -318,61 +318,61 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				digest.DigestLines();
 
 				//Check database is in expected state
-				Person person1 = controller.GetPersonByName("Sophie", "Alsop");
+				Person person1 = controller.GetPersonByName("Sophie", "Alsop").Result;
 				person1.Should().NotBeNull();
 				person1.Rank.Should().Be(Rank.E2);
 				//person1.Flight
 				//person1.org
 
-				Person person2 = controller.GetPersonByName("Neil", "Chapman");
+				Person person2 = controller.GetPersonByName("Neil", "Chapman").Result;
 				person2.Should().NotBeNull();
 				person2.Rank.Should().Be(Rank.Unknown);
 
-				Person person3 = controller.GetPersonByName("Olivia", "Churchill");
+				Person person3 = controller.GetPersonByName("Olivia", "Churchill").Result;
 				person3.Should().NotBeNull();
 				person3.Rank.Should().Be(Rank.E8);
 
-				Person person4 = controller.GetPersonByName("Joshua", "Clark");
+				Person person4 = controller.GetPersonByName("Joshua", "Clark").Result;
 				person4.Should().NotBeNull();
 				person4.Rank.Should().Be(Rank.E1);
 
-				Person person5 = controller.GetPersonByName("Anthony", "Hart");
+				Person person5 = controller.GetPersonByName("Anthony", "Hart").Result;
 				person5.Should().NotBeNull();
 				person5.Rank.Should().Be(Rank.E6);
 
-				Person person6 = controller.GetPersonByName("Grace", "McCloud");
+				Person person6 = controller.GetPersonByName("Grace", "McCloud").Result;
 				person6.Should().NotBeNull();
 				person6.Rank.Should().Be(Rank.E3);
 
-				Person person7 = controller.GetPersonByName("Dean", "St. Onge");
+				Person person7 = controller.GetPersonByName("Dean", "St. Onge").Result;
 				person7.Should().NotBeNull();
 				person7.Rank.Should().Be(Rank.E7);
 
-				Person person8 = controller.GetPersonByName("Jean", "St. Onge");
+				Person person8 = controller.GetPersonByName("Jean", "St. Onge").Result;
 				person8.Should().NotBeNull();
 				person8.Rank.Should().Be(Rank.O9);
 
-				Person person9 = controller.GetPersonByName("Julian", "Underwood");
+				Person person9 = controller.GetPersonByName("Julian", "Underwood").Result;
 				person9.Should().NotBeNull();
 				person9.Rank.Should().Be(Rank.O8);
 
-				Person person10= controller.GetPersonByName("First", "Last Name");
+				Person person10= controller.GetPersonByName("First", "Last Name").Result;
 				person10.Should().NotBeNull();
 				person10.Rank.Should().Be(Rank.O2);
 
-				Person person11 = controller.GetPersonByName("Sim", "Yura-Sim");
+				Person person11 = controller.GetPersonByName("Sim", "Yura-Sim").Result;
 				person11.Should().NotBeNull();
 				person11.Rank.Should().Be(Rank.O1);
 
-				Person person12 = controller.GetPersonByName("LeKeith", "McLean");
+				Person person12 = controller.GetPersonByName("LeKeith", "McLean").Result;
 				person12.Should().NotBeNull();
 				person12.Rank.Should().Be(Rank.O3);
 
-				Person person13 = controller.GetPersonByName("Charles", "Nichols");
+				Person person13 = controller.GetPersonByName("Charles", "Nichols").Result;
 				person13.Should().NotBeNull();
 				person13.Rank.Should().Be(Rank.O10);
 
-				Person person14 = controller.GetPersonByName("Katherine", "Thomson");
+				Person person14 = controller.GetPersonByName("Katherine", "Thomson").Result;
 				person14.Should().NotBeNull();
 				person14.Rank.Should().Be(Rank.E7);
 			

@@ -38,7 +38,7 @@ namespace Insight.Core.Services.File
 				string SSN = digestedLines[2].Replace("-", "");
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = insightController.GetPersonByName(FirstName, LastName);
+				var person = insightController.GetPersonByName(FirstName, LastName).Result;
 
 				if (person == null)
 				{

@@ -172,23 +172,22 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public Person GetPersonByName(string firstName, string lastName, bool includeSubref = true)
+		public async Task<Person> GetPersonByName(string firstName, string lastName, bool includeSubref = true)
 		{
-			List<Person> persons = new List<Person>();
 			Person person;
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					// TODO Make if else or make more readable
-					persons = includeSubref ? insightContext.Persons
+					var persons = includeSubref ? await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToList()
-						: insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
-							?.ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync()
+						: await insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
+							?.ToListAsync();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
@@ -205,6 +204,7 @@ namespace Insight.Core.Services.Database
 			{
 				throw new Exception("Insight.db access error");
 			}
+
 			//returns person or null if none exist
 			return person;
 		}

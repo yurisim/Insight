@@ -33,7 +33,7 @@ namespace Insight.Core.Services.File
 				string unit = data[5];
 				string AFSC = data[7];
 
-				Person person = insightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim());
+				Person person = insightController.GetPersonByName(firstName: name[1].Trim(), lastName: name[0].Trim()).Result;
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)
