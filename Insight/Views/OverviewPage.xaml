@@ -39,7 +39,7 @@
             <Grid x:Name="itemThumbnail"
                         Padding="{StaticResource XSmallLeftTopRightBottomMargin}"
                         Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" PointerPressed="StackPanel_PointerPressed">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" PointerPressed="StackPanel_PointerPressed" Grid.Column="0">
                     <SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <SymbolIcon.RenderTransform>
                             <CompositeTransform ScaleX="2" ScaleY="2"/>
@@ -49,9 +49,11 @@
                     <TextBlock Margin="{StaticResource XXSmallTopMargin}"
                                 HorizontalAlignment="Center"
                                 Text="960 AACS"
+							   Tag="OrgBlock"
                                 Style="{ThemeResource BodyTextStyle}" VerticalAlignment="Center" />
                 </StackPanel>
-            </Grid>
+				
+			</Grid>
             <!--</DataTemplate>
             </controls:AdaptiveGridView.ItemTemplate>-->
         </controls:AdaptiveGridView>

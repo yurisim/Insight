@@ -42,9 +42,9 @@ namespace Insight.ViewModels
 			set;
 		}
 
-        public OverviewDetailViewModel()
+        public OverviewDetailViewModel(string org)
         {
-
+			PageOrg = org;
         }
 		/// <summary>
 		/// puts the people into flights, calculates the unit's overall readiness based on medical, training, personnel data
