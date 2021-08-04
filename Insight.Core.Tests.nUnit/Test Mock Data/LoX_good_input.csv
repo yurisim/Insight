@@ -22,9 +22,11 @@ Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3
 "Yura-Sim, Sim",FE,E-3G,2ndLt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
 ", Eric",FE,E-3G,2Lt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
 "McLean, LeKeith",FE,E-3G,Capt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
-"Thomson, Katherine III",FE,E-3G,MSgt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
 "Cater, ",FE,E-3G,MSgt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
 ", ",FE,E-3G,SMSgt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
+"Data, NO",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,FE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+No Comma,FE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 R,Certified w/ Restrictions,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 X,Certified,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -36,8 +38,9 @@ Signature:, ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 , ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,"MICHAEL C. HOGAN, Lt Col, USAF",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,Commander,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-
-
-
-
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Thomson, Katherine III",FE,E-3G,MSgt,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
 "Nichols III, Charles Edward",FE,E-3G,Gen,A,CMR,E,,,,,,,X,,,,,X,X,,,,,,X,,,,,,,,
