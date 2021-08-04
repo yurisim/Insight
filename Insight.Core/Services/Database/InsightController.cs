@@ -12,24 +12,27 @@ namespace Insight.Core.Services.Database
 {
 	public class InsightController
 	{
-		private static DbContextOptions<InsightContext> _dbContextOptions;
+		private DbContextOptions<InsightContext> _dbContextOptions;
 
 		public InsightController(DbContextOptions<InsightContext> dbContextOptions)
 		{
 			_dbContextOptions = dbContextOptions;
 		}
 
+		/// <summary>
+		/// Whenever the blank constructor is used, it will use the default insight solution. 
+		/// </summary>
 		public InsightController()
 		{
 			_dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
-			.UseSqlite("Filename={Insight.db}")
+			.UseSqlite("Filename=Insight.db")
 			.Options;
 		}
 
 		/// <summary>
 		/// Ensures database has been created.
 		/// </summary>
-		public void EnsureDatabase()
+		public void EnsureDatabaseCreated()
 		{
 			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 			{
@@ -37,6 +40,19 @@ namespace Insight.Core.Services.Database
 				_ = insightContext.Database.EnsureCreated();
 			}
 		}
+
+		/// <summary>
+		/// Ensures database has been deleted.
+		/// </summary>
+		public void EnsureDatabaseDeleted()
+		{
+			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+			{
+				//Ensure database is created
+				_ = insightContext.Database.EnsureDeleted();
+			}
+		}
+
 
 		/// <summary>
 		/// Returns all Person objects from database
@@ -71,7 +87,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <param name="org"></param>
 		/// <returns></returns>
-		public static async Task<List<Person>> GetAllPersons(Org org)
+		public async Task<List<Person>> GetAllPersons(Org org)
 		{
 			List<Person> persons;
 
@@ -94,7 +110,7 @@ namespace Insight.Core.Services.Database
 		/// Returns all OrgAlias objects from database
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<List<OrgAlias>> GetAllOrgAliases()
+		public async Task<List<OrgAlias>> GetAllOrgAliases()
 		{
 			List<OrgAlias> orgAliases;
 
@@ -119,7 +135,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <param alias="alias"></param>
 		/// <returns></returns>
-		public static Org GetOrgByAlias(string alias)
+		public Org GetOrgByAlias(string alias)
 		{
 			List<Org> orgs = new List<Org>();
 
@@ -156,36 +172,39 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public static Person GetPersonByName(string firstName, string lastName)
+		public async Task<Person> GetPersonByName(string firstName, string lastName, bool includeSubref = true)
 		{
-			List<Person> persons = new List<Person>();
 			Person person;
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					// TODO Make if else or make more readable
+					var persons = includeSubref ? await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())?.ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync()
+						: await insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
+							?.ToListAsync();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-					
+
 					person = persons.FirstOrDefault();
 				}
 
 			}
 			//TODO implement exception
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw new Exception("Insight.db access error");
 			}
+
 			//returns person or null if none exist
 			return person;
 		}
@@ -197,7 +216,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <returns></returns>
 		/// 
-		public static Person GetPersonByShortName(string shortName)
+		public Person GetPersonByShortName(string shortName)
 		{
 
 			// break up shortname into first letters and last name
@@ -249,6 +268,37 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
+		public Course GetCourseByName(string courseName)
+		{
+			// now try to find the course with the name
+			Course foundCourse = null;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
+
+					//TODO implement better exceptions
+					if (foundCourses.Count() > 1)
+					{
+						throw new Exception("Too many found, should be null or 1");
+					}
+
+					foundCourse = foundCourses.FirstOrDefault();
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				Debug.WriteLine(e);
+			}
+
+			//returns person or null if none exist
+			return foundCourse;
+		}
+
+
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>
@@ -256,7 +306,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <param name="SSN"></param>
 		/// <returns></returns>
-		public static Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
+		public Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
 		{
 			//TODO refactor to reuse code more and have better methods
 			List<Person> persons = new List<Person>();
@@ -270,7 +320,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower() && x.SSN == SSN).ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToList();
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
@@ -292,11 +342,11 @@ namespace Insight.Core.Services.Database
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Add entity
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
-		public static async void Add<T>(T t)
+		public async void Add<T>(T t)
 		{
 			try
 			{
@@ -306,11 +356,32 @@ namespace Insight.Core.Services.Database
 					_ = await insightContext.SaveChangesAsync();
 				}
 			}
+
 			//TODO implement exception
 			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
+		}
+
+		/// <summary>
+		/// Add entity
+		/// </summary>
+		/// <param name="courseInstance"></param>
+		/// <param name="course"></param>
+		/// <param name="person"></param>
+		public async void Add(CourseInstance courseInstance, Course course, Person person)
+		{
+			using (var insightContext = new InsightContext(_dbContextOptions))
+			{
+				course.CourseInstances.Add(courseInstance);
+				person.CourseInstances.Add(courseInstance);
+
+				_ = insightContext.Update(courseInstance);
+
+				_ = await insightContext.SaveChangesAsync();
+			}
+			//TODO implement exception
 		}
 
 		/// <summary>
@@ -318,7 +389,7 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="t"></param>
-		public static async void Update<T>(T t)
+		public async void Update<T>(T t)
 		{
 			try
 			{
@@ -329,9 +400,9 @@ namespace Insight.Core.Services.Database
 				}
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
-				throw new Exception("Insight.db access error");
+				throw new Exception(e.Message);
 			}
 		}
 	}

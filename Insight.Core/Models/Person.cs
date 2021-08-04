@@ -13,6 +13,8 @@ namespace Insight.Core.Models
 
 		public string LastName { get; set; }
 
+		public Rank Rank { get; set; }
+
 		public string Name => $"{LastName}, {FirstName}";
 
 		public string Phone { get; set; }
@@ -40,6 +42,11 @@ namespace Insight.Core.Models
 		public PEX PEX { get; set; }
 
 		public List<CourseInstance> CourseInstances { get; set; }
+
+		public Person()
+		{
+			CourseInstances = new List<CourseInstance>();
+		}
 
 	}
 }

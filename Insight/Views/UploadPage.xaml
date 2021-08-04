@@ -13,11 +13,11 @@
 
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <StackPanel VerticalAlignment="Top">
-            <views:UploadItemControl FileType="Alpha Roster"></views:UploadItemControl>
-            <views:UploadItemControl FileType="AEF"></views:UploadItemControl>
+            <views:UploadItemControl FileType="Bulk Upload"></views:UploadItemControl>
+            <!--<views:UploadItemControl FileType="AEF"></views:UploadItemControl>
             <views:UploadItemControl FileType="PEX"></views:UploadItemControl>
 			<views:UploadItemControl FileType="ETMS"></views:UploadItemControl>
-			<views:UploadItemControl FileType="LoX"></views:UploadItemControl>
+			<views:UploadItemControl FileType="LoX"></views:UploadItemControl>-->
 
         </StackPanel>
     </Grid>

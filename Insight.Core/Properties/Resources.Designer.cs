@@ -61,20 +61,56 @@ namespace Insight.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The information herein is For Official Use Only (FOUO).
+        /// </summary>
+        internal static string AEFExpected {
+            get {
+                return ResourceManager.GetString("AEFExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FULL_NAME,SSAN,GRADE,RECORD_STATUS,ASSIGNED_PAS,ASSIGNED_PAS_CLEARTEXT,OFFICE_SYMBOL,DUTY_TITLE,DUTY_START_DATE,DOR,DAFSC,CAFSC,PAFSC,2AFSC,3AFSC,4AFSC,DATE_ARRIVED_STATION,DUTY_PHONE,TAFMSD,DOE,DOS,ETS,DATE_OF_BIRTH,HOME_ADDRESS,HOME_CITY,HOME_STATE,HOME_ZIP_CODE,SUPV_NAME,GRADE_PERM_PROJ,UIF_CODE,UIF_DISPOSITION_DATE,PROJ_EVAL_CLOSE_DATE,MARITAL_STATUS,RNLTD,GAINING_PAS,GAINING_PAS_CLEARTEXT,LAST_EVAL_RATING,LAST_EVAL_CLOSE_DATE,PERF_INDICATOR,SPOUSE_SSAN,SUPV_BEGIN_DATE,REENL_ELIG_STATUS,HOME_PHONE_NUMBE [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string AlphaRosterExpectedSchema {
+        internal static string AlphaRosterExpected {
             get {
-                return ResourceManager.GetString("AlphaRosterExpectedSchema", resourceCulture);
+                return ResourceManager.GetString("AlphaRosterExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PAS Description,Course Title,Last Name,First Name,Completion Date.
+        /// </summary>
+        internal static string ETMSExpected {
+            get {
+                return ResourceManager.GetString("ETMSExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CONTROLLED UNCLASSIFIED INFORMATION.
+        /// </summary>
+        internal static string LOXExpected {
+            get {
+                return ResourceManager.GetString("LOXExpected", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ShortName,PEX Designation.
         /// </summary>
-        internal static string PEXExpectedSchema {
+        internal static string PEXExpected {
             get {
-                return ResourceManager.GetString("PEXExpectedSchema", resourceCulture);
+                return ResourceManager.GetString("PEXExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown File Type Detected.
+        /// </summary>
+        internal static string UnsupportedFileType {
+            get {
+                return ResourceManager.GetString("UnsupportedFileType", resourceCulture);
             }
         }
     }

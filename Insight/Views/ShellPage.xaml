@@ -36,7 +36,6 @@
             <winui:NavigationViewItem x:Uid="Shell_Overview" Icon="People" helpers:NavHelper.NavigateTo="views:OverviewPage" />
             <winui:NavigationViewItem x:Uid="Shell_Status" Icon="Document" helpers:NavHelper.NavigateTo="views:StatusPage" />
             <winui:NavigationViewItem x:Uid="Shell_Organizations" Icon="Flag" helpers:NavHelper.NavigateTo="views:OrganizationsPage" />
-            <winui:NavigationViewItem x:Uid="Shell_WebView" Icon="Globe" helpers:NavHelper.NavigateTo="views:WebViewPage" />
             <winui:NavigationViewItem x:Uid="Shell_Upload" Icon="Document" helpers:NavHelper.NavigateTo="views:UploadPage" />
         </winui:NavigationView.MenuItems>
         <i:Interaction.Behaviors>
