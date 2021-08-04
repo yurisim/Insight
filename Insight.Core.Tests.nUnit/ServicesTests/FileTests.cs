@@ -17,9 +17,8 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 	public class Helper
 	{
 		//TODO this is a stop gap to allow me to continue writing tasks. In the future read file needs to be moved out of the front end
-		public static IList<string> ReadFile(string relativeFilePath)
+		public static IList<string> ReadFile(string filePath)
 		{
-			string filePath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName, @"Test Mock Data\"+relativeFilePath);
 			IList<string> result = new List<string>();
 			using (var sr = new StreamReader(filePath))
 			{
@@ -44,7 +43,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void ReadGoodFile()
 		{
-			IList<string> fileContents = Helper.ReadFile(@"short_file_test.csv");
+			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\short_file_test.csv");
 
 
 			IList<string> Result = new List<string>();
@@ -66,7 +65,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void ReadFileThatDoesNotExist()
 		{
-			IList<string> fileContents = Helper.ReadFile(@"this_file_does_not_exist.csv");
+			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\this_file_does_not_exist.csv");
 
 			fileContents.Should().BeNull();
 		}
@@ -78,7 +77,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void ReadEmptyFile()
 		{
-			IList<string> fileContents = Helper.ReadFile(@"empty_file.csv");
+			IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\empty_file.csv");
 
 			fileContents.Should().BeNullOrEmpty();
 		}
@@ -95,7 +94,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectLoX()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"LoX_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\LoX_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -108,7 +107,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectAEF()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"AEF_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\AEF_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -121,7 +120,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectAlphaRoster()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"Alpha_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\Alpha_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -134,7 +133,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectETMS()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"ETMS_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\ETMS_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -147,7 +146,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectPEX()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"PEX_good_input.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\PEX_good_input.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -160,7 +159,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectUnknown()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"random_text.txt");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\random_text.txt");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -173,7 +172,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			[Test]
 			public void DetectEmptyFile()
 			{
-				IList<string> fileContents = Helper.ReadFile(@"empty_file.csv");
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\empty_file.csv");
 
 				FileType detectedFiletype = Detector.DetectFileType(fileContents);
 
@@ -307,17 +306,15 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			/// <summary>
 			/// Tests that the data from a LoX file is added to the database properly
 			/// </summary>
-			[TestCase("LoX_good_input.csv")]
-			[TestCase("LoX_switched_columns.csv")]
-			[TestCase("LoX_switched_columns_2.csv")]
-
+			[TestCase(@"Test Mock Data\LoX_good_input.csv")]
+			[TestCase(@"Test Mock Data\LoX_switched_columns.csv")]
+			[TestCase(@"Test Mock Data\LoX_switched_columns_2.csv")]
 			//These test cases will run, but since some data will be blank so need to write it's own test for each. But then that's a lot of duplicated (or very similar) code
-			//[TestCase("LoX_missing_column_cp.csv")]
-			//[TestCase("LoX_missing_column_flight.csv")]
-			//[TestCase("LoX_missing_column_mds.csv")]
-			//[TestCase("LoX_missing_column_name.csv")]
-			//[TestCase("LoX_missing_column_rank.csv")]
-
+			//[TestCase(@"Test Mock Data\LoX_missing_column_cp.csv")]
+			//[TestCase(@"Test Mock Data\LoX_missing_column_flight.csv")]
+			//[TestCase(@"Test Mock Data\LoX_missing_column_mds.csv")]
+			//[TestCase(@"Test Mock Data\LoX_missing_column_name.csv")]
+			//[TestCase(@"Test Mock Data\LoX_missing_column_rank.csv")]
 			public void DigestLOXTest(string filePath)
 			{
 				//TODO test Flight and org once org is implemented
