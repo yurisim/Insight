@@ -19,7 +19,7 @@ namespace Insight.Core.Helpers
                 decimal medicalPercentage = 0;
                 foreach (var item in data)
                 {
-                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
+                    if (item.Medical?.OverallStatus == Status.Current || item.Medical?.OverallStatus == Status.Upcoming)
                     {
                         medicalPercentage++;
                     }
@@ -42,7 +42,7 @@ namespace Insight.Core.Helpers
                 decimal personnelPercentage = 0;
                 foreach (var item in data)
                 {
-                    if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
+                    if (item.Personnel?.OverallStatus == Status.Current || item.Personnel?.OverallStatus == Status.Upcoming)
                     {
                         personnelPercentage++;
                     }
@@ -65,7 +65,7 @@ namespace Insight.Core.Helpers
                 decimal trainingPercentage = 0;
                 foreach (var item in data)
                 {
-                    if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
+                    if (item.Training?.OverallStatus == Status.Current || item.Training?.OverallStatus == Status.Upcoming)
                     {
                         trainingPercentage++;
                     }
@@ -88,8 +88,8 @@ namespace Insight.Core.Helpers
 				decimal overallPercentage = 0;
 				foreach (var item in data)
 				{
-					if ((item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming) && (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming) &&
-						(item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming))
+					if ((item.Training?.OverallStatus == Status.Current || item.Training?.OverallStatus == Status.Upcoming) && (item.Personnel?.OverallStatus == Status.Current || item.Personnel?.OverallStatus == Status.Upcoming) &&
+						(item.Medical?.OverallStatus == Status.Current || item.Medical?.OverallStatus == Status.Upcoming))
 					{
 						overallPercentage++;
 					}
