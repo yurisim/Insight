@@ -14,28 +14,39 @@ namespace Insight.ViewModels
     {
         private SampleOrder _item;
 
-		/// <summary>
-		/// 
-		/// </summary>
-        public SampleOrder Item
-        {
-            get { return _item; }
-            set { SetProperty(ref _item, value); }
-        }
+		
+		//public SampleOrder Item
+		//{
+		//	get { return _item; }
+		//	set { SetProperty(ref _item, value); }
+		//}
 
 		/// <summary>
-		/// 
+		/// Holds the data for the front end table
 		/// </summary>
-        public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
+		public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
+		/// <summary>
+		/// Number of people in the Squadron
+		/// </summary>
+		public string TotalPersons;
+		/// <summary>
+		/// Percentage of people fully ready
+		/// </summary>
+		public string OverallReadiness;
+		/// <summary>
+		/// Holds the organization name
+		/// </summary>
+		public string pageOrg = "960 AACS";
 
         public OverviewDetailViewModel()
         {
+
         }
 		/// <summary>
-		/// Loads the table
+		/// puts the people into flights, calculates the unit's overall readiness based on medical, training, personnel data
 		/// </summary>
-		/// <returns></returns>
-        public async Task LoadDataAsync()
+		/// <returns>does not return anything, allows the program to keep track of the async method</returns>
+		public async Task LoadDataAsync()
         {
             Source.Clear();
 
@@ -45,7 +56,8 @@ namespace Insight.ViewModels
             List<string> allFlightNames = new List<string>();
 
             List<List<Person>> allFlights = new List<List<Person>>();
-
+			TotalPersons = persons.Count.ToString();
+			OverallReadiness = DataCalculation.GetOverall(persons);
             foreach (var person in persons)
             {
                 if (!allFlightNames.Contains(person.Flight.ToUpper()))
@@ -60,7 +72,7 @@ namespace Insight.ViewModels
 			}
 
 			//TODO When orgs are implemented make more dynamic
-            ReadyPercentages OverallPercentages = new ReadyPercentages("960 Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
+            ReadyPercentages OverallPercentages = new ReadyPercentages(pageOrg + " Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             Source.Add(OverallPercentages);
 
             foreach (var flightName in allFlightNames)
@@ -72,11 +84,11 @@ namespace Insight.ViewModels
         }
 
 		/// <summary>
-		/// puts the data into an object 
+		/// puts the flight's Medical, Personnel, and Training data into a ReadyPercentages object
 		/// </summary>
 		/// <param name="flight">The name of the Flight</param>
 		/// <param name="persons">The list of people in the flight</param>
-		/// <returns></returns>
+		/// <returns>ReadyPercentages object which holds the input data</returns>
         private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> persons)
         {
             ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
@@ -86,7 +98,7 @@ namespace Insight.ViewModels
         
 
         /// <summary>
-		/// Organizes the information
+		/// Organizes the information into rows by the organization
 		/// </summary>
         public struct ReadyPercentages
         {

@@ -61,13 +61,13 @@
                         RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.RightOf="itemHero"
                         Style="{ThemeResource TitleTextBlockStyle}"
-                        Text="960 AACS"
+                        Text="{x:Bind ViewModel.pageOrg}"
                         />
 
                     <StackPanel x:Name="propertiesGroup1" RelativePanel.Below="itemHero">
                         <StackPanel x:Name="statusGroup" Margin="{StaticResource SmallTopMargin}">
                             <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Squadron Readiness" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="75%" />
+                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.OverallReadiness, Mode=OneWay}" />
                         </StackPanel>
 
                         <StackPanel x:Name="orderDateGroup" Margin="{StaticResource SmallTopMargin}">
@@ -84,7 +84,7 @@
 
                         <StackPanel x:Name="orderTotalGroup" Margin="{StaticResource SmallTopMargin}">
                             <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Total Members" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="17" />
+                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.TotalPersons, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                 </RelativePanel>

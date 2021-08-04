@@ -29,7 +29,7 @@ namespace Insight.Views
             base.OnNavigatingFrom(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                NavigationService.Frame.SetListDataItemForNextConnectedAnimation(ViewModel.Item);
+                //NavigationService.Frame.SetListDataItemForNextConnectedAnimation(ViewModel.Item);
             }
         }
     }
