@@ -61,7 +61,7 @@
                         RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.RightOf="itemHero"
                         Style="{ThemeResource TitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.pageOrg}"
+                        Text="{x:Bind ViewModel.PageOrg}"
                         />
 
                     <StackPanel x:Name="propertiesGroup1" RelativePanel.Below="itemHero">

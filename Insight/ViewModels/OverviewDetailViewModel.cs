@@ -36,7 +36,11 @@ namespace Insight.ViewModels
 		/// <summary>
 		/// Holds the organization name
 		/// </summary>
-		public string pageOrg = "960 AACS";
+		public string PageOrg
+		{
+			get;
+			set;
+		}
 
         public OverviewDetailViewModel()
         {
@@ -51,7 +55,7 @@ namespace Insight.ViewModels
             Source.Clear();
 
 			InsightController insightController = new InsightController();
-			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(pageOrg));
+			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(PageOrg));
 
             List<string> allFlightNames = new List<string>();
 
@@ -72,7 +76,7 @@ namespace Insight.ViewModels
 			}
 
 			//TODO When orgs are implemented make more dynamic
-            ReadyPercentages OverallPercentages = new ReadyPercentages(pageOrg + " Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
+            ReadyPercentages OverallPercentages = new ReadyPercentages(PageOrg + " Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             Source.Add(OverallPercentages);
 
             foreach (var flightName in allFlightNames)
