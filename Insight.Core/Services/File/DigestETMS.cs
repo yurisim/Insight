@@ -89,8 +89,6 @@ namespace Insight.Core.Services.File
 				// TODO: Exception if person is not found
 				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false).Result;
 
-				bool sdfsd = true;
-
 				// TODO: Make this a try parse
 				var parsedCompletion = DateTime.Parse(completionDate);
 
