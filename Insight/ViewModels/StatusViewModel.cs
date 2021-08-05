@@ -20,7 +20,8 @@ namespace Insight.ViewModels
         }
 
         /// <summary>
-		/// Loads data into the table whenever the page loads. This is called in the code behind of the object
+		/// Loads person objects into the status table whenever the page loads. This is called in the code behind of the object.
+		/// See references.
 		/// </summary>
 		/// <returns></returns>
 		public async Task LoadDataAsync()
@@ -30,7 +31,6 @@ namespace Insight.ViewModels
 			InsightController controller = new InsightController();
 
 			// Get the person objects needed
-			// Need to 
 			var peopleToProcess = await controller.GetAllPersons();
 
 
@@ -40,6 +40,7 @@ namespace Insight.ViewModels
 				Name = person.Name,
 				SSN = person.SSN,
 				DateOnStation = person.DateOnStation,
+				// Need ?. null checks in case data is bad (it is)
 				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration,
 				ForceProtectionExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Force Protection")?.Expiration,
 				LawOfWarExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Law of War (LoW) - Basic")?.Expiration,
@@ -57,7 +58,8 @@ namespace Insight.ViewModels
     }
 
 	/// <summary>
-	/// Temporary stop gap. Would prefer to use a dynamic "value tuple" instead to display the items in the table. Because this is only used in this view, I stuck it here
+	/// Temporary stop gap. Would prefer to use a dynamic "value tuple" instead to display the items in the table. Because this is only used in this view, I stuck it here.
+	/// The benefits of a value tuple means we don't have to make a new class for every different type of display.
 	/// </summary>
 	public class StatusViewItems
 	{
