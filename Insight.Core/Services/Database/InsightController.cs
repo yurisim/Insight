@@ -10,6 +10,8 @@ using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
+	//TODO: Make this a partial class and have one file/class be for Get functions and another file be for Add/Update. This file is getting too complex.
+
 	public class InsightController
 	{
 		private DbContextOptions<InsightContext> _dbContextOptions;
@@ -71,6 +73,8 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
+						// Maybe have an overload because their course instances are big and we may not need to ever call these except for specific instances?
+						.Include(p => p.CourseInstances).ThenInclude(ci => ci.Course)
 						.Select(x => x)?.ToListAsync();
 				}
 			}

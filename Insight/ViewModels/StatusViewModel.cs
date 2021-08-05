@@ -4,35 +4,70 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Insight.Core.Services.Database;
+using Windows.Networking;
+using System.Linq;
+using System;
 
 namespace Insight.ViewModels
 {
     public class StatusViewModel : ObservableObject
     {
-        public ObservableCollection<Person> Source { get; } = new ObservableCollection<Person>();
-
-
+		// This is a temporary solution for the custom binding. Would be better if we just accept a constructor of objects
+        public ObservableCollection<StatusViewItems> Source { get; } = new ObservableCollection<StatusViewItems>();
 
         public StatusViewModel()
         {
         }
 
-        public async Task LoadDataAsync()
+        /// <summary>
+		/// Loads data into the table whenever the page loads. This is called in the code behind of the object
+		/// </summary>
+		/// <returns></returns>
+		public async Task LoadDataAsync()
         {
             Source.Clear();
 
-			// Replace this with your actual data
-			//var data = await SampleDataService.GetGridDataAsync();
-
 			InsightController controller = new InsightController();
 
-			var data = await controller.GetAllPersons();
+			// Get the person objects needed
+			// Need to 
+			var peopleToProcess = await controller.GetAllPersons();
 
 
-            foreach (var item in data)
+			var peopleToDisplay = peopleToProcess.Select(person => new StatusViewItems
+			{
+				Id = person.Id,
+				Name = person.Name,
+				SSN = person.SSN,
+				DateOnStation = person.DateOnStation,
+				// TODO: What happens when this FirstOrDefault returns null? Does the program crash when we try to access expiration?
+				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration
+			});
+
+
+			foreach (var person in peopleToDisplay)
             {
-                Source.Add(item);
+                Source.Add(person);
             }
         }
     }
+
+	/// <summary>
+	/// Temporary stop gap. Would prefer to use a dynamic tuple instead to display the items in the table. 
+	/// </summary>
+	public class StatusViewItems
+	{
+		public int Id { get; set; }
+
+		public string Name { get; set; }
+
+		public string SSN { get; set; }
+
+		public string DateOnStation { get; set; }
+
+		// This datetime to be nullable to enable null operators for faulty/bad data. 
+		public DateTime? CyberAwarenessExpiration { get; set; }
+
+
+	}
 }
