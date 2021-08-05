@@ -112,6 +112,7 @@ namespace Insight.Core.Services.File
 						orgNew.Aliases.Add(orgAlias);
 						orgNew.Aliases.Add(orgAlias2);
 						insightController.Add(orgNew);
+						org = orgNew;
 					}
 
 					var person = insightController.GetPersonByName(FirstName, LastName).Result;

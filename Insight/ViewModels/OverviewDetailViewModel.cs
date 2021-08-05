@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Insight.Core.Helpers;
 
 namespace Insight.ViewModels
 {
@@ -13,132 +14,110 @@ namespace Insight.ViewModels
     {
         private SampleOrder _item;
 
-        public SampleOrder Item
+		
+		//public SampleOrder Item
+		//{
+		//	get { return _item; }
+		//	set { SetProperty(ref _item, value); }
+		//}
+
+		/// <summary>
+		/// Holds the data for the front end table
+		/// </summary>
+		public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
+		/// <summary>
+		/// Number of people in the Squadron
+		/// </summary>
+		public string TotalPersons;
+		/// <summary>
+		/// Percentage of people fully ready
+		/// </summary>
+		public string OverallReadiness;
+		/// <summary>
+		/// Holds the organization name
+		/// </summary>
+		public string PageOrg
+		{
+			get;
+			set;
+		}
+
+        public OverviewDetailViewModel(string org)
         {
-            get { return _item; }
-            set { SetProperty(ref _item, value); }
+			PageOrg = org;
         }
-
-        public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
-
-        public OverviewDetailViewModel()
-        {
-        }
-
-        public async Task LoadDataAsync()
+		/// <summary>
+		/// puts the people into flights, calculates the unit's overall readiness based on medical, training, personnel data
+		/// </summary>
+		/// <returns>does not return anything, allows the program to keep track of the async method</returns>
+		public async Task LoadDataAsync()
         {
             Source.Clear();
 
-			var insightController = new InsightController();
-			var data = await insightController.GetAllPersons();
+			InsightController insightController = new InsightController();
+			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(PageOrg));
 
             List<string> allFlightNames = new List<string>();
 
             List<List<Person>> allFlights = new List<List<Person>>();
-
-            foreach (var item in data)
+			TotalPersons = persons.Count.ToString();
+			OverallReadiness = DataCalculation.GetOverall(persons);
+            foreach (var person in persons)
             {
-                if (allFlightNames.Contains(item.Flight.ToUpper()))
+                if (!allFlightNames.Contains(person.Flight.ToUpper()))
                 {
-                    allFlights[allFlightNames.IndexOf(item.Flight.ToUpper())].Add(item);
-                }
-                else
-                {
-                    allFlightNames.Add(item.Flight.ToUpper());
+                    allFlightNames.Add(person.Flight.ToUpper());
                     List<Person> newFlight = new List<Person>();
                     allFlights.Add(newFlight);
                 }
-            }
+				//The index of the flight it is trying to access
+				int flightNameIndex = allFlightNames.IndexOf(person.Flight.ToUpper());
+				allFlights[flightNameIndex].Add(person);
+			}
 
-            ReadyPercentages OverallPercentages = new ReadyPercentages("960", GetMedical(data), GetPersonnel(data), GetTraining(data));
+			//TODO When orgs are implemented make more dynamic
+            ReadyPercentages OverallPercentages = new ReadyPercentages(PageOrg + " Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             Source.Add(OverallPercentages);
 
-            foreach (var item in allFlightNames)
+            foreach (var flightName in allFlightNames)
             {
-                Source.Add(FlightPercentageBuilder(item, allFlights[allFlightNames.IndexOf(item)]));
+				//The flight names are in a seperate List so this gets the people in each flight via a syncronized index
+				Source.Add(FlightPercentageBuilder(flightName, allFlights[allFlightNames.IndexOf(flightName)]));
             }
 
         }
 
-
-        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> data)
+		/// <summary>
+		/// puts the flight's Medical, Personnel, and Training data into a ReadyPercentages object
+		/// </summary>
+		/// <param name="flight">The name of the Flight</param>
+		/// <param name="persons">The list of people in the flight</param>
+		/// <returns>ReadyPercentages object which holds the input data</returns>
+        private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> persons)
         {
-            ReadyPercentages flightPercentages = new ReadyPercentages(flight, GetMedical(data), GetPersonnel(data), GetTraining(data));
+            ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
             return flightPercentages;
         }
 
-        private string GetMedical(List<Person> data)
-        {
-            string medicalPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal medicalPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Medical.OverallStatus == Status.Current || item.Medical.OverallStatus == Status.Upcoming)
-                    {
-                        medicalPercentage++;
-                    }
-                }
-                medicalPercentage /= data.Count;
-                medicalPercentageOutput = string.Format("{0:P}", medicalPercentage);
-            }
-            return medicalPercentageOutput;
-        }
+        
 
-        private string GetPersonnel(List<Person> data)
-        {
-            string personnelPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal personnelPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Personnel.OverallStatus == Status.Current || item.Personnel.OverallStatus == Status.Upcoming)
-                    {
-                        personnelPercentage++;
-                    }
-                }
-                personnelPercentage /= data.Count;
-                personnelPercentageOutput = string.Format("{0:P}", personnelPercentage);
-            }
-            return personnelPercentageOutput;
-        }
-
-        private string GetTraining(List<Person> data)
-        {
-            string trainingPercentageOutput = "Unknown";
-            if (data.Count != 0)
-            {
-                decimal trainingPercentage = 0;
-                foreach (var item in data)
-                {
-                    if (item.Training.OverallStatus == Status.Current || item.Training.OverallStatus == Status.Upcoming)
-                    {
-                        trainingPercentage++;
-                    }
-                }
-                trainingPercentage /= data.Count;
-                trainingPercentageOutput = string.Format("{0:P}", trainingPercentage);
-            }
-            return trainingPercentageOutput;
-        }
-
-        // Fix naming of this
+        /// <summary>
+		/// Organizes the information into rows by the organization
+		/// </summary>
         public struct ReadyPercentages
         {
-            public string RowName { get; }
-            public string ValueMed { get; }
-            public string ValuePersonnel { get; }
-            public string ValueTraining { get; }
+            public string Organization { get; }
+            public string Medical { get; }
+            public string Personnel { get; }
+            public string Training { get; }
 
 
             public ReadyPercentages(string rowName, string valueMed, string valuePersonnel, string valueTraining)
             {
-                RowName = rowName;
-                ValueMed = valueMed;
-                ValuePersonnel = valuePersonnel;
-                ValueTraining = valueTraining;
+				Organization = rowName;
+				Medical = valueMed;
+				Personnel = valuePersonnel;
+				Training = valueTraining;
             }
         }
     }

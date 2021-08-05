@@ -102,7 +102,12 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = await insightContext.Persons.Where(x => x.Organization == org).Select(x => x).ToListAsync();
+					persons = await insightContext.Persons.Where(x => x.Organization == org)
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Select(x => x)?.ToListAsync();
 				}
 			}
 			catch (Exception)

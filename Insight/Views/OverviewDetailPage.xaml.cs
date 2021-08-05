@@ -10,7 +10,7 @@ namespace Insight.Views
 {
     public sealed partial class OverviewDetailPage : Page
     {
-        public OverviewDetailViewModel ViewModel { get; } = new OverviewDetailViewModel();
+        public OverviewDetailViewModel ViewModel { get; set; }
 
         public OverviewDetailPage()
         {
@@ -20,7 +20,8 @@ namespace Insight.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            this.RegisterElementForConnectedAnimation("animationKeyOverview", itemHero);
+			ViewModel = new OverviewDetailViewModel(e.Parameter.ToString());
+			this.RegisterElementForConnectedAnimation("animationKeyOverview", itemHero);
             await ViewModel.LoadDataAsync();
         }
 
@@ -29,7 +30,7 @@ namespace Insight.Views
             base.OnNavigatingFrom(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                NavigationService.Frame.SetListDataItemForNextConnectedAnimation(ViewModel.Item);
+                //NavigationService.Frame.SetListDataItemForNextConnectedAnimation(ViewModel.Item);
             }
         }
     }
