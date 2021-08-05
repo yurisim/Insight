@@ -40,8 +40,12 @@ namespace Insight.ViewModels
 				Name = person.Name,
 				SSN = person.SSN,
 				DateOnStation = person.DateOnStation,
-				// TODO: What happens when this FirstOrDefault returns null? Does the program crash when we try to access expiration?
-				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration
+				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration,
+				ForceProtectionExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Force Protection")?.Expiration,
+				LawOfWarExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Law of War (LoW) - Basic")?.Expiration,
+				ReligiousFreedomExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Religious Freedom")?.Expiration,
+				SABCHandsOnExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care Hands On")?.Expiration,
+				SABCExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care (SABC)")?.Expiration,
 			});
 
 
@@ -67,6 +71,11 @@ namespace Insight.ViewModels
 
 		// This datetime to be nullable to enable null operators for faulty/bad data. 
 		public DateTime? CyberAwarenessExpiration { get; set; }
+		public DateTime? ForceProtectionExpiration { get; set; }
+		public DateTime? LawOfWarExpiration { get; set; }
+		public DateTime? ReligiousFreedomExpiration { get; set; }
+		public DateTime? SABCHandsOnExpiration { get; set; }
+		public DateTime? SABCExpiration { get; set; }
 
 
 	}
