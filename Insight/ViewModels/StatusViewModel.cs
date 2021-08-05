@@ -57,7 +57,7 @@ namespace Insight.ViewModels
     }
 
 	/// <summary>
-	/// Temporary stop gap. Would prefer to use a dynamic tuple instead to display the items in the table. 
+	/// Temporary stop gap. Would prefer to use a dynamic "value tuple" instead to display the items in the table. Because this is only used in this view, I stuck it here
 	/// </summary>
 	public class StatusViewItems
 	{
