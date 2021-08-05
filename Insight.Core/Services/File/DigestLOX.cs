@@ -17,9 +17,10 @@ namespace Insight.Core.Services.File
 		int IDigest.Priority { get => 0; }
 
 		int NameIndex;
-		int MDSndex;
+		int MDSIndex;
 		int RankIndex;
 		int FlightIndex;
+		int CPIndex;
 
 
 		bool HeadersProcessed = false;
@@ -64,8 +65,10 @@ namespace Insight.Core.Services.File
 						&& !(FileContents[i].Contains("Flight Quals") && FileContents[i].Contains("Dual Qual")))
 					{
 						//TODO handle column mising
+						// TODO Handle different casing/handle schema better for variations
 						NameIndex = data.IndexOf("Name");
-						MDSndex = data.IndexOf("MDS");
+						CPIndex = data.IndexOf("CP");
+						MDSIndex = data.IndexOf("MDS");
 						RankIndex = data.IndexOf("Rank");
 						FlightIndex = data.IndexOf("Flight");
 						HeadersProcessed = true;
@@ -80,7 +83,8 @@ namespace Insight.Core.Services.File
 				{
 					string LastName = data[NameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim().ToUpperInvariant();
-					string MDS = data[MDSndex + offset].Trim();
+					string crewPosition = data[CPIndex + offset].Trim();
+					string MDS = data[MDSIndex + offset].Trim();
 					string Rank = data[RankIndex + offset].Trim();
 					string Flight = data[FlightIndex + offset].Trim();
 
@@ -124,6 +128,7 @@ namespace Insight.Core.Services.File
 						{
 							FirstName = FirstName,
 							LastName = LastName,
+							CrewPosition = crewPosition,
 							Medical = new Medical(),
 							Training = new Training(),
 							Personnel = new Personnel(),
@@ -135,6 +140,7 @@ namespace Insight.Core.Services.File
 
 					person.Flight = Flight;
 					person.Organization = org;
+					person.CrewPosition = crewPosition;
 					//person.Rank = ;
 
 					insightController.Update(person);
