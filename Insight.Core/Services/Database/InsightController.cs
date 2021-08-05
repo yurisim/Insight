@@ -10,6 +10,8 @@ using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
+	//TODO: Make this a partial class and have one file/class be for Get functions and another file be for Add/Update. This file is getting too complex.
+
 	public class InsightController
 	{
 		private DbContextOptions<InsightContext> _dbContextOptions;
@@ -67,11 +69,16 @@ namespace Insight.Core.Services.Database
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons
-						.Include(p => p.Medical)
-						.Include(p => p.Personnel)
-						.Include(p => p.Training)
-						.Include(p => p.Organization)
-						.Select(x => x)?.ToListAsync();
+						.Include(person => person.Medical)
+						.Include(person => person.Personnel)
+						.Include(person => person.Training)
+						.Include(person => person.Organization)
+						// Maybe have an overload because their course instances are big and we may not need to ever call these except for specific instances?
+						.Include(person => person.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
+						?.ToListAsync();
+
+						// Don't know why this is here. You don't need to map person into person. Tests still run after this change.
+						//.Select(person => person)?.ToListAsync();
 				}
 			}
 			catch (Exception)
