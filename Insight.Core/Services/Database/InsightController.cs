@@ -69,13 +69,16 @@ namespace Insight.Core.Services.Database
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons
-						.Include(p => p.Medical)
-						.Include(p => p.Personnel)
-						.Include(p => p.Training)
-						.Include(p => p.Organization)
+						.Include(person => person.Medical)
+						.Include(person => person.Personnel)
+						.Include(person => person.Training)
+						.Include(person => person.Organization)
 						// Maybe have an overload because their course instances are big and we may not need to ever call these except for specific instances?
-						.Include(p => p.CourseInstances).ThenInclude(ci => ci.Course)
-						.Select(x => x)?.ToListAsync();
+						.Include(person => person.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
+						?.ToListAsync();
+
+						// Don't know why this is here. You don't need to map person into person. Tests still run after this change.
+						//.Select(person => person)?.ToListAsync();
 				}
 			}
 			catch (Exception)
