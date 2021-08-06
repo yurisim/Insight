@@ -73,7 +73,7 @@ namespace Insight.Core.Services.File
 		/// <summary>
 		/// Determines which course on ETMS FileContents is for
 		/// </summary>
-		public Course DetectETMSType()
+		private Course DetectETMSType()
 		{
 			// Use Distinct Column to get the file type in case the first row is blank
 			var courseName = FileContents[1].Split(',')[_courseTitleIndex];
