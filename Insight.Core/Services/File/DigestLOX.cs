@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Insight.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Insight.Core.Services.File
 {
@@ -19,104 +21,103 @@ namespace Insight.Core.Services.File
 
 		private string _squadron = "";
 
-
 		public DigestLOX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
-			CleanInput(FileContents);
+
 		}
 
 		/// <summary>
 		/// Cleans/prepares input for digestion by removing anything that isn't person data and duplicated person data
 		/// </summary>
-		/// <param name="inputToClean"></param>
-		private void CleanInput(IList<string> inputToClean)
+		public void CleanInput()
 		{
 			//headers found and indexes set for the columns to be digested
 			bool headersProcessed = false;
 			//end of file found, no more person data left
 			bool endOfDataReached = false;
 
-			for (var i = 0; i < inputToClean.Count; i++)
+			for (int i = 0; i < FileContents.Count; i++)
 			{
-				var splitLine = new List<string>(inputToClean[i].Split(','));
+				string[] splitLine = FileContents[i].Split(',');
 
 				//if column headers are not processed yet, we're still in the top section of the file before the person data
 				if (!headersProcessed)
 				{
+					string lineToUpper = FileContents[i].ToUpper();
+
 					//finds squadron string
-					Regex regexSquadron = new Regex(@"^Squadron: (.+?),");
-					if (regexSquadron.IsMatch(inputToClean[i]))
+					Regex regexSquadron = new Regex(@"^Squadron: (.+?),", RegexOptions.IgnoreCase);
+					if (regexSquadron.IsMatch(FileContents[i]))
 					{
-						_squadron = regexSquadron.Match(inputToClean[i]).Groups[1].Value;
+						_squadron = regexSquadron.Match(FileContents[i]).Groups[1].Value;
 					}
 					//checks for strings that identify lines that can be ignored
-					else if (!inputToClean[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-						&& !inputToClean[i].Contains("(Controlled with Standard Dissemination)")
-						&& !inputToClean[i].Contains("Letter of Certifications")
-						&& !(inputToClean[i].Contains("Flight Quals") && inputToClean[i].Contains("Dual Qual")))
+					else if (!lineToUpper.Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+						&& !lineToUpper.Contains("FOR OFFICAL USE ONLY")
+						&& !lineToUpper.Contains("CONTROLLED WITH STANDARD DISSEMINATION")
+						&& !lineToUpper.Contains("LETTER OF CERTIFICATIONS")
+						&& !(lineToUpper.Contains("FLIGHT QUALS") && lineToUpper.Contains("DUAL QUAL")))
 					{
-
 						//Sets the index of the data columnns that need to be accessed
 						SetColumnIndexes(splitLine);
 
 						headersProcessed = true;
 					}
-					inputToClean.Remove(inputToClean[i]);
+					FileContents.RemoveAt(i);
 					i--;
 				}
 				//person data and the end of person data can only be reached after column headers are processed
 				else
 				{
 					//checls if end of person data reached. assumes a completely empty line signals of person data
-					if (new Regex("^,+$").IsMatch(inputToClean[i]))
+					if (new Regex("^,+$").IsMatch(FileContents[i]))
 					{
-
 						endOfDataReached = true;
 					}
 
 					//remove persons with a mds of "E-3G(II)" or anything after the end of data
 					if (splitLine[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
 					{
-						inputToClean.Remove(inputToClean[i]);
+						FileContents.RemoveAt(i);
 						i--;
 					}
 				}
 			}
-			FileContents = inputToClean;
 		}
 
 		/// <summary>
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private void SetColumnIndexes(List<string> columnHeaders)
+		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
-			columnHeaders = columnHeaders.ConvertAll(d => d.ToUpper());
+			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
 			int offset = 1;  //this offset is to account for the comma in the Name field
 
-			_lastNameIndex = columnHeaders.IndexOf("NAME");
+			_lastNameIndex = Array.IndexOf(columnHeaders, "NAME");
 			_firstNameIndex = _lastNameIndex + offset;
-			_cpIndex = columnHeaders.IndexOf("CP") + offset;
-			_mdsIndex = columnHeaders.IndexOf("MDS") + offset;
-			_rankIndex = columnHeaders.IndexOf("RANK") + offset;
-			_flightIndex = columnHeaders.IndexOf("FLIGHT") + offset;
+			_cpIndex = Array.IndexOf(columnHeaders, "CP") + offset;
+			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + offset;
+			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + offset;
+			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + offset;
 		}
 
 		public void DigestLines()
 		{
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				List<string> data = new List<string>(FileContents[i].Split(','));
+				string[] splitLine = FileContents[i].Split(',');
 
 				//TODO handle column mising (index of -1)
-				string lastName = data[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-				string firstName = data[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-				string crewPosition = data[_cpIndex].Trim();
-				string MDS = data[_mdsIndex].Trim();
-				string rank = data[_rankIndex].Trim();
-				string flight = data[_flightIndex].Trim();
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+				
+				string crewPosition = splitLine[_cpIndex].Trim();
+				string MDS = splitLine[_mdsIndex].Trim();
+				string rank = splitLine[_rankIndex].Trim();
+				string flight = splitLine[_flightIndex].Trim();
 
 				Org org = insightController.GetOrgByAlias(_squadron);
 

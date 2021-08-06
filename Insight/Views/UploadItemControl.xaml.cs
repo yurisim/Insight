@@ -59,6 +59,7 @@ namespace Insight.Views
 
 			foreach (var digest in FileDigest)
 			{
+				digest.CleanInput();
 				digest.DigestLines();
 			}
         }

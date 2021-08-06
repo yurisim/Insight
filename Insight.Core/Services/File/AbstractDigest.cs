@@ -1,14 +1,11 @@
 ﻿using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Insight.Core.Services.File
 {
 	public abstract class AbstractDigest
 	{
-
 		/// <summary>
 		/// Instantianted InsightController used by the Digest Methods
 		/// </summary>
@@ -26,7 +23,6 @@ namespace Insight.Core.Services.File
 		/// <param name="dbContextOptions">DB Context Options. Determines which database is used</param>
 		public AbstractDigest(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions)
 		{
-
 			this.FileContents = FileContents;
 
 			//default InsightController() constructor uses the live/production database. The dbContextOptions constructor can specify either - uses in tests
