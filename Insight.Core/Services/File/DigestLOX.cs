@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
-using Insight.Core.Helpers;
 using Insight.Core.Models;
-using Insight.Core.Properties;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Insight.Core.Services.File
 {
@@ -16,132 +11,163 @@ namespace Insight.Core.Services.File
 	{
 		int IDigest.Priority { get => 0; }
 
-		int NameIndex;
-		int MDSIndex;
-		int RankIndex;
-		int FlightIndex;
-		int CPIndex;
+		//indexes of columns of the named piece of data. Set to -1 so that they're not defaulted to 0, since 0 is possible desired/valid index.
+		private int _firstNameIndex = -1;
+		private int _lastNameIndex = -1;
+		private int _mdsIndex = -1;
+		private int _rankIndex = -1;
+		private int _flightIndex = -1;
+		private int _crewPositionIndex = -1;
 
-
-		bool HeadersProcessed = false;
+		private string _squadron = "";
 
 		public DigestLOX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
 
 		}
 
-		public void DigestLines()
+		/// <summary>
+		/// Cleans/prepares input for digestion by removing anything that isn't person data and duplicated person data
+		/// </summary>
+		public void CleanInput()
 		{
-			//Assumptions about schema:
-			//There are 5 lines of the file are irrelevant information
-			//Column headers come directly after those first 5 lines.
-			//All relavent person data starts with a '\"' (double quotes) character.
-			//	-this assumption is not necessarily required.
-			//The column headers are "Name", "MDS", "Rank", and "Flight" etc
-			//The name is in the format "Lastname, Firstname" (capitalization or surrounding quotes not important. Order and separating comments are).
-			//After all person data there is a completely empty line (in a .csv that is denoated by a string of only commas)
-			//Everything after that empty line is irrelevant information
-
-			//Assumptions about the data:
-			//Any person with "E-3G(II)" (opposed to "E-3G") can be disregarded.
-
-			string Squadon = "";
+			//headers found and indexes set for the columns to be digested
+			bool headersProcessed = false;
+			//end of file found, no more person data left
+			bool endOfDataReached = false;
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				List<string> data = new List<string>(FileContents[i].Split(','));
-				int offset = 1; //this offset is to account for the comma in the Name field
-				if (!HeadersProcessed)
+				string[] splitLine = FileContents[i].Split(',');
+
+				//if column headers are not processed yet, we're still in the top section of the file before the person data
+				if (!headersProcessed)
 				{
-					Regex regexSquadron = new Regex(@"^Squadron: (.+?),");
+					string lineToUpper = FileContents[i].ToUpper();
+
+					//finds squadron string
+					Regex regexSquadron = new Regex(@"^Squadron: (.+?),", RegexOptions.IgnoreCase);
 					if (regexSquadron.IsMatch(FileContents[i]))
 					{
-						Squadon = regexSquadron.Match(FileContents[i]).Groups[1].Value;
+						_squadron = regexSquadron.Match(FileContents[i]).Groups[1].Value;
+					}
+					//checks for strings that identify lines that can be ignored
+					else if (!lineToUpper.Contains("CONTROLLED UNCLASSIFIED INFORMATION")
+						&& !lineToUpper.Contains("FOR OFFICAL USE ONLY")
+						&& !lineToUpper.Contains("CONTROLLED WITH STANDARD DISSEMINATION")
+						&& !lineToUpper.Contains("LETTER OF CERTIFICATIONS")
+						&& !(lineToUpper.Contains("FLIGHT QUALS") && lineToUpper.Contains("DUAL QUAL")))
+					{
+						//Sets the index of the data columnns that need to be accessed
+						SetColumnIndexes(splitLine);
+
+						headersProcessed = true;
+					}
+					FileContents.RemoveAt(i);
+					i--;
+				}
+				//person data and the end of person data can only be reached after column headers are processed
+				else
+				{
+					//checls if end of person data reached. assumes a completely empty line signals of person data
+					if (new Regex("^,+$").IsMatch(FileContents[i]))
+					{
+						endOfDataReached = true;
 					}
 
-					else if (!FileContents[i].Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-						&& !FileContents[i].Contains("(Controlled with Standard Dissemination)")
-						&& !FileContents[i].Contains("Letter of Certifications")
-						&& !(FileContents[i].Contains("Flight Quals") && FileContents[i].Contains("Dual Qual")))
+					//remove persons with a mds of "E-3G(II)" or anything after the end of data
+					if (splitLine[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
 					{
-						//TODO handle column mising
-						// TODO Handle different casing/handle schema better for variations
-						NameIndex = data.IndexOf("Name");
-						CPIndex = data.IndexOf("CP");
-						MDSIndex = data.IndexOf("MDS");
-						RankIndex = data.IndexOf("Rank");
-						FlightIndex = data.IndexOf("Flight");
-						HeadersProcessed = true;
+						FileContents.RemoveAt(i);
+						i--;
 					}
 				}
-				else if (new Regex("^,+$").IsMatch(FileContents[i]))
-				{
+			}
+		}
 
-					break;
+		/// <summary>
+		/// Sets the indexes for columns of data that needs to be digested
+		/// </summary>
+		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
+		private void SetColumnIndexes(string[] columnHeaders)
+		{
+			//Converts everything to upper case for comparison
+			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
+
+			int offset = 1;  //this offset is to account for the comma in the Name field
+
+			_lastNameIndex = Array.IndexOf(columnHeaders, "NAME");
+			_firstNameIndex = _lastNameIndex + offset;
+			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + offset;
+			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + offset;
+			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + offset;
+			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + offset;
+		}
+
+		public void DigestLines()
+		{
+			for (int i = 0; i < FileContents.Count; i++)
+			{
+				string[] splitLine = FileContents[i].Split(',');
+
+				//TODO handle column mising (index of -1)
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+				
+				string crewPosition = splitLine[_crewPositionIndex].Trim();
+				string MDS = splitLine[_mdsIndex].Trim();
+				string rank = splitLine[_rankIndex].Trim();
+				string flight = splitLine[_flightIndex].Trim();
+
+				Org org = insightController.GetOrgByAlias(_squadron);
+
+				//TODO this is here so that org is created. Eventually, the user will have to determine that "960 AACS" is the same as "960 AIRBORNE AIR CTR" to facilitating create orgAliases in database
+				if (org == null)
+				{
+					//TODO ask user to define what org this is
+					Org orgNew = new Org()
+					{
+						Name = "960 AACS",
+						Aliases = new List<OrgAlias>(),
+					};
+					OrgAlias orgAlias = new OrgAlias()
+					{
+						Name = "960 AIRBORNE AIR CTR",
+						Org = orgNew,
+					};
+					OrgAlias orgAlias2 = new OrgAlias()
+					{
+						Name = "960 AACS",
+						Org = orgNew,
+					};
+					orgNew.Aliases.Add(orgAlias);
+					orgNew.Aliases.Add(orgAlias2);
+					insightController.Add(orgNew);
+					org = orgNew;
 				}
-				else if (FileContents[i].StartsWith("\""))
+
+				var person = insightController.GetPersonByName(firstName, lastName).Result;
+
+				//This will assume if person is null at this point that a new one needs to be created.
+				if (person == null)
 				{
-					string LastName = data[NameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-					string FirstName = data[NameIndex + offset].Replace("\"", "").Trim().ToUpperInvariant();
-					string crewPosition = data[CPIndex + offset].Trim();
-					string MDS = data[MDSIndex + offset].Trim();
-					string Rank = data[RankIndex + offset].Trim();
-					string Flight = data[FlightIndex + offset].Trim();
-
-					//skips people who have a MDS of "E-3G(II)"
-					if (MDS == "E-3G(II)")
+					person = new Person()
 					{
-						continue;
-					}
+						FirstName = firstName,
+						LastName = lastName,
+						Medical = new Medical(),
+						Training = new Training(),
+						Personnel = new Personnel(),
+						PEX = new PEX(),
+						//Organization = org,
+					};
+					insightController.Add(person);
+				}
 
-					Org org = insightController.GetOrgByAlias(Squadon);
-					if(org == null)
-					{
-						//TODO ask user to define what org this is
-						Org orgNew = new Org()
-						{
-							Name = "960 AACS",
-							Aliases = new List<OrgAlias>(),
-						};
-						OrgAlias orgAlias = new OrgAlias()
-						{
-							Name = "960 AIRBORNE AIR CTR",
-							Org = orgNew,
-						};
-						OrgAlias orgAlias2 = new OrgAlias()
-						{
-							Name = "960 AACS",
-							Org = orgNew,
-						};
-						orgNew.Aliases.Add(orgAlias);
-						orgNew.Aliases.Add(orgAlias2);
-						insightController.Add(orgNew);
-						org = orgNew;
-					}
-
-					var person = insightController.GetPersonByName(FirstName, LastName).Result;
-
-					//This will assume if person is null at this point that a new one needs to be created.
-					if (person == null)
-					{
-						person = new Person()
-						{
-							FirstName = FirstName,
-							LastName = LastName,
-							CrewPosition = crewPosition,
-							Medical = new Medical(),
-							Training = new Training(),
-							Personnel = new Personnel(),
-							PEX = new PEX(),
-							//Organization = org,
-						};
-						insightController.Add(person);
-					}
-
-					person.Flight = Flight;
-					person.Organization = org;
-					person.CrewPosition = crewPosition;
-					//person.Rank = ;
+				//Update existing person - even if it was just created above
+				person.Flight = flight;
+				person.Organization = org;
+				person.CrewPosition = crewPosition;
 
 					insightController.Update(person);
 				}
