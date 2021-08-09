@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using FluentAssertions.Execution;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests
 {
@@ -154,6 +155,19 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			}
 
 			/// <summary>
+			/// Tests that a ARIS file is detected properly
+			/// </summary>
+			[Test]
+			public void DetectARIS()
+			{
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\ARIS_good_input.csv");
+
+				FileType detectedFiletype = Detector.DetectFileType(fileContents);
+
+				detectedFiletype.Should().Be(FileType.ARIS);
+			}
+
+			/// <summary>
 			/// Tests that an unknown type file is detected properly
 			/// </summary>
 			[Test]
@@ -190,7 +204,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				detectedFiletype.Should().Be(FileType.Unknown);
 			}
 		}
-
+		/// <summary>
+		/// Digest Factory Tests
+		/// </summary>
 		[TestFixture]
 		public class DigestFactoryTests
 		{
@@ -264,6 +280,19 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			}
 
 			/// <summary>
+			/// Tests factory creating IDgest for ARIS FileType
+			/// </summary>
+			[Test]
+			public void FactoryARIS()
+			{
+				FileType fileType = FileType.ARIS;
+
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
+
+				digest.Should().BeOfType<DigestARIS>();
+			}
+
+			/// <summary>
 			/// Tests factory creating IDgest for Unknownk FileType
 			/// </summary>
 			[Test]
@@ -323,72 +352,219 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				IList<string> fileContents = Helper.ReadFile(filePath);
 
 				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
+				digest.CleanInput();
 				digest.DigestLines();
 
-				//Check database is in expected state
-				Person person1 = controller.GetPersonByName("Sophie", "Alsop").Result;
-				person1.Should().NotBeNull();
-				person1.Rank.Should().Be(Rank.E2);
-				//person1.Flight
-				//person1.org
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sophie", "Alsop", true).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E2);
+					//person.Flight
+					//person.org
+				}
 
-				Person person2 = controller.GetPersonByName("Neil", "Chapman").Result;
-				person2.Should().NotBeNull();
-				person2.Rank.Should().Be(Rank.Unknown);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Neil", "Chapman").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
 
-				Person person3 = controller.GetPersonByName("Olivia", "Churchill").Result;
-				person3.Should().NotBeNull();
-				person3.Rank.Should().Be(Rank.E8);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Olivia", "Churchill").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E8);
+				}
 
-				Person person4 = controller.GetPersonByName("Joshua", "Clark").Result;
-				person4.Should().NotBeNull();
-				person4.Rank.Should().Be(Rank.E1);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Joshua", "Clark").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E1);
+				}
 
-				Person person5 = controller.GetPersonByName("Anthony", "Hart").Result;
-				person5.Should().NotBeNull();
-				person5.Rank.Should().Be(Rank.E6);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Anthony", "Hart").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E6);
+				}
 
-				Person person6 = controller.GetPersonByName("Grace", "McCloud").Result;
-				person6.Should().NotBeNull();
-				person6.Rank.Should().Be(Rank.E3);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Grace", "McCloud").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E3);
+				}
 
-				Person person7 = controller.GetPersonByName("Dean", "St. Onge").Result;
-				person7.Should().NotBeNull();
-				person7.Rank.Should().Be(Rank.E7);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Dean", "St. Onge").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E7);
+				}
 
-				Person person8 = controller.GetPersonByName("Jean", "St. Onge").Result;
-				person8.Should().NotBeNull();
-				person8.Rank.Should().Be(Rank.O9);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Jean", "St. Onge").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O9);
+				}
 
-				Person person9 = controller.GetPersonByName("Julian", "Underwood").Result;
-				person9.Should().NotBeNull();
-				person9.Rank.Should().Be(Rank.O8);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Julian", "Underwood").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O8);
+				}
 
-				Person person10= controller.GetPersonByName("First", "Last Name").Result;
-				person10.Should().NotBeNull();
-				person10.Rank.Should().Be(Rank.O2);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("First", "Last Name").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O2);
+				}
 
-				Person person11 = controller.GetPersonByName("Sim", "Yura-Sim").Result;
-				person11.Should().NotBeNull();
-				person11.Rank.Should().Be(Rank.O1);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sim", "Yura-Sim").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O1);
+				}
 
-				Person person12 = controller.GetPersonByName("LeKeith", "McLean").Result;
-				person12.Should().NotBeNull();
-				person12.Rank.Should().Be(Rank.O3);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("LeKeith", "McLean").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O3);
+				}
 
-				Person person13 = controller.GetPersonByName("Charles", "Nichols").Result;
-				person13.Should().NotBeNull();
-				person13.Rank.Should().Be(Rank.O10);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Charles", "Nichols").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O10);
+				}
 
-				//TODO This person is a 'the third' in database. Need to determine how it's handled
-				//Person person14 = controller.GetPersonByName("Katherine", "Thomson").Result;
-				//person14.Should().NotBeNull();
-				//person14.Rank.Should().Be(Rank.E7);
+				using (new AssertionScope())
+				{
 
-				Person person15= controller.GetPersonByName("No", "Data").Result;
-				person15.Should().NotBeNull();
-				person15.Rank.Should().Be(Rank.Unknown);
+					Person person = controller.GetPersonByName("No", "Data").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
+			}
 
+			[TestCase(@"Test Mock Data\ARIS_good_input.csv")]
+			public void DigestARISTest(string filePath)
+			{
+				IList<string> fileContents = Helper.ReadFile(filePath);
+
+				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
+				digest.CleanInput();
+				digest.DigestLines();
+
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sophie", "Alsop", true).Result;
+					person.Should().NotBeNull();
+					
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Neil", "Chapman").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Olivia", "Churchill").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E8);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Joshua", "Clark").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E1);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Anthony", "Hart").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E6);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Grace", "McCloud").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E3);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Dean", "St. Onge").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E7);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Jean", "St. Onge").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O9);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Julian", "Underwood").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O8);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("First", "Last Name").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O2);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sim", "Yura-Sim").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O1);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("LeKeith", "McLean").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O3);
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Charles", "Nichols").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O10);
+				}
+
+				using (new AssertionScope())
+				{
+
+					Person person = controller.GetPersonByName("No", "Data").Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
 			}
 		}
 	}

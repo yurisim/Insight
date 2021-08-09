@@ -39,6 +39,7 @@
 		PEX,
 		AEF,
 		ETMS,
-		LOX
+		LOX,
+		ARIS
 	}
 }

@@ -117,7 +117,7 @@ namespace Insight.Core.Services.File
 				string completionDate = splitLine[_completionDateIndex].Trim();
 
 				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: false).Result;
+				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: true).Result;
 
 				if (foundPerson == null)
 				{

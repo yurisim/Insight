@@ -197,9 +197,9 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
+						.Include(p => p.CourseInstances)
 						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync()
-						: await insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
-							?.ToListAsync();
+						: await insightContext.Persons.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
