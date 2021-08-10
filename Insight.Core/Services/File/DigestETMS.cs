@@ -143,7 +143,7 @@ namespace Insight.Core.Services.File
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				insightController.Add(courseInstance, courseType, foundPerson);
+				insightController.AddCourseInstance(courseInstance, courseType, foundPerson);
 
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;

@@ -381,7 +381,7 @@ namespace Insight.Core.Services.Database
 		/// <param name="courseInstance"></param>
 		/// <param name="course"></param>
 		/// <param name="person"></param>
-		public async void Add(CourseInstance courseInstance, Course course, Person person)
+		public async void AddCourseInstance(CourseInstance courseInstance, Course course, Person person)
 		{
 			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
