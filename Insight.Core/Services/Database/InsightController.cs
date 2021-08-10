@@ -193,7 +193,6 @@ namespace Insight.Core.Services.Database
 				{
 					// TODO Make if else or make more readable
 					var persons = includeSubref ? await insightContext.Persons
-						.AsNoTracking()
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
@@ -386,7 +385,7 @@ namespace Insight.Core.Services.Database
 		{
 			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
-				//course.CourseInstances.Add(courseInstance);
+				course.CourseInstances.Add(courseInstance);
 				person.CourseInstances.Add(courseInstance);
 
 				_ = insightContext.Update(courseInstance);
