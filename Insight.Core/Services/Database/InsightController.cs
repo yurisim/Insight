@@ -388,7 +388,10 @@ namespace Insight.Core.Services.Database
 				course.CourseInstances.Add(courseInstance);
 				person.CourseInstances.Add(courseInstance);
 
-				_ = insightContext.Update(courseInstance);
+				insightContext.Entry(course).State = EntityState.Modified;
+				insightContext.Entry(person).State = EntityState.Modified;
+
+				_ = insightContext.Add(courseInstance);
 
 				_ = await insightContext.SaveChangesAsync();
 			}
