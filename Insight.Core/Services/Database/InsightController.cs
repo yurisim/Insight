@@ -310,6 +310,11 @@ namespace Insight.Core.Services.Database
 			return foundCourse;
 		}
 
+		public async Task<CourseInstance> GetCourseInstance(string firstName, string lastName, string courseName)
+		{
+			throw new NotImplementedException();
+		}
+
 
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
