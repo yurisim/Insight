@@ -22,6 +22,8 @@ namespace Insight.Core.Services.File
 					return new DigestETMS(fileContents, dbContextOptions);
 				case FileType.LOX:
 					return new DigestLOX(fileContents, dbContextOptions);
+				case FileType.SFMIS:
+					return new DigestSFMIS(fileContents, dbContextOptions);
 				default:
 					//TODO Throw custom exception indicating the digestor requested hasn't been implemented yet.
 					return null;

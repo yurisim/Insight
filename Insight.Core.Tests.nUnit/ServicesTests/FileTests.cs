@@ -290,7 +290,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 
 				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
 
-				digest.Should().BeOfType<DigestARIS>();
+				digest.Should().BeOfType<DigestSFMIS>();
 			}
 
 			/// <summary>
@@ -458,12 +458,12 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				}
 			}
 
-			[TestCase(@"Test Mock Data\ARIS_good_input.csv")]
-			public void DigestARISTest(string filePath)
+			[TestCase(@"Test Mock Data\SFMIS_good_input.csv")]
+			public void DigestSFMISTest(string filePath)
 			{
 				IList<string> fileContents = Helper.ReadFile(filePath);
 
-				IDigest digest = new DigestARIS(fileContents, dbContextOptions);
+				IDigest digest = new DigestSFMIS(fileContents, dbContextOptions);
 				digest.CleanInput();
 				digest.DigestLines();
 

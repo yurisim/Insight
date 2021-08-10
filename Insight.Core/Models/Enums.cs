@@ -40,6 +40,6 @@
 		AEF,
 		ETMS,
 		LOX,
-		ARIS
+		SFMIS,
 	}
 }

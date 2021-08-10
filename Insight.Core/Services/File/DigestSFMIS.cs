@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
-	public class DigestARIS : AbstractDigest, IDigest
+	public class DigestSFMIS : AbstractDigest, IDigest
 	{
 		int IDigest.Priority { get => 5; }
 
-		public DigestARIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		public DigestSFMIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
 
 		}
