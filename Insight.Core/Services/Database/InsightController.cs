@@ -157,7 +157,7 @@ namespace Insight.Core.Services.Database
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					orgs = insightContext.OrgAliases
-						.Where(x => x.Name.ToLower() == alias.ToLower())?
+						.Where(x => x.Name == alias.ToUpper())?
 						.Select(x => x.Org).ToList();
 					//TODO implement exception
 					if (orgs.Count > 1)
