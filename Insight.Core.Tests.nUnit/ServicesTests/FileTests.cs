@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using FluentAssertions.Execution;
+using System.Linq;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests
 {
@@ -351,13 +352,13 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				//Set up for test
 				IList<string> fileContents = Helper.ReadFile(filePath);
 
-				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
+				IDigest digest = new DigestLOX(fileContents, dbContextOptions);
 				digest.CleanInput();
 				digest.DigestLines();
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Sophie", "Alsop", true).Result;
+					Person person = controller.GetPersonByName("Sophie", "Alsop", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E2);
 					//person.Flight
@@ -366,84 +367,84 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Neil", "Chapman").Result;
+					Person person = controller.GetPersonByName("Neil", "Chapman", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.Unknown);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Olivia", "Churchill").Result;
+					Person person = controller.GetPersonByName("Olivia", "Churchill", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E8);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Joshua", "Clark").Result;
+					Person person = controller.GetPersonByName("Joshua", "Clark", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E1);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Anthony", "Hart").Result;
+					Person person = controller.GetPersonByName("Anthony", "Hart", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E6);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Grace", "McCloud").Result;
+					Person person = controller.GetPersonByName("Grace", "McCloud", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E3);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Dean", "St. Onge").Result;
+					Person person = controller.GetPersonByName("Dean", "St. Onge", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.E7);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Jean", "St. Onge").Result;
+					Person person = controller.GetPersonByName("Jean", "St. Onge", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O9);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Julian", "Underwood").Result;
+					Person person = controller.GetPersonByName("Julian", "Underwood", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O8);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("First", "Last Name").Result;
+					Person person = controller.GetPersonByName("First", "Last Name", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O2);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Sim", "Yura-Sim").Result;
+					Person person = controller.GetPersonByName("Sim", "Yura-Sim", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O1);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("LeKeith", "McLean").Result;
+					Person person = controller.GetPersonByName("LeKeith", "McLean", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O3);
 				}
 
 				using (new AssertionScope())
 				{
-					Person person = controller.GetPersonByName("Charles", "Nichols").Result;
+					Person person = controller.GetPersonByName("Charles", "Nichols", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.O10);
 				}
@@ -451,7 +452,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				using (new AssertionScope())
 				{
 
-					Person person = controller.GetPersonByName("No", "Data").Result;
+					Person person = controller.GetPersonByName("No", "Data", false).Result;
 					person.Should().NotBeNull();
 					person.Rank.Should().Be(Rank.Unknown);
 				}
@@ -462,135 +463,291 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			{
 				IList<string> fileContents = Helper.ReadFile(filePath);
 
-				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
+				IDigest digest = new DigestARIS(fileContents, dbContextOptions);
 				digest.CleanInput();
 				digest.DigestLines();
 
+				Course cbrnCourse = controller.GetCourseByName("CBRN");
+				Course catmCourse = controller.GetCourseByName("CATM");
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Sophie", "Alsop", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Sophie", "Alsop", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Sophie", "Alsop", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Neil", "Chapman", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Neil", "Chapman", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Neil", "Chapman", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Olivia", "Churchill", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Olivia", "Churchill", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Olivia", "Churchill", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Joshua", "Clark", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Joshua", "Clark", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Joshua", "Clark", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Anthony", "Hart", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Anthony", "Hart", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Anthony", "Hart", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Grace", "McCloud", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Grace", "McCloud", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Grace", "McCloud", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Grace", "McCloud", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Grace", "McCloud", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Dean", "St. Onge", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Jean", "St. Onge", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Jean", "St. Onge", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Jean", "St. Onge", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Julian", "Underwood", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Julian", "Underwood", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Julian", "Underwood", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("First", "Last Name", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("First", "Last Name", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("First", "Last Name", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Sim", "Yura-Sim", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Sim", "Yura-Sim", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Sim", "Yura-Sim", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("LeKeith", "McLean", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("LeKeith", "McLean", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("LeKeith", "McLean", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("Charles", "Nichols", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("Charles", "Nichols", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("Charles", "Nichols", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 
 				using (new AssertionScope())
 				{
-					CourseInstance courseinstanceCBRN = controller.GetCourseInstance("No", "Data", "CBRN").Result;
-					courseinstanceCBRN.Should().NotBeNull();
+					Person person = controller.GetPersonByName("No", "Data", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
 
-					CourseInstance courseinstanceCATM = controller.GetCourseInstance("No", "Data", "CATM").Result;
-					courseinstanceCATM.Should().NotBeNull();
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == cbrnCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == catmCourse.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(new DateTime());
+					}
 				}
 			}
 		}

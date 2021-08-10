@@ -92,7 +92,7 @@ namespace Insight.Core.Services.File
 
 				insightController.Add(newCourse);
 
-				foundCourse = insightController.GetCourseByName(newCourse.Name);
+				foundCourse = newCourse;
 			}
 			return foundCourse;
 		}
@@ -123,11 +123,11 @@ namespace Insight.Core.Services.File
 				{
 					continue;
 				}
-				if (foundPerson.CourseInstances == null)
-				{
-					foundPerson.CourseInstances = new List<CourseInstance>();
-					insightController.Update(foundPerson);
-				}
+				//if (foundPerson.CourseInstances == null)
+				//{
+				//	foundPerson.CourseInstances = new List<CourseInstance>();
+				//	insightController.Update(foundPerson);
+				//}
 
 				// TODO: Make this a try parse
 				var parsedCompletion = DateTime.Parse(completionDate);

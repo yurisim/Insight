@@ -77,8 +77,8 @@ namespace Insight.Core.Services.Database
 						.Include(person => person.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
 						?.ToListAsync();
 
-						// Don't know why this is here. You don't need to map person into person. Tests still run after this change.
-						//.Select(person => person)?.ToListAsync();
+					// Don't know why this is here. You don't need to map person into person. Tests still run after this change.
+					//.Select(person => person)?.ToListAsync();
 				}
 			}
 			catch (Exception)
@@ -193,6 +193,7 @@ namespace Insight.Core.Services.Database
 				{
 					// TODO Make if else or make more readable
 					var persons = includeSubref ? await insightContext.Persons
+						.AsNoTracking()
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
@@ -310,12 +311,6 @@ namespace Insight.Core.Services.Database
 			return foundCourse;
 		}
 
-		public async Task<CourseInstance> GetCourseInstance(string firstName, string lastName, string courseName)
-		{
-			throw new NotImplementedException();
-		}
-
-
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>
@@ -391,7 +386,7 @@ namespace Insight.Core.Services.Database
 		{
 			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
-				course.CourseInstances.Add(courseInstance);
+				//course.CourseInstances.Add(courseInstance);
 				person.CourseInstances.Add(courseInstance);
 
 				_ = insightContext.Update(courseInstance);
