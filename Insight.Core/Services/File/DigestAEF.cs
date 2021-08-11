@@ -11,7 +11,7 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAEF : AbstractDigest, IDigest
 	{
-		private int _NameIndex = -1;
+		private int _nameIndex = -1;
 		private int _payGradeIndex = -1;
 		private int _unitIndex = -1;
 		private int _afscIndex = -1;
@@ -67,7 +67,7 @@ namespace Insight.Core.Services.File
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
-			_NameIndex = Array.IndexOf(columnHeaders, "NAME");
+			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
 			_payGradeIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
 			_unitIndex = Array.IndexOf(columnHeaders, "UNIT");
 			_afscIndex = Array.IndexOf(columnHeaders, "AFSC");
@@ -82,13 +82,13 @@ namespace Insight.Core.Services.File
 		/// <param name="File"></param>
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count - 1; i++)
+			for (int i = 0; i < FileContents.Count; i++)
 			{
 				string[] splitLine = FileContents[i].Split(',');
 
 				//TODO refact to better handle format changes
 				//Check variables
-				string[] names = splitLine[_NameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
+				string[] names = splitLine[_nameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
 				string firstName = names[0];
 				string lastName = names[1];
 				string unit = splitLine[_unitIndex];

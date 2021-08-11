@@ -73,11 +73,8 @@ namespace Insight.Core.Services.File
 		/// <summary>
 		/// Determines which course on ETMS FileContents is for
 		/// </summary>
-		private Course DetectETMSType()
+		private Course CreateCourse(string courseName)
 		{
-			// Use Distinct Column to get the file type in case the first row is blank
-			var courseName = FileContents[1].Split(',')[_courseTitleIndex];
-
 			var foundCourse = insightController.GetCourseByName(courseName);
 
 			// If the course is not found, it will be null, so create the course
@@ -99,9 +96,10 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			Course courseType = DetectETMSType();
+			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
+			Course course = CreateCourse(courseName);
 
-			if (courseType == null)
+			if (course == null)
 			{
 				return;
 			}
@@ -134,16 +132,16 @@ namespace Insight.Core.Services.File
 
 				CourseInstance courseInstance = new CourseInstance()
 				{
-					Course = courseType,
+					Course = course,
 					Person = foundPerson,
 					Completion = parsedCompletion,
-					Expiration = parsedCompletion.AddDays(courseType.Interval * 365)
+					Expiration = parsedCompletion.AddDays(course.Interval * 365)
 
 					// TODO: Make custom expiration by JSON object
 					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				insightController.AddCourseInstance(courseInstance, courseType, foundPerson);
+				insightController.AddCourseInstance(courseInstance, course, foundPerson);
 
 				//courseInstance.Course = CourseType;
 				//courseInstance.Person = foundPerson;
