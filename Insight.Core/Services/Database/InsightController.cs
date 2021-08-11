@@ -10,6 +10,8 @@ using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
+	//TODO: Make this a partial class and have one file/class be for Get functions and another file be for Add/Update. This file is getting too complex.
+
 	public class InsightController
 	{
 		private DbContextOptions<InsightContext> _dbContextOptions;
@@ -67,11 +69,16 @@ namespace Insight.Core.Services.Database
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					persons = await insightContext.Persons
-						.Include(p => p.Medical)
-						.Include(p => p.Personnel)
-						.Include(p => p.Training)
-						.Include(p => p.Organization)
-						.Select(x => x)?.ToListAsync();
+						.Include(person => person.Medical)
+						.Include(person => person.Personnel)
+						.Include(person => person.Training)
+						.Include(person => person.Organization)
+						// Maybe have an overload because their course instances are big and we may not need to ever call these except for specific instances?
+						.Include(person => person.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
+						?.ToListAsync();
+
+					// Don't know why this is here. You don't need to map person into person. Tests still run after this change.
+					//.Select(person => person)?.ToListAsync();
 				}
 			}
 			catch (Exception)
@@ -95,7 +102,12 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = await insightContext.Persons.Where(x => x.Organization == org).Select(x => x).ToListAsync();
+					persons = await insightContext.Persons.Where(x => x.Organization == org)
+						.Include(p => p.Medical)
+						.Include(p => p.Personnel)
+						.Include(p => p.Training)
+						.Include(p => p.Organization)
+						.Select(x => x)?.ToListAsync();
 				}
 			}
 			catch (Exception)
@@ -185,9 +197,9 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
+						.Include(p => p.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
 						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync()
-						: await insightContext.Persons.Where(x => x.FirstName.ToLower() == firstName.ToLower() && x.LastName.ToLower() == lastName.ToLower())
-							?.ToListAsync();
+						: await insightContext.Persons.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync();
 
 					//TODO implement better exceptions
 					if (persons.Count > 1)
@@ -298,7 +310,6 @@ namespace Insight.Core.Services.Database
 			return foundCourse;
 		}
 
-
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
 		/// </summary>
@@ -370,14 +381,17 @@ namespace Insight.Core.Services.Database
 		/// <param name="courseInstance"></param>
 		/// <param name="course"></param>
 		/// <param name="person"></param>
-		public async void Add(CourseInstance courseInstance, Course course, Person person)
+		public async void AddCourseInstance(CourseInstance courseInstance, Course course, Person person)
 		{
 			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
 				course.CourseInstances.Add(courseInstance);
 				person.CourseInstances.Add(courseInstance);
 
-				_ = insightContext.Update(courseInstance);
+				insightContext.Entry(course).State = EntityState.Modified;
+				insightContext.Entry(person).State = EntityState.Modified;
+
+				_ = insightContext.Add(courseInstance);
 
 				_ = await insightContext.SaveChangesAsync();
 			}

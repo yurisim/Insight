@@ -61,7 +61,7 @@ namespace Insight.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The information herein is For Official Use Only (FOUO).
+        ///   Looks up a localized string similar to Export Description:  UnitRoster.
         /// </summary>
         internal static string AEFExpected {
             get {
@@ -88,7 +88,7 @@ namespace Insight.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CONTROLLED UNCLASSIFIED INFORMATION.
+        ///   Looks up a localized string similar to Letter of Certifications.
         /// </summary>
         internal static string LOXExpected {
             get {
@@ -102,6 +102,15 @@ namespace Insight.Core.Properties {
         internal static string PEXExpected {
             get {
                 return ResourceManager.GetString("PEXExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Description:  SFMISRoster.
+        /// </summary>
+        internal static string SFMISExpected {
+            get {
+                return ResourceManager.GetString("SFMISExpected", resourceCulture);
             }
         }
         
