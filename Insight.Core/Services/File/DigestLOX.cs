@@ -17,7 +17,7 @@ namespace Insight.Core.Services.File
 		private int _mdsIndex = -1;
 		private int _rankIndex = -1;
 		private int _flightIndex = -1;
-		private int _cpIndex = -1;
+		private int _crewPositionIndex = -1;
 
 		private string _squadron = "";
 
@@ -98,7 +98,7 @@ namespace Insight.Core.Services.File
 
 			_lastNameIndex = Array.IndexOf(columnHeaders, "NAME");
 			_firstNameIndex = _lastNameIndex + offset;
-			_cpIndex = Array.IndexOf(columnHeaders, "CP") + offset;
+			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + offset;
 			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + offset;
 			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + offset;
 			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + offset;
@@ -114,7 +114,7 @@ namespace Insight.Core.Services.File
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 				
-				string crewPosition = splitLine[_cpIndex].Trim();
+				string crewPosition = splitLine[_crewPositionIndex].Trim();
 				string MDS = splitLine[_mdsIndex].Trim();
 				string rank = splitLine[_rankIndex].Trim();
 				string flight = splitLine[_flightIndex].Trim();
@@ -167,9 +167,10 @@ namespace Insight.Core.Services.File
 				//Update existing person - even if it was just created above
 				person.Flight = flight;
 				person.Organization = org;
-				//person.Rank = ;
+				person.CrewPosition = crewPosition;
 
-				insightController.Update(person);
+					insightController.Update(person);
+				}
 			}
 		}
 	}
