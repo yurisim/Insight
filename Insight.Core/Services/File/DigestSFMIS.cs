@@ -11,10 +11,6 @@ namespace Insight.Core.Services.File
 {
 	public class DigestSFMIS : AbstractDigest, IDigest
 	{
-		private int _nameIndex;
-		private int _unitIndex;
-		private int _pasCodeIndex;
-		private int _rankIndex;
 		private int _emailIndex;
 		private int _catmCourseNameIndex;
 		private int _catmCompletionDateIndex;
@@ -34,7 +30,6 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
 				string lineToUpper = FileContents[i].ToUpper();
 				if (lineToUpper.Contains("FOR OFFICIAL USE ONLY") || lineToUpper.Contains("CONTROLLED UNCLASSIFIED INFORMATION"))
 				{
@@ -48,6 +43,7 @@ namespace Insight.Core.Services.File
 					//If all of those things have been eliminated, it must be the column header's line
 					if (!lineToUpper.Contains("EXPORT DESCRIPTION: "))
 					{
+						string[] splitLine = FileContents[i].Split(',');
 						SetColumnIndexes(splitLine);
 						headersProcessed = true;
 					}
@@ -71,10 +67,6 @@ namespace Insight.Core.Services.File
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
-			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_unitIndex = Array.IndexOf(columnHeaders, "UNIT");
-			_pasCodeIndex = Array.IndexOf(columnHeaders, "PASCODE");
-			_rankIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
 			_emailIndex = Array.IndexOf(columnHeaders, "EMAIL4CAREER");
 			_catmCourseNameIndex = Array.IndexOf(columnHeaders, "COURSE");
 			_catmCompletionDateIndex = Array.IndexOf(columnHeaders, "COMPLETION_DATE");
@@ -94,7 +86,6 @@ namespace Insight.Core.Services.File
 				{
 					Name = courseName,
 					Interval = 1,
-					//CourseInstances = new List<CourseInstance>(),
 				};
 
 				insightController.Add(newCourse);
@@ -110,6 +101,7 @@ namespace Insight.Core.Services.File
 			{
 				string[] splitLine = FileContents[i].Split(',');
 
+				//name is extracted out of email due to the ambigious formatting of the name column in the source data and because it truncates it at 18 characters
 				string[] names = splitLine[_emailIndex].Substring(0, splitLine[_emailIndex].IndexOf("@")).Split('.');
 
 				string firstName = names[0];
@@ -119,7 +111,7 @@ namespace Insight.Core.Services.File
 
 				if(person == null)
 				{
-					//handle null person
+					//TODO handle null person
 				}
 				else
 				{
