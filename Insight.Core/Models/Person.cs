@@ -19,6 +19,8 @@ namespace Insight.Core.Models
 
 		public string Phone { get; set; }
 
+		public string Email {  get; set; }
+
 		public long DoDID { get; set; }
 
 		public string SSN { get; set; }

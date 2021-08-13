@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Insight.Core.Models;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Insight.Core.Services.File
 {
@@ -18,7 +19,8 @@ namespace Insight.Core.Services.File
 				{FileType.PEX, Resources.PEXExpected},
 				{FileType.AEF, Resources.AEFExpected},
 				{FileType.ETMS, Resources.ETMSExpected},
-				{FileType.LOX, Resources.LOXExpected}
+				{FileType.LOX, Resources.LOXExpected},
+				{FileType.SFMIS, Resources.SFMISExpected},
 			};
 
 		/// <summary>
@@ -27,29 +29,33 @@ namespace Insight.Core.Services.File
 		/// <returns></returns>
 		public static FileType DetectFileType(IList<string> inputFile)
 		{
-			if(inputFile == null || inputFile.Count == 0)
+			if (inputFile == null || inputFile.Count == 0)
 			{
 				throw new ArgumentNullException("null or length 0");
 			}
 			var detectedFileType = FileType.Unknown;
 
-			string firstLine = inputFile[0];
+			string[] firstThreeLines = inputFile.Take(3).ToArray();
 
-			foreach (var supportedFileType in SupportedFileTypes)
+			foreach (string line in firstThreeLines)
 			{
-				if (firstLine.Contains(supportedFileType.Value))
+				foreach (var supportedFileType in SupportedFileTypes)
 				{
-					detectedFileType = supportedFileType.Key;
-					break;
+
+					if (line.Contains(supportedFileType.Value))
+					{
+						return supportedFileType.Key;
+					}
 				}
+
 			}
 
-			if (detectedFileType == FileType.Unknown)
-			{
-				throw new Exception(Resources.UnsupportedFileType);
-			}
+			//if (detectedFileType == FileType.Unknown)
+			//{
+			//	throw new Exception(Resources.UnsupportedFileType);
+			//}
 
-			return detectedFileType;
+			return FileType.Unknown;
 		}
 	}
 }

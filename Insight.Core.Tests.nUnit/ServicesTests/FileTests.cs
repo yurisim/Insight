@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using FluentAssertions.Execution;
+using System.Linq;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests
 {
@@ -154,6 +156,19 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			}
 
 			/// <summary>
+			/// Tests that a ARIS file is detected properly
+			/// </summary>
+			[Test]
+			public void DetectSFMIS()
+			{
+				IList<string> fileContents = Helper.ReadFile(@"Test Mock Data\ARIS_good_input.csv");
+
+				FileType detectedFiletype = Detector.DetectFileType(fileContents);
+
+				detectedFiletype.Should().Be(FileType.SFMIS);
+			}
+
+			/// <summary>
 			/// Tests that an unknown type file is detected properly
 			/// </summary>
 			[Test]
@@ -190,7 +205,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				detectedFiletype.Should().Be(FileType.Unknown);
 			}
 		}
-
+		/// <summary>
+		/// Digest Factory Tests
+		/// </summary>
 		[TestFixture]
 		public class DigestFactoryTests
 		{
@@ -264,6 +281,19 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			}
 
 			/// <summary>
+			/// Tests factory creating IDgest for SFMIS FileType
+			/// </summary>
+			[Test]
+			public void FactorySFMIS()
+			{
+				FileType fileType = FileType.SFMIS;
+
+				IDigest digest = DigestFactory.GetDigestor(fileType, fileContents: new List<string>(), dbContextOptions);
+
+				digest.Should().BeOfType<DigestSFMIS>();
+			}
+
+			/// <summary>
 			/// Tests factory creating IDgest for Unknownk FileType
 			/// </summary>
 			[Test]
@@ -322,73 +352,464 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				//Set up for test
 				IList<string> fileContents = Helper.ReadFile(filePath);
 
-				IDigest digest = DigestFactory.GetDigestor(fileType: FileType.LOX, fileContents: fileContents, dbContextOptions);
+				IDigest digest = new DigestLOX(fileContents, dbContextOptions);
+				digest.CleanInput();
 				digest.DigestLines();
 
-				//Check database is in expected state
-				Person person1 = controller.GetPersonByName("Sophie", "Alsop").Result;
-				person1.Should().NotBeNull();
-				person1.Rank.Should().Be(Rank.E2);
-				//person1.Flight
-				//person1.org
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sophie", "Alsop", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E2);
+					//person.Flight
+					//person.org
+				}
 
-				Person person2 = controller.GetPersonByName("Neil", "Chapman").Result;
-				person2.Should().NotBeNull();
-				person2.Rank.Should().Be(Rank.Unknown);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Neil", "Chapman", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
 
-				Person person3 = controller.GetPersonByName("Olivia", "Churchill").Result;
-				person3.Should().NotBeNull();
-				person3.Rank.Should().Be(Rank.E8);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Olivia", "Churchill", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E8);
+				}
 
-				Person person4 = controller.GetPersonByName("Joshua", "Clark").Result;
-				person4.Should().NotBeNull();
-				person4.Rank.Should().Be(Rank.E1);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Joshua", "Clark", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E1);
+				}
 
-				Person person5 = controller.GetPersonByName("Anthony", "Hart").Result;
-				person5.Should().NotBeNull();
-				person5.Rank.Should().Be(Rank.E6);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Anthony", "Hart", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E6);
+				}
 
-				Person person6 = controller.GetPersonByName("Grace", "McCloud").Result;
-				person6.Should().NotBeNull();
-				person6.Rank.Should().Be(Rank.E3);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Grace", "McCloud", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E3);
+				}
 
-				Person person7 = controller.GetPersonByName("Dean", "St. Onge").Result;
-				person7.Should().NotBeNull();
-				person7.Rank.Should().Be(Rank.E7);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Dean", "St. Onge", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.E7);
+				}
 
-				Person person8 = controller.GetPersonByName("Jean", "St. Onge").Result;
-				person8.Should().NotBeNull();
-				person8.Rank.Should().Be(Rank.O9);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Jean", "St. Onge", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O9);
+				}
 
-				Person person9 = controller.GetPersonByName("Julian", "Underwood").Result;
-				person9.Should().NotBeNull();
-				person9.Rank.Should().Be(Rank.O8);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Julian", "Underwood", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O8);
+				}
 
-				Person person10= controller.GetPersonByName("First", "Last Name").Result;
-				person10.Should().NotBeNull();
-				person10.Rank.Should().Be(Rank.O2);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("First", "Last Name", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O2);
+				}
 
-				Person person11 = controller.GetPersonByName("Sim", "Yura-Sim").Result;
-				person11.Should().NotBeNull();
-				person11.Rank.Should().Be(Rank.O1);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sim", "Yura-Sim", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O1);
+				}
 
-				Person person12 = controller.GetPersonByName("LeKeith", "McLean").Result;
-				person12.Should().NotBeNull();
-				person12.Rank.Should().Be(Rank.O3);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("LeKeith", "McLean", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O3);
+				}
 
-				Person person13 = controller.GetPersonByName("Charles", "Nichols").Result;
-				person13.Should().NotBeNull();
-				person13.Rank.Should().Be(Rank.O10);
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Charles", "Nichols", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.O10);
+				}
 
-				//TODO This person is a 'the third' in database. Need to determine how it's handled
-				//Person person14 = controller.GetPersonByName("Katherine", "Thomson").Result;
-				//person14.Should().NotBeNull();
-				//person14.Rank.Should().Be(Rank.E7);
+				using (new AssertionScope())
+				{
 
-				Person person15= controller.GetPersonByName("No", "Data").Result;
-				person15.Should().NotBeNull();
-				person15.Rank.Should().Be(Rank.Unknown);
+					Person person = controller.GetPersonByName("No", "Data", false).Result;
+					person.Should().NotBeNull();
+					person.Rank.Should().Be(Rank.Unknown);
+				}
+			}
 
+			[TestCase(@"Test Mock Data\SFMIS_good_input.csv")]
+			public void DigestSFMISTest(string filePath)
+			{
+				IList<string> loxContents = Helper.ReadFile(@"Test Mock Data\LoX.csv");
+
+				IDigest lox = new DigestLOX(loxContents, dbContextOptions);
+				lox.CleanInput();
+				lox.DigestLines();
+
+
+				IList<string> fileContents = Helper.ReadFile(filePath);
+
+				IDigest digest = new DigestSFMIS(fileContents, dbContextOptions);
+				digest.CleanInput();
+				digest.DigestLines();
+
+				Course m9Course = controller.GetCourseByName("M9 HG AFQC (INITIAL/RECURRING)");
+				Course m4Course = controller.GetCourseByName("M4 RIFLE/CARBINE GROUP C AFQC");
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Sophie", "Alsop", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("sophie.alsop@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-04-26"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-04-30"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Neil", "Chapman", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("neil.chapman.2@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-04-01"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-04-30"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2019-09-09"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2020-09-30"));
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Olivia", "Churchill", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("olivia.churchill@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-04-01"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-04-30"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Joshua", "Clark", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("joshua.clark.2@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-03-29"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-03-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Anthony", "Hart", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("anthony.hart@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2020-03-13"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2021-03-31"));
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Grace", "Hart", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("grace.hart.3@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-03-22"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-03-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Stewart", "Jones", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("stewart.jones@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2020-03-17"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2021-03-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Alexander", "Lyman", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("alexander.lyman@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2019-08-13"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2020-08-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Julian", "Lyman", true).Result;
+					person.CourseInstances.Count.Should().Be(0);
+					person.Email.Should().Be("julian.lyman@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Adrian", "McLean", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("adrian.mclean.6@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-04-01"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-04-30"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Justin", "Mitchell", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("justin.mitchell@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-05-25"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-05-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Christian", "Morgan", true).Result;
+					person.CourseInstances.Count.Should().Be(0);
+					person.Email.Should().Be("christian.morgan@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Keith", "Murray", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("keith.murray.3@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-05-24"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-05-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("John", "Smith", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("john.smith.999@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-03-01"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-03-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Katherine", "Thomson", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("katherine.thomson@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2021-04-26"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2022-04-30"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
+
+				using (new AssertionScope())
+				{
+					Person person = controller.GetPersonByName("Julian", "Underwood", true).Result;
+					person.CourseInstances.Count.Should().NotBe(0);
+					person.Email.Should().Be("julian.underwood@us.af.mil");
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m9Course.Id).ToList();
+						courseInstances.Count.Should().Be(1);
+						courseInstances.First().Completion.Should().Be(DateTime.Parse("2020-03-13"));
+						courseInstances.First().Expiration.Should().Be(DateTime.Parse("2021-03-31"));
+					}
+
+					using (new AssertionScope())
+					{
+						List<CourseInstance> courseInstances = person.CourseInstances.Where(c => c.Course.Id == m4Course.Id).ToList();
+						courseInstances.Count.Should().Be(0);
+					}
+				}
 			}
 		}
 	}
