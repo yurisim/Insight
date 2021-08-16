@@ -113,7 +113,7 @@ namespace Insight.Core.Services.File
 				//TODO handle column mising (index of -1)
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-				
+
 				string crewPosition = splitLine[_crewPositionIndex].Trim();
 				string MDS = splitLine[_mdsIndex].Trim();
 				string rank = splitLine[_rankIndex].Trim();
@@ -169,8 +169,7 @@ namespace Insight.Core.Services.File
 				person.Organization = org;
 				person.CrewPosition = crewPosition;
 
-					insightController.Update(person);
-				}
+				insightController.Update(person);
 			}
 		}
 	}
