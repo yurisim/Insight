@@ -25,6 +25,8 @@ namespace Insight.Core.Models
 
 		public string SSN { get; set; }
 
+		public string CrewPosition { get; set; }
+
 		public string DateOnStation { get; set; }
 
 		public string Comments { get; set; }
