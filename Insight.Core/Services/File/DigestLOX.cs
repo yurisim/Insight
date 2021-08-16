@@ -113,12 +113,12 @@ namespace Insight.Core.Services.File
 				//TODO handle column mising (index of -1)
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-				
+
 				string crewPosition = splitLine[_crewPositionIndex].Trim();
 				string MDS = splitLine[_mdsIndex].Trim();
 				string rank = splitLine[_rankIndex].Trim();
 				string flight = splitLine[_flightIndex].Trim();
-
+				
 				Org org = insightController.GetOrgByAlias(_squadron);
 
 				//TODO this is here so that org is created. Eventually, the user will have to determine that "960 AACS" is the same as "960 AIRBORNE AIR CTR" to facilitating create orgAliases in database
@@ -169,8 +169,7 @@ namespace Insight.Core.Services.File
 				person.Organization = org;
 				person.CrewPosition = crewPosition;
 
-					insightController.Update(person);
-				}
+				insightController.Update(person);
 			}
 		}
 	}

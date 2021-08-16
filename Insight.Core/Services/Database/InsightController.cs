@@ -177,6 +177,30 @@ namespace Insight.Core.Services.Database
 			return org;
 		}
 
+		/// <summary>
+		/// Gets AFSC by name
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public async Task<AFSC> GetAFSC(string name)
+		{
+			AFSC afsc = null;
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					afsc = await insightContext.AFSCs.FirstOrDefaultAsync(x => x.Name == name.ToUpper());
+
+				}
+			}
+			catch (Exception e)
+			{
+				throw new Exception("Insight.db access error");
+			}
+
+			return afsc;
+		}
+
 		#region GetPersonByProperty
 		/// <summary>
 		/// Returns person that matches First/Last name or null if none exist

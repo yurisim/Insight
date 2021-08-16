@@ -20,6 +20,7 @@ namespace Insight.Core.Services.File
 		private int _ssnIndex = -1;
 		private int _phoneIndex = -1;
 		private int _dateOnStationIndex = -1;
+		private int _pafsc = -1;
 
 		int IDigest.Priority => 1;
 
@@ -57,6 +58,7 @@ namespace Insight.Core.Services.File
 			_ssnIndex = Array.IndexOf(columnHeaders, "SSAN") + offset;
 			_phoneIndex = Array.IndexOf(columnHeaders, "HOME_PHONE_NUMBER") + offset;
 			_dateOnStationIndex = Array.IndexOf(columnHeaders, "DATE_ARRIVED_STATION") + offset;
+			_pafsc = Array.IndexOf(columnHeaders, "PAFSC") + offset;
 		}
 
 		public void DigestLines()
@@ -71,6 +73,7 @@ namespace Insight.Core.Services.File
 				string ssn = splitLine[_ssnIndex].Replace("-", "");
 				string dateOnstation = splitLine[_dateOnStationIndex];
 				string phone = splitLine[_phoneIndex];
+				AFSC pafsc = base.GetOrCreateAFSC(splitLine[_pafsc].Trim());
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
@@ -80,6 +83,8 @@ namespace Insight.Core.Services.File
 					person.SSN = ssn;
 					person.DateOnStation = dateOnstation;
 					person.Phone = phone;
+					person.AFSC = pafsc;
+
 					insightController.Update(person);
 				}				
 			}

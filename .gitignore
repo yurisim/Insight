@@ -364,4 +364,6 @@ FodyWeavers.xsd
 
 #Libre Office Lock Files
 .~lock*.csv#
+.~lock*.xls#
+.~lock*.xlsx#
 

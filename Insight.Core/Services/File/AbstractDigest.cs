@@ -1,4 +1,5 @@
-﻿using Insight.Core.Services.Database;
+﻿using Insight.Core.Models;
+using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -28,5 +29,22 @@ namespace Insight.Core.Services.File
 			//default InsightController() constructor uses the live/production database. The dbContextOptions constructor can specify either - uses in tests
 			insightController = (dbContextOptions == null) ? new InsightController() : new InsightController(dbContextOptions);
 		}
+
+		protected AFSC GetOrCreateAFSC(string name)
+		{
+			AFSC afsc = insightController.GetAFSC(name).Result;
+
+			if(afsc !=  null) { return afsc; }
+
+			afsc = new AFSC()
+			{
+				Name = name,
+			};
+
+			insightController.Add(afsc);
+
+			return afsc;
+		}
+
 	}
 }
