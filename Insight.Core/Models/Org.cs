@@ -1,0 +1,31 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace Insight.Core.Models
+{
+	public class Org
+	{
+		[Key]
+		public int Id { get; set; }
+
+		public string Name { get; set; }
+
+		public List<Org> SubOrgs { get; set; }
+
+		public string PASCode { get; set; }
+
+		public ICollection<OrgAlias> Aliases { get; set; }
+	}
+
+	public class OrgAlias
+	{
+		[Key,Required]
+		public int Id { get; set; }
+
+		[Required]
+		public Org Org { get; set; }
+
+		[Required]
+		public string Name { get; set; }
+	}
+}

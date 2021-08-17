@@ -1,0 +1,27 @@
+﻿<UserControl x:Name= "userControl"
+    x:Class="Insight.Views.UploadItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:Insight.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:UploadItemViewModel}"
+    mc:Ignorable="d">
+    <Grid VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="300" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="textBlock" Text="{Binding FileType, ElementName=userControl}" Margin="{StaticResource SmallLeftTopRightBottomMargin}" FontSize="{StaticResource LargeFontSize}" />
+        <TextBox x:Name="textBox" PlaceholderText="{Binding FileType, ElementName=userControl}" Grid.Row="1" Grid.Column="0"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" />
+
+        <Button Grid.Row="1" Grid.Column="1"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" Click="btnFileDialog_Click" >
+            <!--<Button Grid.Row="1" Grid.Column="1"  Margin="{StaticResource SmallLeftTopRightBottomMargin}" Command="{x:Bind ViewModel.UploadFileCommand}" >-->
+            <SymbolIcon Symbol="Upload" />
+        </Button>
+    </Grid>
+</UserControl>
