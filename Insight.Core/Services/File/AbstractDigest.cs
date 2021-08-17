@@ -30,12 +30,19 @@ namespace Insight.Core.Services.File
 			insightController = (dbContextOptions == null) ? new InsightController() : new InsightController(dbContextOptions);
 		}
 
+		/// <summary>
+		/// Gets AFSC entity associated with name if it exists, creates it otherwise
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		protected AFSC GetOrCreateAFSC(string name)
 		{
 			AFSC afsc = insightController.GetAFSC(name).Result;
 
+			//AFSC exists, returns it
 			if(afsc !=  null) { return afsc; }
 
+			//AFSC does not already exists, creates it
 			afsc = new AFSC()
 			{
 				Name = name,
