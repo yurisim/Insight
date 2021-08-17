@@ -89,8 +89,8 @@ namespace Insight.Core.Services.File
 				//TODO refact to better handle format changes
 				//Check variables
 				string[] names = splitLine[_nameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
-				string firstName = names[0];
-				string lastName = names[1];
+				string firstName = names[1];
+				string lastName = names[0];
 				string unit = splitLine[_unitIndex];
 				string AFSC = splitLine[_afscIndex];
 				Status personnelStatus = StringManipulation.StatusReader(splitLine[_personnelOverallStatusIndex]);
