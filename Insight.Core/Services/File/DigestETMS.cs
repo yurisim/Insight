@@ -70,39 +70,10 @@ namespace Insight.Core.Services.File
 			_completionDateIndex = Array.IndexOf(columnHeaders, "COMPLETION DATE");
 		}
 
-		/// <summary>
-		/// Determines which course on ETMS FileContents is for
-		/// </summary>
-		private Course CreateCourse(string courseName)
-		{
-			var foundCourse = insightController.GetCourseByName(courseName);
-
-			// If the course is not found, it will be null, so create the course
-			if (foundCourse == null)
-			{
-				// TODO make custom intervals for each course. Default is hard coded to 1 year
-				Course newCourse = new Course()
-				{
-					Name = courseName,
-					Interval = 1
-				};
-
-				insightController.Add(newCourse);
-
-				foundCourse = newCourse;
-			}
-			return foundCourse;
-		}
-
 		public void DigestLines()
 		{
 			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
-			Course course = CreateCourse(courseName);
-
-			if (course == null)
-			{
-				return;
-			}
+			Course course = base.GetOrCreateCourse(courseName);
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
