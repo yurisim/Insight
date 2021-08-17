@@ -39,6 +39,7 @@ namespace Insight.ViewModels
 				Id = person.Id,
 				Name = person.Name,
 				SSN = person.SSN,
+				CrewPosition = person.CrewPosition,
 				DateOnStation = person.DateOnStation,
 				// Need ?. null checks in case data is bad (it is)
 				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration,
@@ -68,6 +69,8 @@ namespace Insight.ViewModels
 		public string Name { get; set; }
 
 		public string SSN { get; set; }
+
+		public string CrewPosition { get; set; }
 
 		public string DateOnStation { get; set; }
 
