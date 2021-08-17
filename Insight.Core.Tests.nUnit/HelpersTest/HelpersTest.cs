@@ -9,124 +9,35 @@ using NUnit.Framework;
 
 namespace Insight.Core.Tests.nUnit.HelpersTest
 {
-	public class HelpersTest
+	[TestFixture]
+	public class HelpersTests
 	{
-		[TestFixture]
-		public class ConvertToTitleCaseTests
+		[TestCase("this is a sentence", "This Is A Sentence")]
+		[TestCase("THIS IS A SENTENCE", "This Is A Sentence")]
+		[TestCase("tHiS iS a SeNtEnCe", "This Is A Sentence")]
+		[TestCase("tHiS iS â SeNtÉnCe", "This Is Â Senténce")]
+		[TestCase("", "")]
+		[TestCase(null, null)]
+		public void ConvertToTitleCaseTests(string input, string expected)
 		{
-			[Test]
-			public void AllCaps()
-			{
-				string value = "ALL CAPS";
+			string result = StringManipulation.ConvertToTitleCase(input);
 
-				string result = StringManipulation.ConvertToTitleCase(value);
-
-				string expected = "All Caps";
-
-				result.Should().Be(expected);
-
-			}
-
-			[Test]
-			public void AllLower()
-			{
-				string value = "all lower";
-
-				string result = StringManipulation.ConvertToTitleCase(value);
-
-				string expected = "All Lower";
-
-				result.Should().Be(expected);
-
-			}
-
-			[Test]
-			public void Null()
-			{
-				string value = null;
-
-				string result = StringManipulation.ConvertToTitleCase(value);
-
-				result.Should().BeNull();
-
-			}
-
-			[Test]
-			public void Empty()
-			{
-				string value = "";
-
-				string result = StringManipulation.ConvertToTitleCase(value);
-
-				string expected = "";
-
-				result.Should().Be(expected);
-
-			}
+			result.Should().Be(expected);
 		}
 
-		[TestFixture]
-		public class StatusReaderTests
+		[TestCase("g", Status.Current)]
+		[TestCase("G", Status.Current)]
+		[TestCase("y", Status.Upcoming)]
+		[TestCase("Y", Status.Upcoming)]
+		[TestCase("r", Status.Overdue)]
+		[TestCase("R", Status.Overdue)]
+		[TestCase(null, Status.Unknown)]
+		[TestCase("", Status.Unknown)]
+		public void StatusReaderTests(string input, Status expected)
 		{
-			[Test]
-			public void Current()
-			{
-				string value = "g";
+			Status result = StringManipulation.StatusReader(input);
 
-				Status result = StringManipulation.StatusReader(value);
-
-				Status expected = Status.Current;
-
-				result.Should().Be(expected);
-			}
-
-			[Test]
-			public void Upcoming()
-			{
-				string value = "y";
-
-				Status result = StringManipulation.StatusReader(value);
-
-				Status expected = Status.Upcoming;
-
-				result.Should().Be(expected);
-			}
-
-			[Test]
-			public void Overdue()
-			{
-				string value = "r";
-
-				Status result = StringManipulation.StatusReader(value);
-
-				Status expected = Status.Overdue;
-
-				result.Should().Be(expected);
-			}
-
-			[Test]
-			public void Null()
-			{
-				string value = null;
-
-				Status result = StringManipulation.StatusReader(value);
-
-				Status expected = Status.Unknown;
-
-				result.Should().Be(expected);
-			}
-
-			[Test]
-			public void Empty()
-			{
-				string value = "";
-
-				Status result = StringManipulation.StatusReader(value);
-
-				Status expected = Status.Unknown;
-
-				result.Should().Be(expected);
-			}
+			result.Should().Be(expected);
 		}
 	}
 }

@@ -11,13 +11,13 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAEF : AbstractDigest, IDigest
 	{
-		private int _nameIndex = -1;
-		private int _payGradeIndex = -1;
-		private int _unitIndex = -1;
-		private int _afscIndex = -1;
-		private int _personnelOverallStatusIndex = -1;
-		private int _medicalOverallStatusIndex = -1;
-		private int _trainingOverallStatusIndex = -1;
+		protected int NameIndex = -1;
+		protected int PayGradeIndex = -1;
+		protected int UnitIndex = -1;
+		protected int AFSCIndex = -1;
+		protected int PersonnelOverallStatusIndex = -1;
+		protected int MedicalOverallStatusIndex = -1;
+		protected int TrainingOverallStatusIndex = -1;
 
 		int IDigest.Priority { get => 2; }
 
@@ -62,18 +62,18 @@ namespace Insight.Core.Services.File
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private void SetColumnIndexes(string[] columnHeaders)
+		protected void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
-			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_payGradeIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
-			_unitIndex = Array.IndexOf(columnHeaders, "UNIT");
-			_afscIndex = Array.IndexOf(columnHeaders, "AFSC");
-			_personnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
-			_medicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
-			_trainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
+			NameIndex = Array.IndexOf(columnHeaders, "NAME");
+			PayGradeIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
+			UnitIndex = Array.IndexOf(columnHeaders, "UNIT");
+			AFSCIndex = Array.IndexOf(columnHeaders, "AFSC");
+			PersonnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
+			MedicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
+			TrainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
 		}
 
 		/// <summary>
@@ -88,14 +88,14 @@ namespace Insight.Core.Services.File
 
 				//TODO refact to better handle format changes
 				//Check variables
-				string[] names = splitLine[_nameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
+				string[] names = splitLine[NameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
 				string firstName = names[0];
 				string lastName = names[1];
-				string unit = splitLine[_unitIndex];
-				string AFSC = splitLine[_afscIndex];
-				Status personnelStatus = StringManipulation.StatusReader(splitLine[_personnelOverallStatusIndex]);
-				Status medicalStatus = StringManipulation.StatusReader(splitLine[_medicalOverallStatusIndex]);
-				Status trainingStatus = StringManipulation.StatusReader(splitLine[_trainingOverallStatusIndex]);
+				string unit = splitLine[UnitIndex];
+				string AFSC = splitLine[AFSCIndex];
+				Status personnelStatus = StringManipulation.StatusReader(splitLine[PersonnelOverallStatusIndex]);
+				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
+				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);
 
 				Person person = insightController.GetPersonByName(firstName: firstName, lastName: lastName).Result;
 
