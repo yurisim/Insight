@@ -40,11 +40,11 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		{
 			var persons = new List<Person>
 			{
-				new Person { FirstName = "John", LastName = "Smith" },
-				new Person { FirstName = "Jacob", LastName = "Smith" },
-				new Person { FirstName = "Constantine", LastName = "Quintrell" },
-				new Person { FirstName = "Annabell", LastName = "Turner" },
-				new Person { FirstName = "Graham", LastName = "Soyer" },
+				new() { FirstName = "John", LastName = "Smith" },
+				new() { FirstName = "Jacob", LastName = "Smith" },
+				new() { FirstName = "Constantine", LastName = "Quintrell" },
+				new() { FirstName = "Annabell", LastName = "Turner" },
+				new() { FirstName = "Graham", LastName = "Soyer" },
 			};
 
 			foreach (var person in persons)
