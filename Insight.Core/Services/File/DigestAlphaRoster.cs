@@ -20,6 +20,9 @@ namespace Insight.Core.Services.File
 		private int _ssnIndex = -1;
 		private int _phoneIndex = -1;
 		private int _dateOnStationIndex = -1;
+		private int _pafsc = -1;
+		private int _cafsc = -1;
+		private int _dafsc = -1;
 
 		int IDigest.Priority => 1;
 
@@ -57,20 +60,24 @@ namespace Insight.Core.Services.File
 			_ssnIndex = Array.IndexOf(columnHeaders, "SSAN") + offset;
 			_phoneIndex = Array.IndexOf(columnHeaders, "HOME_PHONE_NUMBER") + offset;
 			_dateOnStationIndex = Array.IndexOf(columnHeaders, "DATE_ARRIVED_STATION") + offset;
+			_pafsc = Array.IndexOf(columnHeaders, "PAFSC") + offset;
+			_cafsc = Array.IndexOf(columnHeaders, "CAFSC") + offset;
+			_dafsc = Array.IndexOf(columnHeaders, "DAFSC") + offset;
 		}
 
 		public void DigestLines()
 		{
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
-				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
-				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim().ToUpperInvariant();
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "");
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "");
 				string rank = splitLine[_rankIndex];
 				string ssn = splitLine[_ssnIndex].Replace("-", "");
 				string dateOnstation = splitLine[_dateOnStationIndex];
 				string phone = splitLine[_phoneIndex];
+				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine[_pafsc], cafsc: splitLine[_cafsc], dafsc: splitLine[_dafsc]);
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
@@ -80,6 +87,8 @@ namespace Insight.Core.Services.File
 					person.SSN = ssn;
 					person.DateOnStation = dateOnstation;
 					person.Phone = phone;
+					person.AFSC = afsc;
+
 					insightController.Update(person);
 				}				
 			}

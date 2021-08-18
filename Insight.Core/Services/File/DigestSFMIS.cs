@@ -73,33 +73,11 @@ namespace Insight.Core.Services.File
 			_catmExperationDateIndex = Array.IndexOf(columnHeaders, "EXPIRE_DATE");
 		}
 
-		//TODO refeactor this and ETMS.CreateCourse() out into a helper method
-		private Course CreateCourse(string courseName)
-		{
-			var foundCourse = insightController.GetCourseByName(courseName);
-
-			// If the course is not found, it will be null, so create the course
-			if (foundCourse == null)
-			{
-				// TODO make custom intervals for each course. Default is hard coded to 1 year
-				Course newCourse = new Course()
-				{
-					Name = courseName,
-					Interval = 1,
-				};
-
-				insightController.Add(newCourse);
-
-				foundCourse = newCourse;
-			}
-			return foundCourse;
-		}
-
 		public void DigestLines()
 		{
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				//name is extracted out of email due to the ambigious formatting of the name column in the source data and because it truncates it at 18 characters
 				string[] names = splitLine[_emailIndex].Substring(0, splitLine[_emailIndex].IndexOf("@")).Split('.');
@@ -121,7 +99,7 @@ namespace Insight.Core.Services.File
 					//CATM course is not empty
 					if(splitLine[_catmCourseNameIndex] != "")
 					{
-						Course catmCourse = CreateCourse(splitLine[_catmCourseNameIndex]);
+						Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
 						DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
 						DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
 

@@ -84,13 +84,13 @@ namespace Insight.Core.Services.File
 		{
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO refact to better handle format changes
 				//Check variables
-				string[] names = splitLine[NameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
-				string firstName = names[0];
-				string lastName = names[1];
+				string[] names = splitLine[NameIndex].Split(' ').ToArray();
+				string firstName = names[1];
+				string lastName = names[0];
 				string unit = splitLine[UnitIndex];
 				string AFSC = splitLine[AFSCIndex];
 				Status personnelStatus = StringManipulation.StatusReader(splitLine[PersonnelOverallStatusIndex]);

@@ -6,12 +6,23 @@ namespace Insight.Core.Models
 {
 	public class Person
 	{
+		private string _firstName;
+		private string _lastName;
+
 		[Key, Required]
 		public int Id { get; set; }
 
-		public string FirstName { get; set; }
+		public string FirstName
+		{
+			get => _firstName;
+			set => _firstName = value.ToUpperInvariant();
+		}
 
-		public string LastName { get; set; }
+		public string LastName
+		{
+			get => _lastName;
+			set => _lastName = value.ToUpperInvariant();
+		}
 
 		public Rank Rank { get; set; }
 
@@ -45,11 +56,11 @@ namespace Insight.Core.Models
 
 		public PEX PEX { get; set; }
 
-		public List<CourseInstance> CourseInstances { get; set; }
+		public List<CourseInstance> CourseInstances { get; set; } = new List<CourseInstance>();
 
 		public Person()
 		{
-			CourseInstances = new List<CourseInstance>();
+			
 		}
 
 	}
