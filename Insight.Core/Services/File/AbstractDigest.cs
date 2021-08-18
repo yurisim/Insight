@@ -15,7 +15,7 @@ namespace Insight.Core.Services.File
 		/// <summary>
 		/// Represents the contents of a file to be digested
 		/// </summary>
-		protected virtual IList<string> FileContents { get; set; }
+		protected IList<string> FileContents { get; set; } = new List<string>();
 
 		/// <summary>
 		/// 

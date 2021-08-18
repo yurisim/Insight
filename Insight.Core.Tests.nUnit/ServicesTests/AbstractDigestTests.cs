@@ -34,7 +34,6 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		public AbstractDigestTests() : base(null, dbContextOptions) { }
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.GetOrCreateAFSCTestCases))]
-		[TestCase("invalid afsc", null)]
 		public void GetOrCreateAFSC_Create(string input, string expected)
 		{
 			//act
@@ -70,17 +69,19 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			afsc.DAFSC.Should().Be(expected);
 		}
 	}
-	   
+
 	public partial class TestCasesObjects
 	{
 		public static object[] GetOrCreateAFSCTestCases =
 		{
 			//test cases	input, expected
-			new object[] { "3D0X4", "3D0X4" },
-			new object[] { "3d0x1", "3D0X1" },
-			new object[] { "2a0x4", "2A0X4" },
-			new object[] { "17DA", "17DA" },
-			new object[] { "T17DA", "T17DA" },
+			new[] { "3D0X4", "3D0X4" },
+			new[] { "3d0x1", "3D0X1" },
+			new[] { "2a0x4", "2A0X4" },
+			new[] { "17DA", "17DA" },
+			new[] { "T17DA", "T17DA" },
+			new[] { "invalid afsc", "INVALID AFSC" }, //what ever the input is, expected it back
+
 		};
 	}
 }
