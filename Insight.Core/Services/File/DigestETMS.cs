@@ -106,7 +106,7 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = t.Split(',');
+				string[] splitLine = FileContents[i].Split(',');
 				string squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
 
 				string firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
