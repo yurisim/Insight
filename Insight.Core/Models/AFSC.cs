@@ -9,9 +9,19 @@ namespace Insight.Core.Models
 		public int Id { get; set; }
 
 		/// <summary>
-		/// Name of AFSC, example 3D0X4
+		/// Primary AFSC
 		/// </summary>
-		public string Name { get; set; }
+		public string PAFSC { get; set; }
+
+		/// <summary>
+		/// Duty AFSC
+		/// </summary>
+		public string DAFSC { get; set; }
+
+		/// <summary>
+		/// Control AFSC
+		/// </summary>
+		public string CAFSC { get; set; }
 
 		public int TBATasksNeeded { get; set; }
 

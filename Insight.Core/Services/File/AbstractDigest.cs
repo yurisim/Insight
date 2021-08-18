@@ -35,17 +35,20 @@ namespace Insight.Core.Services.File
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		protected AFSC GetOrCreateAFSC(string name)
+		protected AFSC GetOrCreateAFSC(string pafsc, string cafsc, string dafsc)
 		{
-			AFSC afsc = insightController.GetAFSC(name).Result;
+			AFSC afsc = insightController.GetAFSC(pafsc: pafsc).Result;
 
+			//TODO does not upadate CAFSC/DAFSC if they're missing
 			//AFSC exists, returns it
 			if(afsc !=  null) { return afsc; }
 
 			//AFSC does not already exists, creates it
 			afsc = new AFSC()
 			{
-				Name = name,
+				PAFSC = pafsc.ToUpper(),
+				CAFSC = cafsc.ToUpper(),
+				DAFSC = dafsc.ToUpper(),
 			};
 
 			insightController.Add(afsc);

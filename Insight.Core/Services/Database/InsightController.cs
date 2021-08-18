@@ -182,14 +182,15 @@ namespace Insight.Core.Services.Database
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		public async Task<AFSC> GetAFSC(string name)
+		public async Task<AFSC> GetAFSC(string pafsc)
 		{
+			//TODO search by any of p/c/d afsc
 			AFSC afsc = null;
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					afsc = await insightContext.AFSCs.FirstOrDefaultAsync(x => x.Name == name.ToUpper());
+					afsc = await insightContext.AFSCs.FirstOrDefaultAsync(x => x.PAFSC == pafsc.ToUpper());
 
 				}
 			}

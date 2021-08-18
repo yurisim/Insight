@@ -25,7 +25,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		{
 		}
 
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.AEFCleanInputCases))]
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.AEFCleanInputTestCases))]
 		public void AEFCleanInputTest(IList<string> input, IList<string> expected)
 		{
 			FileContents = input;
@@ -44,9 +44,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		}
 	}
 
-	public class TestCasesObjects
+	public partial class TestCasesObjects
 	{
-		public static object[] AEFCleanInputCases =
+		public static object[] AEFCleanInputTestCases =
 		{
 			//test case
 			new object[]
