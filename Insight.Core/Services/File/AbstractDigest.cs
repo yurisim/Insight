@@ -56,5 +56,30 @@ namespace Insight.Core.Services.File
 			return afsc;
 		}
 
+
+	
+
+		/// <summary>
+		/// Determines which course on ETMS FileContents is for
+		/// </summary>
+		protected Course GetOrCreateCourse(string name)
+		{
+			Course course = insightController.GetCourseByName(name);
+
+			//if a course for passed name already exists, return it
+			if (course != null) { return course; }
+
+			//course does not exist, create it
+			// TODO make custom intervals for each course. Default is hard coded to 1 year
+			course = new Course()
+			{
+				Name = name,
+				Interval = 1
+			};
+
+			insightController.Add(course);
+
+			return course;
+		}
 	}
 }
