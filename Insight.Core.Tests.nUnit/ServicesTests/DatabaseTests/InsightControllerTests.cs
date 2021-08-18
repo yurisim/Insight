@@ -2,9 +2,7 @@
 using Insight.Core.Services.Database;
 using Insight.Core.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using System.Linq;

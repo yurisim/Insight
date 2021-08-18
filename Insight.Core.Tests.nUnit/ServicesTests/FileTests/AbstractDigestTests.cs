@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Insight.Core.Services.File;
 using Insight.Core.Models;
 using FluentAssertions;
-using System.Collections.Generic;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {

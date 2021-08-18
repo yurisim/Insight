@@ -1,9 +1,5 @@
 ﻿using FluentAssertions;
 using Insight.Core.Models;
-using Insight.Core.Services.File;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Insight.Core.Helpers;
 using NUnit.Framework;
 
