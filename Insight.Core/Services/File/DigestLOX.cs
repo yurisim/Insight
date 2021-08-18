@@ -155,6 +155,7 @@ namespace Insight.Core.Services.File
 					{
 						FirstName = firstName,
 						LastName = lastName,
+						///TODO change it so these entities aren't created until they're needed
 						Medical = new Medical(),
 						Training = new Training(),
 						Personnel = new Personnel(),
