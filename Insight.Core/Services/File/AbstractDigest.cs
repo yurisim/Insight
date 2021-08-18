@@ -46,9 +46,9 @@ namespace Insight.Core.Services.File
 			//AFSC does not already exists, creates it
 			afsc = new AFSC()
 			{
-				PAFSC = pafsc.ToUpper(),
-				CAFSC = cafsc.ToUpper(),
-				DAFSC = dafsc.ToUpper(),
+				PAFSC = pafsc,
+				CAFSC = cafsc,
+				DAFSC = dafsc,
 			};
 
 			insightController.Add(afsc);

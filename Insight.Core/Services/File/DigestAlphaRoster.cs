@@ -69,7 +69,7 @@ namespace Insight.Core.Services.File
 		{
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				List<string> splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToList();
+				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "");
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "");

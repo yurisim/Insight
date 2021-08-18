@@ -60,13 +60,13 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				// short name of person, format is "SmithJ" if name is "John Smith"
-				string shortName = splitLine[_shortNameIndex].Trim();
+				string shortName = splitLine[_shortNameIndex];
 
 				// Flight Designation 
-				string pexName = splitLine[_pexDesignationIndex].Trim();
+				string pexName = splitLine[_pexDesignationIndex];
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
