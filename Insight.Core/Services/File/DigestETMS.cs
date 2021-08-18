@@ -106,12 +106,11 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				string[] splitLine = t.Split(',');
 				string squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
 
 				string firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
 				string lastName = splitLine[_lastNameIndex].ToUpperInvariant().Trim();
-				
 				string completionDate = splitLine[_completionDateIndex].Trim();
 
 				// TODO: Exception if person is not found
@@ -121,6 +120,7 @@ namespace Insight.Core.Services.File
 				{
 					continue;
 				}
+
 				//if (foundPerson.CourseInstances == null)
 				//{
 				//	foundPerson.CourseInstances = new List<CourseInstance>();

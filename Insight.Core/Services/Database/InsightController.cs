@@ -128,9 +128,9 @@ namespace Insight.Core.Services.Database
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					orgAliases = await insightContext.OrgAliases.Select(x => x)?.ToListAsync();
+					orgAliases = await insightContext.OrgAliases.Select(x => x).ToListAsync();
 
 				}
 			}
@@ -146,12 +146,14 @@ namespace Insight.Core.Services.Database
 		/// Returns OrgAlias that matches name
 		/// </summary>
 		/// <param alias="alias"></param>
+		/// <param name="alias"></param>
 		/// <returns></returns>
 		public Org GetOrgByAlias(string alias)
 		{
 			List<Org> orgs = new List<Org>();
 
 			Org org = null;
+
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
@@ -164,6 +166,7 @@ namespace Insight.Core.Services.Database
 					{
 						throw new Exception("Too many Aliases found, count should not be greater than 1");
 					}
+
 					org = orgs.FirstOrDefault();
 				}
 
@@ -396,6 +399,36 @@ namespace Insight.Core.Services.Database
 				_ = await insightContext.SaveChangesAsync();
 			}
 			//TODO implement exception
+		}
+
+		/// <summary>
+		/// This is a generic method used to either Get an Entity or if it's not found then to create the entity and return it.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TOutput"></typeparam>
+		/// <param name="entity"></param>
+		/// <returns></returns>
+		public async Task<T> GetOrCreate<T>(T entity)
+			where T: IGenericable
+		{
+			var foundEntity = entity;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					foundEntity = (T)insightContext.FindAsync(entity.GetType(), entity.Id).Result;
+
+				}
+			}
+			//TODO implement exception
+			catch (Exception e)
+			{
+				Debug.WriteLine(e);
+			}
+
+			//returns person or null if none exist
+			return foundEntity;
 		}
 
 		/// <summary>

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Insight.Core.Models
 {
-	public class CourseInstance
+	public class CourseInstance : IGenericable
 	{
 		[Key]
 		public int Id { get; set; }
