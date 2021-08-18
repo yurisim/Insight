@@ -5,10 +5,10 @@ using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
-	public class DigestAEFTest : DigestAEF
+	public class DigestAEFTests : DigestAEF
 	{
 		[TearDown]
 		public void TearDown()
@@ -21,7 +21,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 				.UseInMemoryDatabase("InsightTestDB")
 				.Options;
 
-		public DigestAEFTest() : base(null, dbContextOptions)
+		public DigestAEFTests() : base(null, dbContextOptions)
 		{
 		}
 

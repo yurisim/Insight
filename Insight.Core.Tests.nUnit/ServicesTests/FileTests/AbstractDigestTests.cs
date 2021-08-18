@@ -7,7 +7,7 @@ using Insight.Core.Models;
 using FluentAssertions;
 using System.Collections.Generic;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class AbstractDigestTests : AbstractDigest
