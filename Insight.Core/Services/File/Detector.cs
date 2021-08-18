@@ -29,32 +29,25 @@ namespace Insight.Core.Services.File
 		/// <returns></returns>
 		public static FileType DetectFileType(IList<string> inputFile)
 		{
-			if (inputFile == null || inputFile.Count == 0)
+			if (inputFile == null)
 			{
-				throw new ArgumentNullException("null or length 0");
+				return FileType.Unknown;
 			}
-			var detectedFileType = FileType.Unknown;
 
-			string[] firstThreeLines = inputFile.Take(3).ToArray();
+			var firstThreeLines = inputFile.Take(3);
 
-			foreach (string line in firstThreeLines)
+			foreach (var line in firstThreeLines)
 			{
 				foreach (var supportedFileType in SupportedFileTypes)
 				{
-
 					if (line.Contains(supportedFileType.Value))
 					{
 						return supportedFileType.Key;
 					}
 				}
-
 			}
 
-			//if (detectedFileType == FileType.Unknown)
-			//{
-			//	throw new Exception(Resources.UnsupportedFileType);
-			//}
-
+			// If we get here, we didn't find a match
 			return FileType.Unknown;
 		}
 	}

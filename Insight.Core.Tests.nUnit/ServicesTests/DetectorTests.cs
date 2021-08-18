@@ -2,8 +2,6 @@
 using Insight.Core.Models;
 using Insight.Core.Services.File;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-using System.Collections.Generic;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests
 {
@@ -18,24 +16,25 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[TestCase(@"Test Mock Data\SFMIS_good_input.csv", FileType.SFMIS)]
 		[TestCase(@"Test Mock Data\random_text.txt", FileType.Unknown)]
 		[TestCase(@"Test Mock Data\empty_file.csv", FileType.Unknown)]
+
 		public void DetectorTest(string input, FileType expected)
 		{
-			IList<string> fileContents = Helper.ReadFile(input);
+			var fileContents = Helper.ReadFile(input);
 
-			FileType detectedFiletype = Detector.DetectFileType(fileContents);
+			var detectedFiletype = Detector.DetectFileType(fileContents);
 
 			detectedFiletype.Should().Be(expected);
 		}
 
 		/// <summary>
-		/// Tests that a file with null contents is handled properly
+		///     Tests that a file with null contents is handled properly
 		/// </summary>
 		[Test]
 		public void DetectNullFileContents()
 		{
-			FileType detectedFiletype = Detector.DetectFileType(null);
+			var detectFileType = Detector.DetectFileType(null);
 
-			detectedFiletype.Should().Be(FileType.Unknown);
+			detectFileType.Should().Be(FileType.Unknown);
 		}
 	}
 }
