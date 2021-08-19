@@ -48,22 +48,44 @@ namespace Insight.Core.Services.File
 			}
 		}
 
+		/// <summary>
+		/// Determines which course on ETMS FileContents is for
+		/// </summary>
+		private Course CreateCourse(string courseName)
+		{
+			var foundCourse = insightController.GetCourseByName(courseName);
+
+			// If the course is not found, it will be null, so create the course
+			if (foundCourse == null)
+			{
+				// TODO make custom intervals for each course. Default is hard coded to 1 year
+				Course newCourse = new Course()
+				{
+					Name = courseName,
+					Interval = 1
+				};
+
+				insightController.Add(newCourse);
+
+				foundCourse = newCourse;
+			}
+			return foundCourse;
+		}
+
 		public void DigestLines()
 		{
-			var courseName = FileContents[1].Split(',')[_courseTitleIndex];
-			var course = CreateCourse(courseName);
+			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
+			Course course = base.GetOrCreateCourse(courseName);
 
-			if (course == null) return;
-
-			for (var i = 0; i < FileContents.Count; i++)
+			// Parallel.ForEach(FileContents, t =>
+			foreach (var line in FileContents)
 			{
-				var splitLine = FileContents[i].Split(',');
-				var squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
+				string[] splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
+				string squadron = splitLine[_pasDescriptionIndex].ToUpper();
 
-				var firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
-				var lastName = splitLine[_lastNameIndex].ToUpperInvariant().Trim();
-
-				var completionDate = splitLine[_completionDateIndex].Trim();
+				string firstName = splitLine[_firstNameIndex];
+				string lastName = splitLine[_lastNameIndex];
+				string completionDate = splitLine[_completionDateIndex];
 
 				// TODO: Exception if person is not found
 				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
@@ -71,6 +93,9 @@ namespace Insight.Core.Services.File
 				if (foundPerson == null) continue;
 				//if (foundPerson.CourseInstances == null)
 				//{
+				//	foundPerson.CourseInstances = new List<CourseInstance>();
+				//	insightController.Update(foundPerson);
+				//}
 				//	foundPerson.CourseInstances = new List<CourseInstance>();
 				//	insightController.Update(foundPerson);
 				//}
@@ -86,15 +111,16 @@ namespace Insight.Core.Services.File
 					Expiration = parsedCompletion.AddDays(course.Interval * 365)
 
 					// TODO: Make custom expiration by JSON object
-					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				insightController.AddCourseInstance(courseInstance, course, foundPerson);
+				// check if the course instance exists
+				var foundInstance = insightController.GetCourseInstance(courseInstance).Result;
 
-				//courseInstance.Course = CourseType;
-				//courseInstance.Person = foundPerson;
-
-				//InsightController.Update(courseInstance);
+				// if no instance is found
+				if (foundInstance == null)
+				{
+					insightController.AddCourseInstance(courseInstance, course, foundPerson);
+				}
 			}
 		}
 
@@ -112,31 +138,6 @@ namespace Insight.Core.Services.File
 			_lastNameIndex = Array.IndexOf(columnHeaders, "LAST NAME");
 			_firstNameIndex = Array.IndexOf(columnHeaders, "FIRST NAME");
 			_completionDateIndex = Array.IndexOf(columnHeaders, "COMPLETION DATE");
-		}
-
-		/// <summary>
-		///     Determines which course on ETMS FileContents is for
-		/// </summary>
-		private Course CreateCourse(string courseName)
-		{
-			var foundCourse = insightController.GetCourseByName(courseName);
-
-			// If the course is not found, it will be null, so create the course
-			if (foundCourse == null)
-			{
-				// TODO make custom intervals for each course. Default is hard coded to 1 year
-				var newCourse = new Course
-				{
-					Name = courseName,
-					Interval = 1
-				};
-
-				insightController.Add(newCourse);
-
-				foundCourse = newCourse;
-			}
-
-			return foundCourse;
 		}
 
 		private T CreateOrReturn<T, T1>(string courseName, ref T1 entity)

@@ -10,7 +10,7 @@ namespace Insight.Core.Services.Database
 {
 	//TODO: Make this a partial class and have one file/class be for Get functions and another file be for Add/Update. This file is getting too complex.
 
-	public class InsightController
+	public partial class InsightController
 	{
 		private DbContextOptions<InsightContext> _dbContextOptions;
 
@@ -126,9 +126,9 @@ namespace Insight.Core.Services.Database
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					orgAliases = await insightContext.OrgAliases.Select(x => x)?.ToListAsync();
+					orgAliases = await insightContext.OrgAliases.Select(x => x).ToListAsync();
 
 				}
 			}
@@ -168,15 +168,17 @@ namespace Insight.Core.Services.Database
 		/// Returns OrgAlias that matches name
 		/// </summary>
 		/// <param alias="alias"></param>
+		/// <param name="alias"></param>
 		/// <returns></returns>
 		public Org GetOrgByAlias(string alias)
 		{
-			List<Org> orgs = new List<Org>();
+			var orgs = new List<Org>();
 
 			Org org = null;
+
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
 					orgs = insightContext.OrgAliases
 						.Where(x => x.Name == alias.ToUpper())?
@@ -186,6 +188,7 @@ namespace Insight.Core.Services.Database
 					{
 						throw new Exception("Too many Aliases found, count should not be greater than 1");
 					}
+
 					org = orgs.FirstOrDefault();
 				}
 
@@ -283,7 +286,7 @@ namespace Insight.Core.Services.Database
 
 			// TODO MAKE MORE FACTORS to find the correct person
 
-			int indexOfCapital = 0;
+			int indexOfCapital;
 			for (indexOfCapital = shortName.Length - 1; indexOfCapital >= 0; indexOfCapital--)
 			{
 				if (char.IsUpper(shortName[indexOfCapital]))
@@ -327,35 +330,6 @@ namespace Insight.Core.Services.Database
 			return foundPerson;
 		}
 
-		public Course GetCourseByName(string courseName)
-		{
-			// now try to find the course with the name
-			Course foundCourse = null;
-
-			try
-			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
-				{
-					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
-
-					//TODO implement better exceptions
-					if (foundCourses.Count() > 1)
-					{
-						throw new Exception("Too many found, should be null or 1");
-					}
-
-					foundCourse = foundCourses.FirstOrDefault();
-				}
-			}
-			//TODO implement exception
-			catch (Exception e)
-			{
-				Debug.WriteLine(e);
-			}
-
-			//returns person or null if none exist
-			return foundCourse;
-		}
 
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist
@@ -410,7 +384,7 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					_ = insightContext.Add(t);
+					_ = await insightContext.AddAsync(t);
 					_ = await insightContext.SaveChangesAsync();
 				}
 			}
@@ -438,12 +412,43 @@ namespace Insight.Core.Services.Database
 				insightContext.Entry(course).State = EntityState.Modified;
 				insightContext.Entry(person).State = EntityState.Modified;
 
-				_ = insightContext.Add(courseInstance);
+				_ = await insightContext.AddAsync(courseInstance);
 
 				_ = await insightContext.SaveChangesAsync();
 			}
 			//TODO implement exception
 		}
+
+		/// <summary>
+		/// This is a generic method used to either Get an Entity or if it's not found then to create the entity and return it.
+		/// TODO do not use not complete.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TOutput"></typeparam>
+		/// <param name="entity"></param>
+		/// <returns></returns>
+		//public async Task<T> GetOrCreate<T>(T entity)
+		//	where T: IGenericable
+		//{
+		//	var foundEntity = entity;
+
+		//	try
+		//	{
+		//		using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+		//		{
+		//			foundEntity = (T)insightContext.FindAsync(entity.GetType(), entity.Id).Result;
+
+		//		}
+		//	}
+		//	//TODO implement exception
+		//	catch (Exception e)
+		//	{
+		//		Debug.WriteLine(e);
+		//	}
+
+		//	//returns person or null if none exist
+		//	return foundEntity;
+		//}
 
 		/// <summary>
 		/// Update entity in database
