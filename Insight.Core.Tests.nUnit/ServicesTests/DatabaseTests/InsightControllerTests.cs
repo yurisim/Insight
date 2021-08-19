@@ -2,15 +2,14 @@
 using Insight.Core.Services.Database;
 using Insight.Core.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using System.Linq;
 using FluentAssertions;
+using System;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 {
 	[TestFixture]
 	public class InsightControllerTests
@@ -81,41 +80,56 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void GetPersonCaps()
 		{
+			//arrange
+
+			//act
 			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
 
+			//assert
 			person.Should().NotBeNull();
 		}
 
 		[Test]
 		public void GetNullPerson()
 		{
+			//arrange
+
+			//act
 			var person = controller.GetPersonByName("I should", "not exist").Result;
 
+			//assert
 			person.Should().BeNull();
 		}
 
 		[Test]
 		public void AddPerson()
 		{
+			//arrange
 			var person = new Person { FirstName = "Jonathan", LastName = "Xander" };
 
+			//act
 			controller.Add(person);
 
 			var personFromDB = controller.GetPersonByName("Jonathan", "Xander").Result;
 
+			//assert
 			person.Id.Should().Be(personFromDB.Id);
+			
 		}
 
 		[Test]
 		public void UpdatePerson()
 		{
+			//arrange
 			var person = controller.GetPersonByName("John", "Smith").Result;
 
 			person.FirstName = "Johnathan";
 
+			//act
 			controller.Update(person);
 
 			var personFromDB = controller.GetPersonByName("Johnathan", "Smith").Result;
+			//assert
 
 			personFromDB.Id.Should().Be(person.Id);
 		}

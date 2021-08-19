@@ -111,12 +111,21 @@ namespace Insight.Core.Services.File
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO handle column mising (index of -1)
+				//need to make sure these are trimmed after quotes are removed
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
+
 				string crewPosition = splitLine[_crewPositionIndex];
 				string MDS = splitLine[_mdsIndex];
 				string rank = splitLine[_rankIndex];
 				string flight = splitLine[_flightIndex];
+
+				//return if invalid squadron
+				if (String.IsNullOrWhiteSpace(_squadron))
+				{
+					return;
+				}
+
 				
 				Org org = insightController.GetOrgByAlias(_squadron);
 
@@ -126,24 +135,25 @@ namespace Insight.Core.Services.File
 					//TODO ask user to define what org this is
 					Org orgNew = new Org()
 					{
-						Name = "960 AACS",
+						Name = _squadron,
 						Aliases = new List<OrgAlias>(),
 					};
 					OrgAlias orgAlias = new OrgAlias()
 					{
-						Name = "960 AIRBORNE AIR CTR",
-						Org = orgNew,
-					};
-					OrgAlias orgAlias2 = new OrgAlias()
-					{
-						Name = "960 AACS",
+						Name = _squadron,
 						Org = orgNew,
 					};
 					orgNew.Aliases.Add(orgAlias);
-					orgNew.Aliases.Add(orgAlias2);
 					insightController.Add(orgNew);
 					org = orgNew;
 				}
+
+				//continue if invalid first/last name
+				if (String.IsNullOrWhiteSpace(firstName) || String.IsNullOrWhiteSpace(lastName))
+				{
+					continue;
+				}
+
 
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
 

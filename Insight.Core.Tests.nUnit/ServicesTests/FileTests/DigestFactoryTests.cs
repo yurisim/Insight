@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using FluentAssertions;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {
 	/// <summary>
 	/// Digest Factory Tests
@@ -26,8 +26,12 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[TestCase(FileType.SFMIS, typeof(DigestSFMIS))]
 		public void DigestFactoryTestCases(FileType input, Type expected)
 		{
+			//arange
+
+			//act
 			IDigest digest = DigestFactory.GetDigestor(input, fileContents: null, dbContextOptions);
 
+			//assert
 			digest.Should().BeOfType(expected);
 		}
 
@@ -37,10 +41,13 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		[Test]
 		public void DigestFactoryUnknown()
 		{
+			//arrange
 			FileType input = FileType.Unknown;
 
+			//act
 			IDigest digest = DigestFactory.GetDigestor(input, fileContents: null, dbContextOptions);
 
+			//assert
 			digest.Should().BeNull();
 		}
 	}

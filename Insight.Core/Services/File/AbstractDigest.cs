@@ -18,7 +18,7 @@ namespace Insight.Core.Services.File
 		protected IList<string> FileContents { get; set; } = new List<string>();
 
 		/// <summary>
-		/// 
+		/// Abstract class for Digest classes to implement
 		/// </summary>
 		/// <param name="FileContents">Represents the contents of a file to be digested</param>
 		/// <param name="dbContextOptions">DB Context Options. Determines which database is used</param>
@@ -55,9 +55,6 @@ namespace Insight.Core.Services.File
 
 			return afsc;
 		}
-
-
-	
 
 		/// <summary>
 		/// Determines which course on ETMS FileContents is for

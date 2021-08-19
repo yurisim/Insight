@@ -5,9 +5,8 @@ using NUnit.Framework;
 using Insight.Core.Services.File;
 using Insight.Core.Models;
 using FluentAssertions;
-using System.Collections.Generic;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests
+namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class AbstractDigestTests : AbstractDigest
@@ -31,11 +30,16 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 		/// <summary>
 		/// Invokes base constructor
 		/// </summary>
-		public AbstractDigestTests() : base(null, dbContextOptions) { }
+		public AbstractDigestTests() : base(null, dbContextOptions)
+		{
 
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.GetOrCreateAFSCTestCases))]
+		}
+
+		[TestCaseSource(typeof(AFSCTestCasesObject), nameof(AFSCTestCasesObject.GetOrCreateAFSCTestCases))]
 		public void GetOrCreateAFSC_Create(string input, string expected)
 		{
+			//arrange
+
 			//act
 			AFSC afsc = base.GetOrCreateAFSC(input, input, input);
 
@@ -46,7 +50,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			afsc.CAFSC.Should().Be(expected);
 		}
 
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.GetOrCreateAFSCTestCases))]
+		[TestCaseSource(typeof(AFSCTestCasesObject), nameof(AFSCTestCasesObject.GetOrCreateAFSCTestCases))]
 		public void GetOrCreateAFSC_GetExisting(string input, string expected)
 		{
 			//arrange
@@ -68,20 +72,21 @@ namespace Insight.Core.Tests.nUnit.ServicesTests
 			afsc.CAFSC.Should().Be(expected);
 			afsc.DAFSC.Should().Be(expected);
 		}
-	}
 
-	public partial class TestCasesObjects
-	{
-		public static object[] GetOrCreateAFSCTestCases =
+
+		private class AFSCTestCasesObject
 		{
-			//test cases	input, expected
-			new[] { "3D0X4", "3D0X4" },
-			new[] { "3d0x1", "3D0X1" },
-			new[] { "2a0x4", "2A0X4" },
-			new[] { "17DA", "17DA" },
-			new[] { "T17DA", "T17DA" },
-			new[] { "invalid afsc", "INVALID AFSC" }, //what ever the input is, expected it back
+			public static object[] GetOrCreateAFSCTestCases =
+			{
+				//test cases	input, expected
+				new[] { "3D0X4", "3D0X4" },
+				new[] { "3d0x1", "3D0X1" },
+				new[] { "2a0x4", "2A0X4" },
+				new[] { "17DA", "17DA" },
+				new[] { "T17DA", "T17DA" },
+				new[] { "invalid afsc", "INVALID AFSC" }, //what ever the input is, expected it back
 
-		};
+			};
+		}
 	}
 }

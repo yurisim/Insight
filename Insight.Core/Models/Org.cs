@@ -23,7 +23,7 @@ namespace Insight.Core.Models
 		public string PASCode
 		{
 			get => _pascode;
-			set => _pascode = value.ToUpper();
+			set => _pascode = value?.ToUpper();
 		}
 
 		public ICollection<OrgAlias> Aliases { get; set; } = new List<OrgAlias>();

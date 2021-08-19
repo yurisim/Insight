@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Linq.Expressions;
 
 namespace Insight.Core.Services.Database
 {
@@ -140,6 +138,30 @@ namespace Insight.Core.Services.Database
 			}
 
 			return orgAliases;
+		}
+
+		/// <summary>
+		/// Returns all Org objects from database
+		/// </summary>
+		/// <returns></returns>
+		public async Task<List<Org>> GetAllOrgs()
+		{
+			List<Org> orgs;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					orgs = await insightContext.Orgs.Select(x => x)?.ToListAsync();
+
+				}
+			}
+			catch (Exception)
+			{
+				throw new Exception("Insight.db access error");
+			}
+
+			return orgs;
 		}
 
 		/// <summary>
