@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
-	public class DigestLOXTests 
+	public class DigestLOXTests
 	{
 
 		public InsightController insightController;
@@ -52,6 +52,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
 			var org = insightController.GetOrgByAlias(expectedOrg);
+			var orgs = insightController.GetAllOrgs().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -60,6 +61,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 				digest.Should().BeOfType<DigestLOX>();
 
 				allPersons.Count.Should().Be(1);
+				orgs.Count.Should().Be(1);
 
 				person.Should().NotBeNull();
 
@@ -68,6 +70,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 				person.Organization.Name.Should().Be(org.Name);
 				person.Flight.Equals(expectedFlight);
 				person.CrewPosition.Should().Be(expectedCrewPosition);
+				//TODO implement rank
 				//person.Rank.Should().Be(expectedRank);
 			}
 		}
@@ -89,6 +92,37 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
 			var org = insightController.GetOrgByAlias(expectedOrg);
+			var orgs = insightController.GetAllOrgs().Result;
+
+			//assert
+			using (new AssertionScope())
+			{
+				detectedFileType.Should().Be(FileType.LOX);
+				digest.Should().BeOfType<DigestLOX>();
+
+				orgs.Count.Should().Be(1);
+				allPersons.Count.Should().Be(0);
+				org.Should().NotBeNull();
+			}
+		}
+
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestLOX_InvalidSquadronTestCases))]
+		public void DigestLOXTest_InvalidSquadron(TestCaseObject testCaseParameters)
+		{
+			(IList<string> input, _) = testCaseParameters;
+
+			//arrange
+			FileType detectedFileType = Detector.DetectFileType(input);
+
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+
+			//act
+			digest.CleanInput();
+			digest.DigestLines();
+
+			//arrange 2.0
+			var allPersons = insightController.GetAllPersons().Result;
+			var orgs = insightController.GetAllOrgs().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -97,10 +131,13 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 				digest.Should().BeOfType<DigestLOX>();
 
 				allPersons.Count.Should().Be(0);
-				org.Should().NotBeNull();
+				orgs.Count.Should().Be(0);
 			}
 		}
 
+		/// <summary>
+		/// Objects containing the data for the test cases
+		/// </summary>
 		private class TestCasesObjects
 		{
 			public static object[] DigestLOX_ExpectOnePersonsTestCases =
@@ -179,7 +216,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					input: new List<string>
 					{
 						"Letter of Certifications,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
-						"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+						"Squadron: 960th AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
 						",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
 						"\"Hyphe-nated, Sophie \",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
@@ -197,7 +234,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					input: new List<string>
 					{
 						"Letter of Certifications,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
-						"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+						"Squadron: 552 Air Control Network Squadron,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
 						",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
 						"\"St. Onge, Dean\",FE,E-3G,bad_rank,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
@@ -229,9 +266,6 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 				),
 			};
 
-			/// <summary>
-			/// Test cases where it is expected that zero valid persons will be created in database
-			/// </summary>
 			public static object[] DigestLOX_ExpectZeroPersonsTestCases =
 			{
 				//test case - no first name
@@ -259,7 +293,10 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					},
 					expectedOrg: "960 AACS"
 				),
+			};
 
+			public static object[] DigestLOX_InvalidSquadronTestCases =
+			{
 				//test case - no squadron
 				new TestCaseObject(
 					input: new List<string>
@@ -269,14 +306,14 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
 						"\"Alsop, Sophie\",ABM,E-3G,AMN,E,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
 						"\"Alsop, Sophie\",ABM,E-3G(II),AMN,E,CMR,I,,,,,,,,,,,,,,,,,,,,,,,,,,,PERS: DNIF,",
-					},
-					expectedOrg: "960 AACS"
-				),
-
-
+					}
+				)
 			};
 		}
 
+		/// <summary>
+		/// Container outline for all of the required input and expected outputs for the tests
+		/// </summary>
 		public class TestCaseObject
 		{
 			IList<string> _input { get; set; }
@@ -288,7 +325,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			string _expectedFlight { get; set; }
 
 			string _expectedOrg { get; set; }
-			
+
 			Rank _expectedRank { get; set; }
 
 			string _expectedCrewPosition { get; set; }
@@ -325,6 +362,16 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			{
 				input = _input;
 				expectedOrgAlias = _expectedOrg;
+			}
+
+			public TestCaseObject(IList<string> input)
+			{
+				_input = input;
+			}
+
+			public void Deconstruct(out IList<string> input)
+			{
+				input = _input;
 			}
 		}
 	}

@@ -143,6 +143,30 @@ namespace Insight.Core.Services.Database
 		}
 
 		/// <summary>
+		/// Returns all Org objects from database
+		/// </summary>
+		/// <returns></returns>
+		public async Task<List<Org>> GetAllOrgs()
+		{
+			List<Org> orgs;
+
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					orgs = await insightContext.Orgs.Select(x => x)?.ToListAsync();
+
+				}
+			}
+			catch (Exception)
+			{
+				throw new Exception("Insight.db access error");
+			}
+
+			return orgs;
+		}
+
+		/// <summary>
 		/// Returns OrgAlias that matches name
 		/// </summary>
 		/// <param alias="alias"></param>
