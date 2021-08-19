@@ -111,13 +111,19 @@ namespace Insight.Core.Services.File
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO handle column mising (index of -1)
-				string firstName = splitLine[_firstNameIndex].Replace("\"", "");
-				string lastName = splitLine[_lastNameIndex].Replace("\"", "");
+				//need to make sure these are trimmed after quotes are removed
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
 
 				string crewPosition = splitLine[_crewPositionIndex];
 				string MDS = splitLine[_mdsIndex];
 				string rank = splitLine[_rankIndex];
 				string flight = splitLine[_flightIndex];
+
+				if (String.IsNullOrWhiteSpace(_squadron))
+				{
+					return;
+				}
 				
 				Org org = insightController.GetOrgByAlias(_squadron);
 
