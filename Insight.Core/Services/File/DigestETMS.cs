@@ -118,12 +118,7 @@ namespace Insight.Core.Services.File
 		public void DigestLines()
 		{
 			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
-			Course course = CreateCourse(courseName);
-
-			if (course == null)
-			{
-				return;
-			}
+			Course course = base.GetOrCreateCourse(courseName);
 
 			// Parallel.ForEach(FileContents, t =>
 			foreach (var line in FileContents)
