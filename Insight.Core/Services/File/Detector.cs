@@ -29,10 +29,7 @@ namespace Insight.Core.Services.File
 		/// <returns></returns>
 		public static FileType DetectFileType(IList<string> inputFile)
 		{
-			if (inputFile == null)
-			{
-				return FileType.Unknown;
-			}
+			if (inputFile == null) { return FileType.Unknown; }
 
 			var firstThreeLines = inputFile.Take(3);
 

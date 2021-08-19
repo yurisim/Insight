@@ -15,7 +15,7 @@ namespace Insight.Core.Services.File
 		/// <summary>
 		/// Represents the contents of a file to be digested
 		/// </summary>
-		protected virtual IList<string> FileContents { get; set; }
+		protected IList<string> FileContents { get; set; } = new List<string>();
 
 		/// <summary>
 		/// 
@@ -29,6 +29,33 @@ namespace Insight.Core.Services.File
 			//default InsightController() constructor uses the live/production database. The dbContextOptions constructor can specify either - uses in tests
 			insightController = (dbContextOptions == null) ? new InsightController() : new InsightController(dbContextOptions);
 		}
+
+		/// <summary>
+		/// Gets AFSC entity associated with name if it exists, creates it otherwise
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		protected AFSC GetOrCreateAFSC(string pafsc, string cafsc, string dafsc)
+		{
+			AFSC afsc = insightController.GetAFSC(pafsc: pafsc).Result;
+
+			//TODO does not upadate CAFSC/DAFSC if they're missing
+			//AFSC exists, returns it
+			if(afsc !=  null) { return afsc; }
+
+			//AFSC does not already exists, creates it
+			afsc = new AFSC()
+			{
+				PAFSC = pafsc,
+				CAFSC = cafsc,
+				DAFSC = dafsc,
+			};
+
+			insightController.Add(afsc);
+
+			return afsc;
+		}
+
 
 	
 

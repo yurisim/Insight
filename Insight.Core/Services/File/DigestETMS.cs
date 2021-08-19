@@ -123,12 +123,12 @@ namespace Insight.Core.Services.File
 			// Parallel.ForEach(FileContents, t =>
 			foreach (var line in FileContents)
 			{
-				string[] splitLine = line.Split(',');
-				string squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
+				string[] splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
+				string squadron = splitLine[_pasDescriptionIndex].ToUpper();
 
-				string firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
-				string lastName = splitLine[_lastNameIndex].ToUpperInvariant().Trim();
-				string completionDate = splitLine[_completionDateIndex].Trim();
+				string firstName = splitLine[_firstNameIndex];
+				string lastName = splitLine[_lastNameIndex];
+				string completionDate = splitLine[_completionDateIndex];
 
 				// TODO: Exception if person is not found
 				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: true).Result;
