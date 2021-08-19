@@ -71,8 +71,8 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
-				string firstName = splitLine[_firstNameIndex].Replace("\"", "");
-				string lastName = splitLine[_lastNameIndex].Replace("\"", "");
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
 				string rank = splitLine[_rankIndex];
 				string ssn = splitLine[_ssnIndex].Replace("-", "");
 				string dateOnstation = splitLine[_dateOnStationIndex];

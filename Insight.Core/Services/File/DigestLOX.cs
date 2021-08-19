@@ -111,9 +111,8 @@ namespace Insight.Core.Services.File
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO handle column mising (index of -1)
-				string firstName = splitLine[_firstNameIndex].Replace("\"", "");
-				string lastName = splitLine[_lastNameIndex].Replace("\"", "");
-
+				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
+				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
 				string crewPosition = splitLine[_crewPositionIndex];
 				string MDS = splitLine[_mdsIndex];
 				string rank = splitLine[_rankIndex];
