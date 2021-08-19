@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using System.Linq;
 using FluentAssertions;
+using System;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 {
