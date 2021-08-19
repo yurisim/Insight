@@ -19,9 +19,9 @@ namespace Insight.Core.Services.File
 		protected int MedicalOverallStatusIndex = -1;
 		protected int TrainingOverallStatusIndex = -1;
 
-		int IDigest.Priority { get => 2; }
+		int IDigest.Priority => 2;
 
-		public DigestAEF(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		public DigestAEF(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
 		{
 
 		}
@@ -54,7 +54,7 @@ namespace Insight.Core.Services.File
 					//removes everything up to and including column headers
 					FileContents.RemoveAt(i);
 					i--;
-				}				
+				}
 			}
 		}
 

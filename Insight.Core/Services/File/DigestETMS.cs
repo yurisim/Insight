@@ -94,6 +94,27 @@ namespace Insight.Core.Services.File
 			return foundCourse;
 		}
 
+		private Course CreateCourseInstance(string courseName)
+		{
+			var foundCourse = insightController.GetCourseByName(courseName);
+
+			// If the course is not found, it will be null, so create the course
+			if (foundCourse == null)
+			{
+				// TODO make custom intervals for each course. Default is hard coded to 1 year
+				Course newCourse = new Course()
+				{
+					Name = courseName,
+					Interval = 1
+				};
+
+				insightController.Add(newCourse);
+
+				foundCourse = newCourse;
+			}
+			return foundCourse;
+		}
+
 		public void DigestLines()
 		{
 			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
@@ -104,9 +125,10 @@ namespace Insight.Core.Services.File
 				return;
 			}
 
-			for (int i = 0; i < FileContents.Count; i++)
+			// Parallel.ForEach(FileContents, t =>
+			foreach (var line in FileContents)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				string[] splitLine = line.Split(',');
 				string squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
 
 				string firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
@@ -121,11 +143,6 @@ namespace Insight.Core.Services.File
 					continue;
 				}
 
-				//if (foundPerson.CourseInstances == null)
-				//{
-				//	foundPerson.CourseInstances = new List<CourseInstance>();
-				//	insightController.Update(foundPerson);
-				//}
 
 				// TODO: Make this a try parse
 				var parsedCompletion = DateTime.Parse(completionDate);
@@ -138,15 +155,16 @@ namespace Insight.Core.Services.File
 					Expiration = parsedCompletion.AddDays(course.Interval * 365)
 
 					// TODO: Make custom expiration by JSON object
-					//Expiration = DateTime.Parse(completionDate).AddYears(1)
 				};
 
-				insightController.AddCourseInstance(courseInstance, course, foundPerson);
+				// check if the course instance exists
+				var foundInstance = insightController.GetCourseInstance(courseInstance).Result;
 
-				//courseInstance.Course = CourseType;
-				//courseInstance.Person = foundPerson;
-
-				//InsightController.Update(courseInstance);
+				// if no instance is found
+				if (foundInstance == null)
+				{
+					insightController.AddCourseInstance(courseInstance, course, foundPerson);
+				}
 			}
 		}
 	}
