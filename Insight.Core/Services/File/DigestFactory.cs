@@ -1,13 +1,18 @@
 ﻿using Insight.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Insight.Core.Services.File
 {
 	public static class DigestFactory
 	{
+		/// <summary>
+		/// Creates IDigest based on fileType
+		/// </summary>
+		/// <param name="fileType">Type of file digest to be created</param>
+		/// <param name="fileContents">Contents of file to be digested</param>
+		/// <param name="dbContextOptions"></param>
+		/// <returns>Returns IDigest object</returns>
 		public static IDigest GetDigestor(FileType fileType, IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions)
 		{
 			switch (fileType)
