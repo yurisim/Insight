@@ -263,7 +263,7 @@ namespace Insight.Core.Services.Database
 
 			}
 			//TODO implement exception
-			catch (Exception)
+			catch (Exception e)
 			{
 				throw new Exception("Insight.db access error");
 			}
