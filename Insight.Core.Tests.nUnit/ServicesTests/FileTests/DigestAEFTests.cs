@@ -54,7 +54,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
+			var allPersons = insightController.GetAll<Person>().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
 
 			//assert
@@ -89,7 +89,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
+			var allPersons = insightController.GetAll<Person>().Result;
 
 			//assert
 			using (new AssertionScope())

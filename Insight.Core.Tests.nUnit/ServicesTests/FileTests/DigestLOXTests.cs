@@ -51,7 +51,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
 			var org = insightController.GetOrgByAlias(expectedOrg);
-			var orgs = insightController.GetAllOrgs().Result;
+			var orgs = insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -89,9 +89,9 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
+			var allPersons = insightController.GetAll<Person>().Result;
 			var org = insightController.GetOrgByAlias(expectedOrg);
-			var orgs = insightController.GetAllOrgs().Result;
+			var orgs = insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -120,8 +120,8 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var orgs = insightController.GetAllOrgs().Result;
+			var allPersons = insightController.GetAll<Person>().Result;
+			var orgs = insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -277,7 +277,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
 						"\"last name, \",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
 					},
-					expectedOrg: "960 AACS"
+					expectedOrg: "960 AACS"  
 				),
 
 				//test case - no last name
@@ -292,6 +292,45 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					},
 					expectedOrg: "960 AACS"
 				),
+
+				////test case - no comma
+				//new TestCaseObject(
+				//	input: new List<string>
+				//	{
+				//		"Letter of Certifications,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+				//		"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+				//		",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
+				//		"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
+				//		"\"no comma\",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
+				//	},
+				//	expectedOrg: "960 AACS"
+				//),
+
+				//test case - no name
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Letter of Certifications,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+						"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+						",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
+						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
+						"\",\",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
+					},
+					expectedOrg: "960 AACS"
+				),
+
+				////test case - no name
+				//new TestCaseObject(
+				//	input: new List<string>
+				//	{
+				//		"Letter of Certifications,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+				//		"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+				//		",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
+				//		"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
+				//		",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
+				//	},
+				//	expectedOrg: "960 AACS"
+				//),
 			};
 
 			public static object[] DigestLOX_InvalidSquadronTestCases =
