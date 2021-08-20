@@ -70,6 +70,34 @@ namespace Insight.Core.Services.Database
 			//returns person or null if none exist
 			return foundCourse;
 		}
+
+		/// <summary>
+		/// Generic Get. Use case, var allPersons = GetAll<Person>();
+		/// Note that it does not support .Includes by default.
+		/// Be wary of subreferences.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public async Task<List<T>> GetAll<T>()
+			where T : class
+		{
+			Task<List<T>> output;
+			try
+			{
+				using (var insightContext = new InsightContext(_dbContextOptions))
+				{
+					output = insightContext.Set<T>().ToListAsync();
+				}
+			}
+
+			//TODO implement exception
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
+			}
+
+			return await output;
+		}
 	}
 
 
