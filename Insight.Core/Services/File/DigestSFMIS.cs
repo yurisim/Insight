@@ -79,6 +79,14 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
+
+				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]))
+				{
+					//if name is not valid, can't find associated person
+					//option is to try name optionally, but the fomatting is less than optimal
+					continue;
+				}
+
 				//name is extracted out of email due to the ambigious formatting of the name column in the source data and because it truncates it at 18 characters
 				string[] names = splitLine[_emailIndex].Substring(0, splitLine[_emailIndex].IndexOf("@")).Split('.');
 

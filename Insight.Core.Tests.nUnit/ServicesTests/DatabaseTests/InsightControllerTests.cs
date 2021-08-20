@@ -64,7 +64,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 		[Test]
 		public async Task GetPeople()
 		{
-			var people = await controller.GetAll<Person>();
+			var people = await controller.GetAllPersons();
 
 			people.Count().Should().Be(5);
 		}

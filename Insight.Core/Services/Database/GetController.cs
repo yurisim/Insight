@@ -50,7 +50,8 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName)
+						.Include(course => course.CourseInstances);
 
 					//TODO implement better exceptions
 					if (foundCourses.Count() > 1)
