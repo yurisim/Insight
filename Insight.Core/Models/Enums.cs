@@ -8,6 +8,15 @@
 		Overdue = 4
 	}
 
+	public enum DeploymentStatus
+	{
+		Unknown,
+		Resetting,
+		Training,
+		Ready,
+		Deployed,
+	}
+
 	public enum Rank
 	{
 		Unknown,

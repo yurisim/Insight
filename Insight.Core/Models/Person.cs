@@ -25,6 +25,8 @@ namespace Insight.Core.Models
 
 		public Rank Rank { get; set; }
 
+		public DeploymentStatus DeploymentStatus {  get; set; }
+
 		public string Name => $"{LastName}, {FirstName}";
 
 		public string HomePhone { get; set; }

@@ -7,13 +7,15 @@ using Insight.Core.Services.Database;
 using Windows.Networking;
 using System.Linq;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Insight.ViewModels
 {
     public class StatusViewModel : ObservableObject
     {
 		// This is a temporary solution for the custom binding. Would be better if we just accept a constructor of objects
-        public ObservableCollection<StatusViewItems> Source { get; } = new ObservableCollection<StatusViewItems>();
+        public ObservableCollection<StatusViewItems> Source { get; set;  } = new ObservableCollection<StatusViewItems>();
 
         public StatusViewModel()
         {
@@ -40,6 +42,7 @@ namespace Insight.ViewModels
 				Name = person.Name,
 				SSN = person.SSN,
 				CrewPosition = person.CrewPosition,
+				DeploymentStatus = person.DeploymentStatus,
 				DateOnStation = person.DateOnStation,
 				// Need ?. null checks in case data is bad (it is)
 				CyberAwarenessExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "TFAT - Cyber Awareness Challenge")?.Expiration,
@@ -62,15 +65,43 @@ namespace Insight.ViewModels
 	/// Temporary stop gap. Would prefer to use a dynamic "value tuple" instead to display the items in the table. Because this is only used in this view, I stuck it here.
 	/// The benefits of a value tuple means we don't have to make a new class for every different type of display.
 	/// </summary>
-	public class StatusViewItems
+	public class StatusViewItems : INotifyPropertyChanged
 	{
-		public int Id { get; set; }
+		private int _id;
+		private DeploymentStatus _deploymentStatus;
+
+		public int Id
+		{
+			get => _id;
+			set
+			{
+				if (value != _id)
+				{
+					_id = value;
+					this.OnPropertyChanged(nameof(Id));
+				}
+			}
+		}
+
 
 		public string Name { get; set; }
 
 		public string SSN { get; set; }
 
 		public string CrewPosition { get; set; }
+
+		public DeploymentStatus DeploymentStatus
+		{
+			get => _deploymentStatus;
+			set
+			{
+				if (value != _deploymentStatus)
+				{
+					_deploymentStatus = value;
+					this.OnPropertyChanged(nameof(DeploymentStatus));
+				}
+			}
+		}
 
 		public string DateOnStation { get; set; }
 
@@ -82,6 +113,17 @@ namespace Insight.ViewModels
 		public DateTime? SABCHandsOnExpiration { get; set; }
 		public DateTime? SABCExpiration { get; set; }
 
+		public event PropertyChangedEventHandler PropertyChanged;
 
+		// This method MUST BE called by the Set accessor of each property for TwoWay binding to work.
+		// The CallerMemberName attribute that is applied to the optional propertyName
+		// parameter causes the property name of the caller to be substituted as an argument.
+		private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
 	}
 }
