@@ -75,7 +75,7 @@ namespace Insight.Core.Services.File
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
 				string rank = splitLine[_rankIndex];
 				string ssn = splitLine[_ssnIndex].Replace("-", "");
-				string dateOnstation = splitLine[_dateOnStationIndex];
+				DateTime dateOnstation = DateTime.Parse(splitLine[_dateOnStationIndex]);
 				string phone = splitLine[_phoneIndex];
 				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine[_pafsc], cafsc: splitLine[_cafsc], dafsc: splitLine[_dafsc]);
 

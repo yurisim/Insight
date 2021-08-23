@@ -149,6 +149,7 @@
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\FileService.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Helpers\StatusPageGenerateColumnCommand.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
     <Compile Include="Services\NavigationService.cs" />
