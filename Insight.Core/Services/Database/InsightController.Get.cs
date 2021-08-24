@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Insight.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -50,8 +49,7 @@ namespace Insight.Core.Services.Database
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName)
-						.Include(course => course.CourseInstances);
+					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName);
 
 					//TODO implement better exceptions
 					if (foundCourses.Count() > 1)
@@ -73,33 +71,66 @@ namespace Insight.Core.Services.Database
 		}
 
 		/// <summary>
-		/// Generic Get. Use case, var allPersons = GetAll<Person>();
-		/// Note that it does not support .Includes by default.
-		/// Be wary of subreferences.
+		/// Returns OrgAlias that matches name
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <param alias="alias"></param>
+		/// <param name="alias"></param>
 		/// <returns></returns>
-		public async Task<List<T>> GetAll<T>()
-			where T : class
+		public Org GetOrgByAlias(string alias)
 		{
-			Task<List<T>> output;
+			var orgs = new List<Org>();
+
+			Org org = null;
+
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					output = insightContext.Set<T>().ToListAsync();
-				}
-			}
+					orgs = insightContext.OrgAliases
+						.Where(x => x.Name == alias.ToUpper())?
+						.Select(x => x.Org).ToList();
+					//TODO implement exception
+					if (orgs.Count > 1)
+					{
+						throw new Exception("Too many Aliases found, count should not be greater than 1");
+					}
 
+					org = orgs.FirstOrDefault();
+				}
+
+			}
 			//TODO implement exception
 			catch (Exception e)
 			{
-				throw new Exception(e.Message);
+				throw new Exception("Insight.db access error");
+			}
+			//returns org or null if none exist
+			return org;
+		}
+
+		/// <summary>
+		/// Gets AFSC by name
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public async Task<AFSC> GetAFSC(string pafsc)
+		{
+			//TODO search by any of p/c/d afsc
+			AFSC afsc = null;
+			try
+			{
+				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				{
+					afsc = await insightContext.AFSCs.FirstOrDefaultAsync(x => x.PAFSC == pafsc.ToUpper());
+
+				}
+			}
+			catch (Exception e)
+			{
+				throw new Exception("Insight.db access error");
 			}
 
-			return await output;
+			return afsc;
 		}
 	}
-
-
 }
