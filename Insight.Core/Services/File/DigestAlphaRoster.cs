@@ -70,8 +70,8 @@ namespace Insight.Core.Services.File
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
 				//string rank = splitLine[_rankIndex];
 				string ssn = splitLine[_ssnIndex].Replace("-", "");
-				//string dateOnstation = splitLine[_dateOnStationIndex];
-				string homePhone = splitLine[_homePhoneIndex];
+				DateTime dateOnstation = splitLine[_dateOnStationIndex];
+				string phone = splitLine[_phoneIndex];
 				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine[_pafsc], cafsc: splitLine[_cafsc], dafsc: splitLine[_dafsc]);
 
 				//TODO look for existing person and update if it exists. Lookup by name and SSN
