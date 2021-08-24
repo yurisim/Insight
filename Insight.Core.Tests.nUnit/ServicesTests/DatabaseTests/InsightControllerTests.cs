@@ -70,6 +70,14 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 		}
 
 		[Test]
+		public async Task GenericGetPeople()
+		{
+			var people = await controller.GetAll<Person>();
+
+			people.Count().Should().Be(5);
+		}
+
+		[Test]
 		public void GetPersonByName()
 		{
 			var person = controller.GetPersonByName("John", "Smith").Result;

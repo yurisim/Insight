@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Insight.Core.Helpers;
 using Insight.Core.Models;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
 	public class DigestAEF : AbstractDigest, IDigest
 	{
-		protected int NameIndex = -1;
-		protected int PayGradeIndex = -1;
-		protected int UnitIndex = -1;
-		protected int AFSCIndex = -1;
-		protected int PersonnelOverallStatusIndex = -1;
-		protected int MedicalOverallStatusIndex = -1;
-		protected int TrainingOverallStatusIndex = -1;
+		private int NameIndex = -1;
+		private int PayGradeIndex = -1;
+		private int UnitIndex = -1;
+		private int AFSCIndex = -1;
+		private int PersonnelOverallStatusIndex = -1;
+		private int MedicalOverallStatusIndex = -1;
+		private int TrainingOverallStatusIndex = -1;
 
 		int IDigest.Priority => 2;
 
@@ -62,7 +60,8 @@ namespace Insight.Core.Services.File
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		protected void SetColumnIndexes(string[] columnHeaders)
+		private
+			void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
@@ -91,8 +90,8 @@ namespace Insight.Core.Services.File
 				string[] names = splitLine[NameIndex].Split(' ').Select(x => x.Trim()).ToArray();
 				string firstName = names[1];
 				string lastName = names[0];
-				string unit = splitLine[UnitIndex];
-				string AFSC = splitLine[AFSCIndex];
+				//string unit = splitLine[UnitIndex];
+				//string AFSC = splitLine[AFSCIndex];
 				Status personnelStatus = StringManipulation.StatusReader(splitLine[PersonnelOverallStatusIndex]);
 				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
 				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);

@@ -52,12 +52,6 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			// TODO dialog exception for schema differences
-			if (!FileContents[0].StartsWith(Resources.PEXExpected))
-			{
-				throw new NotImplementedException();
-			}
-
 			for (int i = 0; i < FileContents.Count; i++)
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();

@@ -28,7 +28,7 @@ namespace Insight.Core.Models
 
 		public string Name => $"{LastName}, {FirstName}";
 
-		public string Phone { get; set; }
+		public string HomePhone { get; set; }
 
 		public string Email {  get; set; }
 
