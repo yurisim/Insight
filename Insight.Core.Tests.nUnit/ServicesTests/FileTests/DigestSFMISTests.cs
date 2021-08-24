@@ -113,7 +113,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					person.CourseInstances.Count.Should().BeInRange(1, 2);
 				}
 
-				if (!m4CourseExpected ^ !m9CourseExpected)
+				if (m4CourseExpected ^ m9CourseExpected)
 				{
 					person.CourseInstances.Count.Should().Be(1);
 				}
