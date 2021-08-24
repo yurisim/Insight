@@ -15,15 +15,15 @@
 	{
 		///<summary>Unknown deployment status</summary>
 		Unknown,
-		///<summary></summary>
-		Resetting,
 		///<summary>Returning from deployment or on R&R</summary>
-		Training,
+		Resetting,
 		///<summary>Training to prepare for deployment</summary>
-		Ready,
+		Training,
 		///<summary>Completed all defined training & readiness requirements</summary>
-		Scheduled,
+		Ready,
 		///<summary>Ready and scheduled to deply</summary>
+		Scheduled,
+		///<summary>Currently Deployed</summary>
 		Deployed,
 	}
 
