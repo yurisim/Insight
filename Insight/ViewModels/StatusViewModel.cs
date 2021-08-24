@@ -13,23 +13,23 @@ using System.Reflection;
 
 namespace Insight.ViewModels
 {
-    public class StatusViewModel : ObservableObject
-    {
+	public class StatusViewModel : ObservableObject
+	{
 		// This is a temporary solution for the custom binding. Would be better if we just accept a constructor of objects
-        public ObservableCollection<StatusViewItems> Source { get; set;  } = new ObservableCollection<StatusViewItems>();
+		public ObservableCollection<StatusViewItems> Source { get; set; } = new ObservableCollection<StatusViewItems>();
 
-        public StatusViewModel()
-        {
-        }
+		public StatusViewModel()
+		{
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Loads person objects into the status table whenever the page loads. This is called in the code behind of the object.
 		/// See references.
 		/// </summary>
 		/// <returns></returns>
 		public async Task LoadDataAsync()
-        {
-            Source.Clear();
+		{
+			Source.Clear();
 
 			InsightController controller = new InsightController();
 
@@ -56,11 +56,11 @@ namespace Insight.ViewModels
 
 
 			foreach (var person in peopleToDisplay)
-            {
-                Source.Add(person);
-            }
-        }
-    }
+			{
+				Source.Add(person);
+			}
+		}
+	}
 
 	/// <summary>
 	/// Temporary stop gap. Would prefer to use a dynamic "value tuple" instead to display the items in the table. Because this is only used in this view, I stuck it here.
@@ -70,7 +70,7 @@ namespace Insight.ViewModels
 	{
 		private DeploymentStatus _deploymentStatus;
 
-		public int Id {  get; set; }
+		public int Id { get; set; }
 
 		public string Name { get; set; }
 
