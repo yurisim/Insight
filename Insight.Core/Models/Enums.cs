@@ -8,12 +8,22 @@
 		Overdue = 4
 	}
 
+	/// <summary>
+	/// Status of an individual's deployment readiness/preparedness 
+	/// </summary>
 	public enum DeploymentStatus
 	{
+		///<summary>Unknown deployment status</summary>
 		Unknown,
+		///<summary></summary>
 		Resetting,
+		///<summary>Returning from deployment or on R&R</summary>
 		Training,
+		///<summary>Training to prepare for deployment</summary>
 		Ready,
+		///<summary>Completed all defined training & readiness requirements</summary>
+		Scheduled,
+		///<summary>Ready and scheduled to deply</summary>
 		Deployed,
 	}
 
@@ -45,10 +55,15 @@
 	{
 		Unknown,
 		AlphaRoster,
+		///<summary>Patriot Excalibur</summary>
 		PEX,
+		///<summary>AEF Online</summary>
 		AEF,
+		///<summary>Patriot Excalibur</summary>
 		ETMS,
+		///<summary>Letter of Certifications</summary>
 		LOX,
+		///<summary>Security Forces Management Information System</summary>
 		SFMIS,
 	}
 }
