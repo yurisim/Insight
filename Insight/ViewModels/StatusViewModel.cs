@@ -91,9 +91,8 @@ namespace Insight.ViewModels
 			}
 		}
 
-		public string DateOnStation { get; set; }
-
 		// This datetime to be nullable to enable null operators for faulty/bad data. 
+		public DateTime? DateOnStation { get; set; }
 		public DateTime? CyberAwarenessExpiration { get; set; }
 		public DateTime? ForceProtectionExpiration { get; set; }
 		public DateTime? LawOfWarExpiration { get; set; }

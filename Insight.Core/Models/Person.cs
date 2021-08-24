@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Insight.Core.Models
@@ -39,7 +40,7 @@ namespace Insight.Core.Models
 
 		public string CrewPosition { get; set; }
 
-		public string DateOnStation { get; set; }
+		public DateTime DateOnStation { get; set; }
 
 		public string Comments { get; set; }
 
