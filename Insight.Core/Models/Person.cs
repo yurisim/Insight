@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Insight.Core.Models
 {
-	public class Person : IGenericable
+	public class Person
 	{
 		private string _firstName;
 		private string _lastName;

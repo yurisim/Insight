@@ -46,14 +46,14 @@ namespace Insight.Core.Services.Database
 		/// <param name="id"></param>
 		/// <returns></returns>
 		public async Task<T> GetByID<T>(int id)
-			where T : class, IGenericable
+			where T : class
 		{
 			Task<T> output;
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					output = insightContext.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
+					output = insightContext.FindAsync<T>(id).AsTask();
 				}
 			}
 
