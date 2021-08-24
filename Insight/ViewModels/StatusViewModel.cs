@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace Insight.ViewModels
 {
@@ -67,22 +68,9 @@ namespace Insight.ViewModels
 	/// </summary>
 	public class StatusViewItems : INotifyPropertyChanged
 	{
-		private int _id;
 		private DeploymentStatus _deploymentStatus;
 
-		public int Id
-		{
-			get => _id;
-			set
-			{
-				if (value != _id)
-				{
-					_id = value;
-					this.OnPropertyChanged(nameof(Id));
-				}
-			}
-		}
-
+		public int Id {  get; set; }
 
 		public string Name { get; set; }
 
@@ -123,6 +111,29 @@ namespace Insight.ViewModels
 			if (PropertyChanged != null)
 			{
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				InsightController insightController = new InsightController();
+				switch (propertyName)
+				{
+					//piggy back on this case statement for any Person property
+					case nameof(DeploymentStatus):
+						//get obj by id
+						var person = insightController.GetByID<Person>(this.Id).Result;
+
+						//get property of obj that was changed by user
+						PropertyInfo destinationProperty = person.GetType().GetProperty(propertyName);
+
+						//get property that needs to be updated in database
+						PropertyInfo sourceProperty = this.GetType().GetProperty(propertyName);
+
+						//update value and save to db
+						destinationProperty.SetValue(person, sourceProperty.GetValue(this), null);
+						insightController.Update(person);
+						break;
+
+					default:
+
+						break;
+				}
 			}
 		}
 	}
