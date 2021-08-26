@@ -6,7 +6,7 @@ using Insight.Core.Services.File;
 using Insight.Core.Models;
 using FluentAssertions;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class AbstractDigestTests : AbstractDigest
@@ -72,7 +72,6 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 			afsc.CAFSC.Should().Be(expected);
 			afsc.DAFSC.Should().Be(expected);
 		}
-
 
 		private class AFSCTestCasesObject
 		{

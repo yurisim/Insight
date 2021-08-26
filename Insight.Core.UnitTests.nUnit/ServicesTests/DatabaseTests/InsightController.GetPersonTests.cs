@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Insight.Core.Services.Database;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
+namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
 	public partial class InsightControllerTests
 	{

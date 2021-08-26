@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using FluentAssertions;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 {
 	/// <summary>
 	/// Digest Factory Tests

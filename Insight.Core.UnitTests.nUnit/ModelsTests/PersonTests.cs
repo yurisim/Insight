@@ -2,7 +2,7 @@
 using Insight.Core.Models;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ModelsTests
+namespace Insight.Core.UnitTests.nUnit.ModelsTests
 {
 	[TestFixture]
 	public class PersonTests
