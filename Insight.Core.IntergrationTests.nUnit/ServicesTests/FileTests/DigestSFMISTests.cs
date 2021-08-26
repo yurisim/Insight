@@ -115,7 +115,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					person.CourseInstances.Count.Should().BeInRange(1, 2);
 				}
 
-				//if exactly one course is expected, course count should be exactly one
+				//if exactly one course is expected, course count should be exactly one (exclusive or)
 				if (m4CourseExpected ^ m9CourseExpected)
 				{
 					person.CourseInstances.Count.Should().Be(1);
