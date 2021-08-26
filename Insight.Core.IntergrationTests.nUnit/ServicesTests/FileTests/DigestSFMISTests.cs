@@ -76,6 +76,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				person.Should().NotBeNull();
 				person.Email.Should().Be(expectedEmail);
 
+				//hanldes testing if a m4 course is expected
 				if (m4CourseExpected)
 				{
 					DateTime m4CourseCompletionExpected = DateTime.Parse(strm4CourseCompletionExpected);
@@ -95,6 +96,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 				}
 
+				//hanldes testing if a m4 course is expected
 				if (m9CourseExpected)
 				{
 					DateTime m9CourseCompletionExpected = DateTime.Parse(strm9CourseCompletionExpected);
@@ -113,9 +115,16 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					person.CourseInstances.Count.Should().BeInRange(1, 2);
 				}
 
+				//if exactly one course is expected, course count should be exactly one
 				if (m4CourseExpected ^ m9CourseExpected)
 				{
 					person.CourseInstances.Count.Should().Be(1);
+				}
+
+				//if exactly two courses are expected, course count should be exactly two
+				if (m4CourseExpected && m9CourseExpected)
+				{
+					person.CourseInstances.Count.Should().Be(2);
 				}
 			}
 		}

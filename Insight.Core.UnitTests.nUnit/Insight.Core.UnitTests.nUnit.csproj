@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <RootNamespace>Insight.Core.Tests.nUnit</RootNamespace>
+    <RootNamespace>Insight.Core.UnitTests.nUnit</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

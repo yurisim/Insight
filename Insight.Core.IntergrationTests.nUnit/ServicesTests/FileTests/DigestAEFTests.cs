@@ -35,6 +35,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAEF_ExpectOnePersonsTestCases))]
 		public void DigestAEFTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
+			//deconstructs parameters into the input/expected values
 			var (input, expectedFirstName, expectedLastName, expectedTrainingOverallStatus, expectedMedicalOverallStatus, expectedPersonnelOverallStatus) = testCaseParameters;
 
 			//arrange
