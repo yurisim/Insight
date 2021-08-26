@@ -17,8 +17,8 @@
 		Unknown,
 		///<summary>Returning from deployment or on R&R</summary>
 		Resetting,
-		///<summary>Training to prepare for deployment</summary>
-		Training,
+		///<summary>Normal operating procedures and is not scheduled for an upcoming deployment</summary>
+		Regular,
 		///<summary>Completed all defined training & readiness requirements</summary>
 		Ready,
 		///<summary>Ready and scheduled to deply</summary>
