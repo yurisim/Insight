@@ -8,11 +8,12 @@ using NUnit.Framework;
 using System.Linq;
 using FluentAssertions;
 using System;
+using System.Reflection;
 
 namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 {
 	[TestFixture]
-	public class InsightControllerTests
+	public partial class InsightControllerTests
 	{
 		public InsightController controller;
 
@@ -40,7 +41,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 			var persons = new List<Person>
 			{
 				new() { FirstName = "John", LastName = "Smith" },
-				new() { FirstName = "Jacob", LastName = "Smith" },
+				new() { FirstName = "Hacob", LastName = "Smith" },
 				new() { FirstName = "Constantine", LastName = "Quintrell" },
 				new() { FirstName = "Annabell", LastName = "Turner" },
 				new() { FirstName = "Graham", LastName = "Soyer" },
@@ -122,7 +123,20 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 
 			//assert
 			person.Id.Should().Be(personFromDB.Id);
-			
+		}
+
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.AddTestCases))]
+		public void AddTest<T>(T entityToAdd) where T : class
+		{
+			controller.Add(entityToAdd);
+
+			PropertyInfo prop = entityToAdd.GetType().GetProperty("Id");
+
+			prop.Should().NotBeNull();
+
+			T entityFromDb = controller.GetByID<T>((int)prop.GetValue(entityToAdd)).Result;
+
+			entityFromDb.Should().BeEquivalentTo(entityToAdd);
 		}
 
 		[Test]
@@ -193,6 +207,34 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.DatabaseTests
 		public void TearDown()
 		{
 			controller.EnsureDatabaseDeleted();
+		}
+
+		/// <summary>
+		/// Objects containing the data for the test cases
+		/// </summary>
+		private class TestCasesObjects
+		{
+			public static object[] AddTestCases =
+			{
+				//test cases
+				new[] {
+					new Person()
+					{
+						FirstName = "Test",
+						LastName = "Test"
+					}
+				},
+
+				//test cases
+				new[] {
+					new AFSC()
+					{
+						CAFSC = "AFSC",
+						PAFSC = "AFSC",
+						DAFSC = "AFSC",
+					}
+				},
+			};
 		}
 	}
 }
