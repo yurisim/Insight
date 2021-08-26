@@ -113,6 +113,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					person.CourseInstances.Count.Should().BeInRange(1, 2);
 				}
 
+				// "Needed to add an exclusive OR because these tests need to make sure that only one of the sources are true, not both"
 				if (m4CourseExpected ^ m9CourseExpected)
 				{
 					person.CourseInstances.Count.Should().Be(1);
