@@ -11,7 +11,7 @@ namespace Insight.Core.Services.File
 	{
 		private int _lastNameIndex = -1;
 		private int _firstNameIndex = -1;
-		private int _rankIndex = -1;
+		//private int _rankIndex = -1;
 		private int _ssnIndex = -1;
 		private int _homePhoneIndex = -1;
 		private int _dateOnStationIndex = -1;
@@ -51,7 +51,7 @@ namespace Insight.Core.Services.File
 
 			_lastNameIndex = Array.IndexOf(columnHeaders, "FULL_NAME");
 			_firstNameIndex = _lastNameIndex + offset;
-			_rankIndex = Array.IndexOf(columnHeaders, "GRADE") + offset;
+			//_rankIndex = Array.IndexOf(columnHeaders, "GRADE") + offset;
 			_ssnIndex = Array.IndexOf(columnHeaders, "SSAN") + offset;
 			_homePhoneIndex = Array.IndexOf(columnHeaders, "HOME_PHONE_NUMBER") + offset;
 			_dateOnStationIndex = Array.IndexOf(columnHeaders, "DATE_ARRIVED_STATION") + offset;
