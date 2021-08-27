@@ -80,7 +80,7 @@ namespace Insight.Core.Services.File
 				if (person != null)
 				{
 					person.SSN = ssn;
-					//person.DateOnStation = dateOnstation;
+					person.DateOnStation = dateOnStation;
 					person.HomePhone = homePhone;
 					person.AFSC = afsc;
 
