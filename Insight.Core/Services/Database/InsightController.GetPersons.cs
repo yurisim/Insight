@@ -145,8 +145,7 @@ namespace Insight.Core.Services.Database
 			var lastName = shortName.Substring(0, indexOfCapital);
 
 			// now try to find the person with the name
-
-			Person foundPerson = new Person();
+			Person foundPerson = null;
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
@@ -156,7 +155,7 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(person => person.FirstName.Contains(firstLetters) && person.LastName == lastName);
+						.Where(person => person.FirstName.Contains(firstLetters.ToUpperInvariant()) && person.LastName == lastName.ToUpperInvariant());
 
 					//TODO implement better exceptions
 					if (foundPeople.Count() > 1)

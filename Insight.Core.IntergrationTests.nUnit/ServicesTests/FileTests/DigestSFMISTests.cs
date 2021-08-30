@@ -9,7 +9,7 @@ using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class DigestSFMISTests
@@ -76,6 +76,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 				person.Should().NotBeNull();
 				person.Email.Should().Be(expectedEmail);
 
+				//hanldes testing if a m4 course is expected
 				if (m4CourseExpected)
 				{
 					DateTime m4CourseCompletionExpected = DateTime.Parse(strm4CourseCompletionExpected);
@@ -95,6 +96,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 
 				}
 
+				//hanldes testing if a m4 course is expected
 				if (m9CourseExpected)
 				{
 					DateTime m9CourseCompletionExpected = DateTime.Parse(strm9CourseCompletionExpected);
@@ -113,10 +115,16 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 					person.CourseInstances.Count.Should().BeInRange(1, 2);
 				}
 
-				// "Needed to add an exclusive OR because these tests need to make sure that only one of the sources are true, not both"
+				//if exactly one course is expected, course count should be exactly one (exclusive or)
 				if (m4CourseExpected ^ m9CourseExpected)
 				{
 					person.CourseInstances.Count.Should().Be(1);
+				}
+
+				//if exactly two courses are expected, course count should be exactly two
+				if (m4CourseExpected && m9CourseExpected)
+				{
+					person.CourseInstances.Count.Should().Be(2);
 				}
 			}
 		}
