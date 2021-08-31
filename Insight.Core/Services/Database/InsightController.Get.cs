@@ -97,25 +97,20 @@ namespace Insight.Core.Services.Database
 			return foundInstance;
 		}
 
-		public Course GetCourseByName(string courseName)
+		[ItemCanBeNull]
+		public async Task<Course> GetCourseByName(string courseName)
 		{
 			// now try to find the course with the name
-			Course foundCourse = null;
+			Task<Course> foundCourse;
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName)
-						.Include(course => course.CourseInstances);
-
-					//TODO implement better exceptions
-					if (foundCourses.Count() > 1)
-					{
-						throw new Exception("Too many found, should be null or 1");
-					}
-
-					foundCourse = foundCourses.FirstOrDefault();
+					foundCourse = insightContext.Courses
+						.Where(course => course.Name == courseName)
+						.Include(course => course.CourseInstances)
+						.FirstOrDefaultAsync();
 				}
 			}
 			//TODO implement exception
