@@ -8,7 +8,7 @@ using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class DigestLOXTests

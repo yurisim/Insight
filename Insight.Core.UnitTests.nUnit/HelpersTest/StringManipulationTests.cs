@@ -3,7 +3,7 @@ using Insight.Core.Models;
 using Insight.Core.Helpers;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.HelpersTest
+namespace Insight.Core.UnitTests.nUnit.HelpersTest
 {
 	[TestFixture]
 	public class HelpersTests

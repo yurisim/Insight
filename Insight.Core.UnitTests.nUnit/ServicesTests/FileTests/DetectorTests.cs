@@ -4,7 +4,7 @@ using Insight.Core.Services.File;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class DetectorTests

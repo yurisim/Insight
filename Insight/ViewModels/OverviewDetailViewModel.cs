@@ -12,40 +12,31 @@ namespace Insight.ViewModels
 {
     public class OverviewDetailViewModel : ObservableObject
     {
-        private SampleOrder _item;
-
-		
-		//public SampleOrder Item
-		//{
-		//	get { return _item; }
-		//	set { SetProperty(ref _item, value); }
-		//}
-
 		/// <summary>
 		/// Holds the data for the front end table
 		/// </summary>
 		public ObservableCollection<ReadyPercentages> Source { get; } = new ObservableCollection<ReadyPercentages>();
+
 		/// <summary>
 		/// Number of people in the Squadron
 		/// </summary>
 		public string TotalPersons;
+
 		/// <summary>
 		/// Percentage of people fully ready
 		/// </summary>
 		public string OverallReadiness;
+
 		/// <summary>
 		/// Holds the organization name
 		/// </summary>
-		public string PageOrg
-		{
-			get;
-			set;
-		}
+		public string PageOrg {  get; set; }
 
         public OverviewDetailViewModel(string org)
         {
 			PageOrg = org;
         }
+
 		/// <summary>
 		/// puts the people into flights, calculates the unit's overall readiness based on medical, training, personnel data
 		/// </summary>
@@ -61,7 +52,8 @@ namespace Insight.ViewModels
 
             List<List<Person>> allFlights = new List<List<Person>>();
 			TotalPersons = persons.Count.ToString();
-			OverallReadiness = DataCalculation.GetOverall(persons);
+			var num = DataCalculation.GetReadinessPercentage(persons);
+			OverallReadiness = string.Format("{0:P}", DataCalculation.GetReadinessPercentage(persons));
             foreach (var person in persons)
             {
                 if (!allFlightNames.Contains(person.Flight.ToUpper()))
@@ -75,8 +67,11 @@ namespace Insight.ViewModels
 				allFlights[flightNameIndex].Add(person);
 			}
 
+			var (medicalPercent, PersonnelPercent, TrainingPercent) = DataCalculation.GetReadinessPerctageByCategory(persons);
+
 			//TODO When orgs are implemented make more dynamic
-            ReadyPercentages OverallPercentages = new ReadyPercentages(PageOrg + " Overall", DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
+			ReadyPercentages OverallPercentages = new ReadyPercentages(PageOrg + " Overall", medicalPercent, PersonnelPercent, TrainingPercent);
+
             Source.Add(OverallPercentages);
 
             foreach (var flightName in allFlightNames)
@@ -84,7 +79,6 @@ namespace Insight.ViewModels
 				//The flight names are in a seperate List so this gets the people in each flight via a syncronized index
 				Source.Add(FlightPercentageBuilder(flightName, allFlights[allFlightNames.IndexOf(flightName)]));
             }
-
         }
 
 		/// <summary>
@@ -95,11 +89,9 @@ namespace Insight.ViewModels
 		/// <returns>ReadyPercentages object which holds the input data</returns>
         private ReadyPercentages FlightPercentageBuilder(string flight, List<Person> persons)
         {
-            ReadyPercentages flightPercentages = new ReadyPercentages(string.Format("{0} Flight", flight), DataCalculation.GetMedical(persons), DataCalculation.GetPersonnel(persons), DataCalculation.GetTraining(persons));
-            return flightPercentages;
+			var (medicalPercent, PersonnelPercent, TrainingPercent) = DataCalculation.GetReadinessPerctageByCategory(persons);
+			return new ReadyPercentages($"{flight} Flight", medicalPercent, PersonnelPercent, TrainingPercent);
         }
-
-        
 
         /// <summary>
 		/// Organizes the information into rows by the organization
@@ -111,14 +103,13 @@ namespace Insight.ViewModels
             public string Personnel { get; }
             public string Training { get; }
 
-
-            public ReadyPercentages(string rowName, string valueMed, string valuePersonnel, string valueTraining)
+            public ReadyPercentages(string rowName, decimal valueMed, decimal valuePersonnel, decimal valueTraining)
             {
 				Organization = rowName;
-				Medical = valueMed;
-				Personnel = valuePersonnel;
-				Training = valueTraining;
-            }
-        }
+				Medical = string.Format("{0:P}", valueMed);
+				Personnel = string.Format("{0:P}", valuePersonnel);
+				Training = string.Format("{0:P}", valueTraining);
+			}
+		}
     }
 }
