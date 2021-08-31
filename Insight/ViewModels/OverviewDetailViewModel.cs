@@ -46,7 +46,7 @@ namespace Insight.ViewModels
             Source.Clear();
 
 			InsightController insightController = new InsightController();
-			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(PageOrg));
+			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(PageOrg).Result);
 
             List<string> allFlightNames = new List<string>();
 

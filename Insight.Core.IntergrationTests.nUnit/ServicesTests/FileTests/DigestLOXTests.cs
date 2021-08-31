@@ -50,7 +50,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var org = insightController.GetOrgByAlias(expectedOrg);
+			var org = insightController.GetOrgByAlias(expectedOrg).Result;
 			var orgs = insightController.GetAll<Org>().Result;
 
 			//assert

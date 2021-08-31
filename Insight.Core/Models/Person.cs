@@ -59,11 +59,5 @@ namespace Insight.Core.Models
 		public PEX PEX { get; set; }
 
 		public List<CourseInstance> CourseInstances { get; set; } = new List<CourseInstance>();
-
-		public Person()
-		{
-			
-		}
-
 	}
 }
