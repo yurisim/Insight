@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Insight.Core.Models
 ﻿namespace Insight.Core.Models
 {
 	/// <summary>
