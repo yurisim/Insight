@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Insight.Core.Models;
+using System.Collections.Generic;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -82,6 +83,42 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 
 			//assert
 			person.Id.Should().Be(personFromDB.Id);
+		}
+
+		[Test]
+		public void GetPersonByNameSSN_Good()
+		{
+			//arrange
+
+			//act
+			var person = controller.GetPersonByNameSSN("Graham", "Soyer", "123456789");
+
+			//assert
+			person.Should().NotBeNull();
+		}
+
+		[Test]
+		public void GetPersonByNameSSN_DoesNotExist()
+		{
+			//arrange
+
+			//act
+			var person = controller.GetPersonByNameSSN("random", "name", "123456789");
+
+			//assert
+			person.Should().BeNull();
+		}
+
+		[Test]
+		public void GetPersonByNameSSN_PersonExistsButNoSSN()
+		{
+			//arrange
+
+			//act
+			var person = controller.GetPersonByNameSSN("John", "Smith", "123456789");
+
+			//assert
+			person.Should().BeNull();
 		}
 	}
 }
