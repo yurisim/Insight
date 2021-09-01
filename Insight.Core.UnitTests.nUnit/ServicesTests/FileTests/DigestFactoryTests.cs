@@ -14,7 +14,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 	[TestFixture]
 	public class DigestFactoryTests
 	{
-		private DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
+		private readonly DbContextOptions<InsightContext> dbContextOptions = new DbContextOptionsBuilder<InsightContext>()
 			.UseInMemoryDatabase(databaseName: "InsightTestDB")
 			.Options;
 

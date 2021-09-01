@@ -163,14 +163,10 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
-
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			string _expectedFlight { get; set; }
-
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly string _expectedFlight;
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight)
 			{

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Insight.Core.Properties;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File

@@ -1,11 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Insight.Core.Services.Database;
 using Insight.Core.Models;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
@@ -31,7 +26,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		{
 			var people = await controller.GetAllPersons();
 
-			people.Count().Should().Be(5);
+			people.Count.Should().Be(5);
 		}
 
 		[Test]
@@ -39,7 +34,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		{
 			var people = await controller.GetAll<Person>();
 
-			people.Count().Should().Be(5);
+			people.Count.Should().Be(5);
 		}
 
 		[Test]

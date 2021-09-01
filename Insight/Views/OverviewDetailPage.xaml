@@ -8,34 +8,34 @@
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+	<Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <!--641 is the default CompactModeThresholdWidth in NavigationView -->
-                        <AdaptiveTrigger MinWindowWidth="641" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="propertiesGroup1.(RelativePanel.RightOf)" Value="itemHero" />
-                        <Setter Target="propertiesGroup1.(RelativePanel.Below)" Value="title" />
-                        <Setter Target="propertiesGroup2.(RelativePanel.RightOf)" Value="propertiesGroup1" />
-                        <Setter Target="propertiesGroup2.(RelativePanel.Below)" Value="title" />
-                        <Setter Target="propertiesGroup1.Width" Value="200" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<!--641 is the default CompactModeThresholdWidth in NavigationView -->
+						<AdaptiveTrigger MinWindowWidth="641" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="propertiesGroup1.(RelativePanel.RightOf)" Value="itemHero" />
+						<Setter Target="propertiesGroup1.(RelativePanel.Below)" Value="title" />
+						<Setter Target="propertiesGroup2.(RelativePanel.RightOf)" Value="propertiesGroup1" />
+						<Setter Target="propertiesGroup2.(RelativePanel.Below)" Value="title" />
+						<Setter Target="propertiesGroup1.Width" Value="200" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 
-        <ScrollViewer
+		<ScrollViewer
             x:Name="contentScroll"
             IsTabStop="True">
-            <StackPanel
+			<StackPanel
                 Margin="{StaticResource MediumLeftRightMargin}"
                 x:Name="contentPanel">
-                <RelativePanel>
-                    <Grid
+				<RelativePanel>
+					<Grid
                         x:Name="itemHero"
                         Width="200"
                         Height="200"
@@ -46,16 +46,16 @@
                         Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
                         RelativePanel.AlignTopWithPanel="True"
                         RelativePanel.AlignLeftWithPanel="True">
-                        <SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <SymbolIcon.RenderTransform>
-                                <CompositeTransform ScaleX="4" ScaleY="4"/>
-                            </SymbolIcon.RenderTransform>
-                        </SymbolIcon>
-                    </Grid>
-                    
-                    <!--Text="{x:Bind ViewModel.Item.Organization, Mode=OneWay}"-->
+						<SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+							<SymbolIcon.RenderTransform>
+								<CompositeTransform ScaleX="4" ScaleY="4"/>
+							</SymbolIcon.RenderTransform>
+						</SymbolIcon>
+					</Grid>
 
-                    <TextBlock
+					<!--Text="{x:Bind ViewModel.Item.Organization, Mode=OneWay}"-->
+
+					<TextBlock
                         x:Name="title"
                         Margin="{StaticResource XXSmallTopMargin}"
                         RelativePanel.AlignTopWithPanel="True"
@@ -64,48 +64,48 @@
                         Text="{x:Bind ViewModel.PageOrg}"
                         />
 
-                    <StackPanel x:Name="propertiesGroup1" RelativePanel.Below="itemHero">
-                        <StackPanel x:Name="statusGroup" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Squadron Readiness" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.OverallReadiness, Mode=OneWay}" />
-                        </StackPanel>
+					<StackPanel x:Name="propertiesGroup1" RelativePanel.Below="itemHero">
+						<StackPanel x:Name="statusGroup" Margin="{StaticResource SmallTopMargin}">
+							<TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Squadron Readiness" />
+							<TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.OverallReadiness, Mode=OneWay}" />
+						</StackPanel>
 
-                        <StackPanel x:Name="orderDateGroup" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Date of Record" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="04JUL2021" />
-                        </StackPanel>
-                    </StackPanel>
+						<StackPanel x:Name="orderDateGroup" Margin="{StaticResource SmallTopMargin}">
+							<TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Date of Record" />
+							<TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="04JUL2021" />
+						</StackPanel>
+					</StackPanel>
 
-                    <StackPanel x:Name="propertiesGroup2" RelativePanel.Below="propertiesGroup1">
-                        <StackPanel x:Name="shipToGroup" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Last Updated By" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="SIM.YURA" />
-                        </StackPanel>
+					<StackPanel x:Name="propertiesGroup2" RelativePanel.Below="propertiesGroup1">
+						<StackPanel x:Name="shipToGroup" Margin="{StaticResource SmallTopMargin}">
+							<TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Last Updated By" />
+							<TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="SIM.YURA" />
+						</StackPanel>
 
-                        <StackPanel x:Name="orderTotalGroup" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Total Members" />
-                            <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.TotalPersons, Mode=OneWay}" />
-                        </StackPanel>
-                    </StackPanel>
-                </RelativePanel>
+						<StackPanel x:Name="orderTotalGroup" Margin="{StaticResource SmallTopMargin}">
+							<TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Total Members" />
+							<TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind ViewModel.TotalPersons, Mode=OneWay}" />
+						</StackPanel>
+					</StackPanel>
+				</RelativePanel>
 
-                <tg:RadDataGrid ColumnDataOperationsMode="Flyout" x:Name="grid" ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}" AutoGenerateColumns="True" UserEditMode="External" CanDrag="True"  CanUserChooseColumns="True">
-                    <tg:RadDataGrid.Columns>
-                        <!--TODO WTS:
+				<tg:RadDataGrid ColumnDataOperationsMode="Flyout" x:Name="grid" ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}" AutoGenerateColumns="True" UserEditMode="External" CanDrag="True"  CanUserChooseColumns="True">
+					<tg:RadDataGrid.Columns>
+						<!--TODO WTS:
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
-                        <!--<tg:DataGridTextColumn Header="0960" PropertyName="RowName"/>
+						<!--<tg:DataGridTextColumn Header="0960" PropertyName="RowName"/>
                         <tg:DataGridTextColumn Header="Medical" PropertyName="ValueMed"/>
                         <tg:DataGridTextColumn Header="Personnel" PropertyName="ValuePersonnel"/>
 						<tg:DataGridTextColumn Header="Training" PropertyName="ValueTraining"/>-->
 					</tg:RadDataGrid.Columns>
-                </tg:RadDataGrid>
+				</tg:RadDataGrid>
 
 
-            </StackPanel>
-            
-        </ScrollViewer>
+			</StackPanel>
 
-        
-    </Grid>
+		</ScrollViewer>
+
+
+	</Grid>
 </Page>
