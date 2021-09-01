@@ -128,7 +128,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"-3D034",
 					"3D054",
 					"5039155972",
-					DateTime.Parse("07-NOV-1991")
+					DateTime.Parse("10-JUN-2020")
 				),
 
 				//test case - lower case AFSC input, no SSN dashes
@@ -146,7 +146,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"-3D034",
 					"3D054",
 					"5039155972",
-					DateTime.Parse("07-NOV-1991")
+					DateTime.Parse("10-JUN-2020")
 				),
 			};
 
