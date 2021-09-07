@@ -16,7 +16,7 @@ namespace Insight.Core.Services.File
 		private int _catmCompletionDateIndex;
 		private int _catmExperationDateIndex;
 
-		int IDigest.Priority { get => 5; }
+		int IDigest.Priority => 5;
 
 		public DigestSFMIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
@@ -84,6 +84,8 @@ namespace Insight.Core.Services.File
 				{
 					//if name is not valid, can't find associated person
 					//option is to try name optionally, but the fomatting is less than optimal
+
+					// TODO: There isn't a test case for this, when there's no email
 					continue;
 				}
 
