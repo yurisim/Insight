@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Insight.Core.Helpers;
+using System.Text.RegularExpressions;
 using Insight.Core.Models;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
@@ -79,11 +77,15 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
+				//a valid email is of the format firstname.lastname@domain.com
+				//optionally with '.#' after lastname or an underscore in last name (representing hyphenated last names).
+				//Only requirement after the @ symbol is that it must contain a period, with letters before and after it.
+				Regex emailFormat = new Regex(@"\w+\.\w+(\.\d*)?@.+\..+");
 
-				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]))
+				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]) || !emailFormat.IsMatch(splitLine[_emailIndex]))
 				{
-					//if name is not valid, can't find associated person
-					//option is to try name optionally, but the fomatting is less than optimal
+					//if email is not valid, can't find associated person
+					//option is to try to parse name, but the fomatting is less than optimal
 					continue;
 				}
 
@@ -92,10 +94,10 @@ namespace Insight.Core.Services.File
 
 				string firstName = names[0];
 				string lastName = names[1].Replace("_", "-");
-				
+
 				Person person = insightController.GetPersonByName(firstName, lastName).Result;
 
-				if(person == null)
+				if (person == null)
 				{
 					//TODO handle null person
 				}
@@ -105,7 +107,7 @@ namespace Insight.Core.Services.File
 					insightController.Update(person);
 
 					//CATM course is not empty
-					if(splitLine[_catmCourseNameIndex] != "")
+					if (splitLine[_catmCourseNameIndex] != "")
 					{
 						Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
 						DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
