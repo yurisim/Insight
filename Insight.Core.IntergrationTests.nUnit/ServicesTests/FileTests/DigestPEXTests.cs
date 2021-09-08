@@ -8,7 +8,7 @@ using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class DigestPEXTests
@@ -34,45 +34,45 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestPEX_ExpectOnePersonsTestCases))]
-		public void DigestPEXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
-		{
-			var (input, expectedFirstName, expectedLastName, expectedFlight) = testCaseParameters;
+		//public void DigestPEXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
+		//{
+		//	var (input, expectedFirstName, expectedLastName, expectedFlight) = testCaseParameters;
 
-			//arrange
-			FileType detectedFileType = Detector.DetectFileType(input);
+		//	//arrange
+		//	FileType detectedFileType = Detector.DetectFileType(input);
 
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+		//	IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
 
-			//creates person entity in DB so there's someone to look up
-			Person personToCreateInDB = new Person()
-			{
-				FirstName = expectedFirstName,
-				LastName = expectedLastName,
-			};
-			insightController.Add(personToCreateInDB);
+		//	//creates person entity in DB so there's someone to look up
+		//	Person personToCreateInDB = new Person()
+		//	{
+		//		FirstName = expectedFirstName,
+		//		LastName = expectedLastName,
+		//	};
+		//	insightController.Add(personToCreateInDB);
 
-			//act
-			digest.CleanInput();
-			digest.DigestLines();
+		//	//act
+		//	digest.CleanInput();
+		//	digest.DigestLines();
 
-			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+		//	//arrange 2.0
+		//	var allPersons = insightController.GetAllPersons().Result;
+		//	var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
 
-			//assert
-			using (new AssertionScope())
-			{
-				detectedFileType.Should().Be(FileType.PEX);
-				digest.Should().BeOfType<DigestPEX>();
+		//	//assert
+		//	using (new AssertionScope())
+		//	{
+		//		detectedFileType.Should().Be(FileType.PEX);
+		//		digest.Should().BeOfType<DigestPEX>();
 
-				allPersons.Count.Should().Be(1);
-				person.Should().NotBeNull();
+		//		allPersons.Count.Should().Be(1);
+		//		person.Should().NotBeNull();
 
-				person.FirstName.Should().Be(expectedFirstName.Trim().ToUpperInvariant());
-				person.LastName.Should().Be(expectedLastName.Trim().ToUpperInvariant());
-				person.Flight.Equals(expectedFlight);
-			}
-		}
+		//		person.FirstName.Should().Be(expectedFirstName.Trim().ToUpperInvariant());
+		//		person.LastName.Should().Be(expectedLastName.Trim().ToUpperInvariant());
+		//		person.Flight.Equals(expectedFlight);
+		//	}
+		//}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestPEX_ExpectZeroPersonsTestCases))]
 		public void DigestPEXTest_ExpectZeroPerson(TestCaseObject testCaseParameters)

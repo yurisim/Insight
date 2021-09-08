@@ -8,7 +8,7 @@ using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
+namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
 	[TestFixture]
 	public class DigestAEFTests
@@ -35,6 +35,7 @@ namespace Insight.Core.Tests.nUnit.ServicesTests.FileTests
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAEF_ExpectOnePersonsTestCases))]
 		public void DigestAEFTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
+			//deconstructs parameters into the input/expected values
 			var (input, expectedFirstName, expectedLastName, expectedTrainingOverallStatus, expectedMedicalOverallStatus, expectedPersonnelOverallStatus) = testCaseParameters;
 
 			//arrange

@@ -14,7 +14,7 @@ namespace Insight.Core.Services.File
 		private int _catmCompletionDateIndex;
 		private int _catmExperationDateIndex;
 
-		int IDigest.Priority { get => 5; }
+		int IDigest.Priority => 5;
 
 		public DigestSFMIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
