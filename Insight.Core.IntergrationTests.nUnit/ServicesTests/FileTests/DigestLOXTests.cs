@@ -169,7 +169,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "960 AACS",
-					expectedRank: Rank.E2,
+					expectedGrade: Grade.E2,
 					expectedCrewPosition: "ABM"
 				),
 
@@ -188,7 +188,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "522 ACNS",
-					expectedRank: Rank.E2,
+					expectedGrade: Grade.E2,
 					expectedCrewPosition: "ABM"
 				),
 
@@ -206,7 +206,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "960 AACS",
-					expectedRank: Rank.O2,
+					expectedGrade: Grade.O2,
 					expectedCrewPosition: "ABM"
 				),
 
@@ -224,7 +224,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Hyphe-nated",
 					expectedFlight: "A",
 					expectedOrg: "960th AACS",
-					expectedRank: Rank.E2,
+					expectedGrade: Grade.E2,
 					expectedCrewPosition: "FE"
 				),
 
@@ -242,7 +242,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "St. Onge",
 					expectedFlight: "A",
 					expectedOrg: "552 Air Control Network Squadron",
-					expectedRank: Rank.Unknown,
+					expectedGrade: Grade.Unknown,
 					expectedCrewPosition: "FE"
 				),
 
@@ -260,7 +260,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Data",
 					expectedFlight: "",
 					expectedOrg: "960 AACS",
-					expectedRank: Rank.Unknown,
+					expectedGrade: Grade.Unknown,
 					expectedCrewPosition: ""
 				),
 			};
@@ -359,28 +359,28 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			private readonly string _expectedLastName;
 			private readonly string _expectedFlight;
 			private readonly string _expectedOrg;
-			private readonly Rank _expectedRank;
+			private readonly Grade _expectedGrade;
 			private readonly string _expectedCrewPosition;
 
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight, string expectedOrg, Rank expectedRank, string expectedCrewPosition)
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight, string expectedOrg, Grade expectedGrade, string expectedCrewPosition)
 			{
 				_input = input;
 				_expectedFirstName = expectedFirstName;
 				_expectedLastName = expectedLastName;
 				_expectedFlight = expectedFlight;
 				_expectedOrg = expectedOrg;
-				_expectedRank = expectedRank;
+				_expectedGrade = expectedGrade;
 				_expectedCrewPosition = expectedCrewPosition;
 			}
 
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedFlight, out string expectedOrgAlias, out Rank expectedRank, out string expectedCrewPosition)
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedFlight, out string expectedOrgAlias, out Grade expectedGrade, out string expectedCrewPosition)
 			{
 				input = _input;
 				expectedFirstName = _expectedFirstName;
 				expectedLastName = _expectedLastName;
 				expectedFlight = _expectedFlight;
 				expectedOrgAlias = _expectedOrg;
-				expectedRank = _expectedRank;
+				expectedGrade = _expectedGrade;
 				expectedCrewPosition = _expectedCrewPosition;
 			}
 

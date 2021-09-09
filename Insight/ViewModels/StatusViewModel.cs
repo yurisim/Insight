@@ -33,8 +33,10 @@ namespace Insight.ViewModels
 			var peopleToDisplay = peopleToProcess.Select(person => new StatusViewItems
 			{
 				Id = person.Id,
+				Rank = person.Rank,
 				Name = person.Name,
 				SSN = person.SSN,
+
 				CrewPosition = person.CrewPosition,
 				DeploymentStatus = person.DeploymentStatus,
 				DateOnStation = person.DateOnStation,
@@ -69,6 +71,8 @@ namespace Insight.ViewModels
 		public string Name { get; set; }
 
 		public string SSN { get; set; }
+
+		public string Rank { get; set; }
 
 		public string CrewPosition { get; set; }
 

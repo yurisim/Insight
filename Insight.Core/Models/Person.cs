@@ -24,7 +24,12 @@ namespace Insight.Core.Models
 			set => _lastName = value.ToUpperInvariant();
 		}
 
-		public Rank Rank { get; set; }
+		/// <summary>
+		/// This is the correct way to implement Grade/Rank, but because criteria didn't push for anything in particular, will implement lazy way.
+		/// </summary>
+		//public Grade Grade { get; set; }
+
+		public string Rank { get; set; }
 
 		public DeploymentStatus DeploymentStatus { get; set; }
 
