@@ -50,16 +50,14 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			if (FileContents.Count == 0)
-			{
-				return;
-			}
+			//return if contents is empty
+			if (FileContents.Count == 0) return;
 
 			string courseName = FileContents[0].Split(',')[_courseTitleIndex];
 			Course course = base.GetOrCreateCourse(courseName);
 
 			// Parallel.ForEach(FileContents, t =>
-			foreach (var line in FileContents)
+			foreach (string line in FileContents)
 			{
 				string[] splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 				string squadron = splitLine[_pasDescriptionIndex].ToUpper();
@@ -71,10 +69,8 @@ namespace Insight.Core.Services.File
 				// TODO: Exception if person is not found
 				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
 
-				if (foundPerson == null)
-				{
-					continue;
-				}
+				if (foundPerson == null) continue;
+
 				//if (foundPerson.CourseInstances == null)
 				//{
 				//	foundPerson.CourseInstances = new List<CourseInstance>();

@@ -77,9 +77,9 @@ namespace Insight.Core.Services.File
 		/// <param name="File"></param>
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO refact to better handle format changes
 				//Check variables
