@@ -126,7 +126,6 @@ namespace Insight.Core.Services.File
 					return;
 				}
 
-				
 				Org org = insightController.GetOrgByAlias(_squadron);
 
 				//TODO this is here so that org is created. Eventually, the user will have to determine that "960 AACS" is the same as "960 AIRBORNE AIR CTR" to facilitating create orgAliases in database
@@ -153,7 +152,6 @@ namespace Insight.Core.Services.File
 				{
 					continue;
 				}
-
 
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
 

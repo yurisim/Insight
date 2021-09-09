@@ -2,13 +2,13 @@
 
 namespace Insight.Helpers
 {
-    internal static class ResourceExtensions
-    {
-        private static readonly ResourceLoader _resLoader = new ResourceLoader();
+	internal static class ResourceExtensions
+	{
+		private static readonly ResourceLoader _resLoader = new ResourceLoader();
 
-        public static string GetLocalized(this string resourceKey)
-        {
-            return _resLoader.GetString(resourceKey);
-        }
-    }
+		public static string GetLocalized(this string resourceKey)
+		{
+			return _resLoader.GetString(resourceKey);
+		}
+	}
 }

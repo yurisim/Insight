@@ -3,11 +3,8 @@ using Insight.Core.Services.Database;
 using Insight.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using NUnit.Framework;
-using System.Linq;
 using FluentAssertions;
-using System;
 using System.Reflection;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests

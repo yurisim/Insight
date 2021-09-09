@@ -277,12 +277,12 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			private IList<string> _input { get; set; }
-			private string _expectedFirstName { get; set; }
-			private string _expectedLastName { get; set; }
-			private string _m4CourseCompletionExpected { get; set; }
-			private string _m9CourseCompletionExpected { get; set; }
-			private string _expectedEmail { get; set; }
+			private readonly IList<string> _input { get; set; }
+			private readonly string _expectedFirstName { get; set; }
+			private readonly string _expectedLastName { get; set; }
+			private readonly string _m4CourseCompletionExpected { get; set; }
+			private readonly string _m9CourseCompletionExpected { get; set; }
+			private readonly string _expectedEmail { get; set; }
 
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string m4CourseCompletionExpected, string m9CourseCompletionExpected, string expectedEmail)

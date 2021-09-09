@@ -8,37 +8,37 @@ using System.Threading.Tasks;
 
 namespace Insight.ViewModels
 {
-    public class OrganizationsViewModel : ObservableObject
-    {
-        private SampleOrder _selected;
+	public class OrganizationsViewModel : ObservableObject
+	{
+		private SampleOrder _selected;
 
-        public SampleOrder Selected
-        {
-            get { return _selected; }
-            set { SetProperty(ref _selected, value); }
-        }
+		public SampleOrder Selected
+		{
+			get { return _selected; }
+			set { SetProperty(ref _selected, value); }
+		}
 
-        public ObservableCollection<SampleOrder> SampleItems { get; private set; } = new ObservableCollection<SampleOrder>();
+		public ObservableCollection<SampleOrder> SampleItems { get; private set; } = new ObservableCollection<SampleOrder>();
 
-        public OrganizationsViewModel()
-        {
-        }
+		public OrganizationsViewModel()
+		{
+		}
 
-        public async Task LoadDataAsync(ListDetailsViewState viewState)
-        {
-            SampleItems.Clear();
+		public async Task LoadDataAsync(ListDetailsViewState viewState)
+		{
+			SampleItems.Clear();
 
-            System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetListDetailDataAsync();
+			System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetListDetailDataAsync();
 
-            foreach (SampleOrder item in data)
-            {
-                SampleItems.Add(item);
-            }
+			foreach (SampleOrder item in data)
+			{
+				SampleItems.Add(item);
+			}
 
-            if (viewState == ListDetailsViewState.Both)
-            {
-                Selected = SampleItems.First();
-            }
-        }
-    }
+			if (viewState == ListDetailsViewState.Both)
+			{
+				Selected = SampleItems.First();
+			}
+		}
+	}
 }

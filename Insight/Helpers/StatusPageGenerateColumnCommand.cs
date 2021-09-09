@@ -38,7 +38,7 @@ namespace Insight.Helpers
 		{
 			var context = parameter as GenerateColumnContext;
 			//If column name has "Expiration" or "Date" in it, set date format. Otherwise sets it to a text column
-			if (context.PropertyName.Contains("Expiration",StringComparison.CurrentCultureIgnoreCase) || context.PropertyName.Contains("Date", StringComparison.CurrentCultureIgnoreCase))
+			if (context.PropertyName.Contains("Expiration", StringComparison.CurrentCultureIgnoreCase) || context.PropertyName.Contains("Date", StringComparison.CurrentCultureIgnoreCase))
 			{
 				DataGridDateColumn column = new DataGridDateColumn();
 				column.CellContentFormat = "{0: MM/dd/yyyy}";

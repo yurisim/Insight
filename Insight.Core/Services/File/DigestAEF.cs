@@ -10,9 +10,7 @@ namespace Insight.Core.Services.File
 	public class DigestAEF : AbstractDigest, IDigest
 	{
 		private int NameIndex = -1;
-		private int PayGradeIndex = -1;
 		private int UnitIndex = -1;
-		private int AFSCIndex = -1;
 		private int PersonnelOverallStatusIndex = -1;
 		private int MedicalOverallStatusIndex = -1;
 		private int TrainingOverallStatusIndex = -1;
@@ -44,7 +42,7 @@ namespace Insight.Core.Services.File
 				{
 					//FOUO/CUI warnings have been removed, checks that the current line is not the export description.
 					//If all of those things have been eliminated, it must be the column header's line
-					if(!lineToUpper.Contains("EXPORT DESCRIPTION: "))
+					if (!lineToUpper.Contains("EXPORT DESCRIPTION: "))
 					{
 						SetColumnIndexes(splitLine);
 						headersProcessed = true;
@@ -67,9 +65,7 @@ namespace Insight.Core.Services.File
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
 			NameIndex = Array.IndexOf(columnHeaders, "NAME");
-			PayGradeIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
 			UnitIndex = Array.IndexOf(columnHeaders, "UNIT");
-			AFSCIndex = Array.IndexOf(columnHeaders, "AFSC");
 			PersonnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
 			MedicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
 			TrainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");

@@ -1,11 +1,11 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Insight.ViewModels;
+﻿using Insight.Core.Services.File;
 using Insight.Helpers;
-using Insight.Core.Services.File;
+using Insight.ViewModels;
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Insight.Views
 {

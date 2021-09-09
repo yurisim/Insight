@@ -1,8 +1,5 @@
 ﻿using Insight.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace Insight.Core.Helpers
 {
@@ -15,7 +12,7 @@ namespace Insight.Core.Helpers
 		/// <returns></returns>
 		public static string ConvertToTitleCase(string improperCase)
 		{
-			if(improperCase == null)
+			if (improperCase == null)
 			{
 				return null;
 			}

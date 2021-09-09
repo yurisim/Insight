@@ -1,10 +1,10 @@
-﻿using Insight.Core.Services.Database;
+﻿using FluentAssertions;
+using Insight.Core.Models;
 using Insight.Core.Services;
+using Insight.Core.Services.Database;
+using Insight.Core.Services.File;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using Insight.Core.Services.File;
-using Insight.Core.Models;
-using FluentAssertions;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 {
