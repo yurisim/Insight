@@ -41,7 +41,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 				new() { FirstName = "Hacob", LastName = "Smith" },
 				new() { FirstName = "Constantine", LastName = "Quintrell" },
 				new() { FirstName = "Annabell", LastName = "Turner" },
-				new() { FirstName = "Graham", LastName = "Soyer" },
+				new() { FirstName = "Graham", LastName = "Soyer" , SSN = "123456789" },
 			};
 
 			foreach (var person in persons)

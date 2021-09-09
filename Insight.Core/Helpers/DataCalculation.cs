@@ -11,16 +11,17 @@ namespace Insight.Core.Helpers
 		/// </summary>
 		/// <param name="persons"></param>
 		/// <returns></returns>
-		public static decimal GetReadinessPercentage(List<Person> persons)
+		public static decimal GetReadinessPercentage(IList<Person> persons)
 		{
-			if (persons.Count == 0) return 1;
+			//return 1 if list is null or empty
+			if (persons?.Any() != true) return 1;
 
 			var validStatus = new List<Status>() { Status.Current, Status.Upcoming };
 
 			decimal numValid = persons.Count(p =>
-				validStatus.Contains(p.Medical.OverallStatus) &&
-				validStatus.Contains(p.Personnel.OverallStatus) &&
-				validStatus.Contains(p.Training.OverallStatus));
+				validStatus.Contains((p.Medical?.OverallStatus).GetValueOrDefault()) &&
+				validStatus.Contains((p.Personnel?.OverallStatus).GetValueOrDefault()) &&
+				validStatus.Contains((p.Training?.OverallStatus).GetValueOrDefault()));
 			return numValid / persons.Count;
 		}
 
@@ -29,9 +30,10 @@ namespace Insight.Core.Helpers
 		/// </summary>
 		/// <param name="persons"></param>
 		/// <returns></returns>
-		public static (decimal, decimal, decimal) GetReadinessPerctageByCategory(List<Person> persons)
+		public static (decimal, decimal, decimal) GetReadinessPerctageByCategory(IList<Person> persons)
 		{
-			if (persons.Count == 0) return (1m, 1m, 1m);
+			//return if list is null or empty
+			if (persons?.Any() != true) return (1m, 1m, 1m);
 
 			var validStatus = new List<Status>() { Status.Current, Status.Upcoming };
 
