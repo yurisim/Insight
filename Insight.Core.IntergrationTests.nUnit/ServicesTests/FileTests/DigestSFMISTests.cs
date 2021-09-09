@@ -62,8 +62,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var m4Couse = insightController.GetCourseByName("M4 RIFLE/CARBINE GROUP C AFQC");
-			var m9Couse = insightController.GetCourseByName("M9 HG AFQC (INITIAL/RECURRING)");
+			var m4Couse = insightController.GetCourseByName("M4 RIFLE/CARBINE GROUP C AFQC").Result;
+			var m9Couse = insightController.GetCourseByName("M9 HG AFQC (INITIAL/RECURRING)").Result;
 
 			//assert
 			using (new AssertionScope())

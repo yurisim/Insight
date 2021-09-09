@@ -61,7 +61,7 @@ namespace Insight.Core.Services.File
 		/// </summary>
 		protected Course GetOrCreateCourse(string name)
 		{
-			Course course = insightController.GetCourseByName(name);
+			Course course = insightController.GetCourseByName(name).Result;
 
 			//if a course for passed name already exists, return it
 			if (course != null) { return course; }

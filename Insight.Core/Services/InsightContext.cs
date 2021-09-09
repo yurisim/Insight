@@ -23,6 +23,8 @@ namespace Insight.Core.Services
 
 		public DbSet<Org> Orgs { get; set; }
 
+		public DbSet<GradeAlias> GradeAliases { get; set; }
+
 		public DbSet<OrgAlias> OrgAliases { get; set; }
 
 		public DbSet<Person> Persons { get; set; }
@@ -53,6 +55,8 @@ namespace Insight.Core.Services
 			modelBuilder.Entity<Personnel>().ToTable("Personnels");
 			modelBuilder.Entity<Org>().ToTable("Orgs");
 			modelBuilder.Entity<OrgAlias>().ToTable("OrgAliases");
+			modelBuilder.Entity<GradeAlias>().ToTable("GradeAliases");
+
 			modelBuilder.Entity<Person>().ToTable("Persons");
 			modelBuilder.Entity<PEX>().ToTable("PEXs");
 			modelBuilder.Entity<TBA>().ToTable("TBAs");
@@ -73,26 +77,6 @@ namespace Insight.Core.Services
 				.Property(entity => entity.Id)
 				.ValueGeneratedOnAdd();
 
-			//modelBuilder.Entity<Medical>()
-			//    .Property(entity => entity.PersonId)
-			//    .ValueGeneratedOnAdd();
-
-			//modelBuilder.Entity<Training>()
-			//    .Property(entity => entity.Id)
-			//    .ValueGeneratedOnAdd();
-
-			//modelBuilder.Entity<Personnel>()
-			//    .Property(entity => entity.Id)
-			//    .ValueGeneratedOnAdd();
-
-			//modelBuilder.Entity<Org>()
-			//	.Property(entity => entity.Id)
-			//	.ValueGeneratedOnAdd();
-
-			//modelBuilder.Entity<OrgAlias>()
-			//	.Property(entity => entity.Id)
-			//	.ValueGeneratedOnAdd();
-
 			modelBuilder.Entity<PEX>()
 				.Property(entity => entity.Id)
 				.ValueGeneratedOnAdd();
@@ -101,34 +85,9 @@ namespace Insight.Core.Services
 			   .Property(entity => entity.Id)
 				.ValueGeneratedOnAdd();
 
-			// TODO Write custom exception to deal w/ duplicate DoDIDs
-			//modelBuilder.Entity<Person>()
-			//    .HasIndex(b => b.DoDID)
-			//    .IsUnique(true);
-
-			//modelBuilder.Entity<Medical>()
-			//    .HasIndex(b => b.Id)
-			//    .IsUnique(true);
-
-			// Configured ono-to-one relationship between Person and Medical
-			//modelBuilder.Entity<Person>()
-			//  .HasOne(person => person.Medical)
-			//  .WithOne(medical => medical.Person)
-			//  .HasForeignKey<Medical>(medical => medical.Id);
-
-			// Configured ono-to-one relationship between Person and Training
-			//modelBuilder.Entity<Person>()
-			//  .HasOne(p => p.Training)
-			//  .WithOne(p => p.Person)
-			//  .HasForeignKey<Training>(m => m.Id);
-
-			//// Configured ono-to-one relationship between Person and Personnel
-			//modelBuilder.Entity<Person>()
-			//  .HasOne(p => p.Personnel)
-			//  .WithOne(p => p.Person)
-			//  .HasForeignKey<Personnel>(m => m.Id);
-
 			base.OnModelCreating(modelBuilder);
+
+
 		}
 	}
 }

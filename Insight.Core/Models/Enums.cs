@@ -26,7 +26,7 @@
 		Deployed,
 	}
 
-	public enum Rank
+	public enum Grade
 	{
 		Unknown,
 		E1,

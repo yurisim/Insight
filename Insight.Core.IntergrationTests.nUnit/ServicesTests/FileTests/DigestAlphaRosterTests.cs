@@ -123,7 +123,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"John",
 					"Smith",
 					"123456789",
-					Rank.E3,
+					Grade.E3,
 					"-3D034",
 					"-3D034",
 					"3D054",
@@ -141,7 +141,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"John",
 					"Smith",
 					"123456789",
-					Rank.E3,
+					Grade.E3,
 					"-3D034",
 					"-3D034",
 					"3D054",
@@ -171,20 +171,20 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			private readonly string _expectedFirstName;
 			private readonly string _expectedLastName;
 			private readonly string _expectedSSN;
-			private readonly Rank _expectedRank;
+			private readonly Grade _expectedGrade;
 			private readonly string _expectedDAFSC;
 			private readonly string _expectedCAFSC;
 			private readonly string _expectedPAFSC;
 			private readonly string _expectedPhone;
 			private readonly DateTime _expectedDateOnStation;
 
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedSSN, Rank expectedRank, string expectedDAFSC, string expectedCAFSC, string expectedPAFSC, string expectedPhone, DateTime expectedDateOnStation)
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedSSN, Grade expectedGrade, string expectedDAFSC, string expectedCAFSC, string expectedPAFSC, string expectedPhone, DateTime expectedDateOnStation)
 			{
 				_input = input;
 				_expectedFirstName = expectedFirstName;
 				_expectedLastName = expectedLastName;
 				_expectedSSN = expectedSSN;
-				_expectedRank = expectedRank;
+				_expectedGrade = expectedGrade;
 				_expectedDAFSC = expectedDAFSC;
 				_expectedCAFSC = expectedCAFSC;
 				_expectedPAFSC = expectedPAFSC;
@@ -192,13 +192,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				_expectedDateOnStation = expectedDateOnStation;
 			}
 
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedSSN, out Rank expectedRank, out string expectedDAFSC, out string expectedCAFSC, out string expectedPAFSC, out string expectedPhone, out DateTime expectedDateOnStation)
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedSSN, out Grade expectedGrade, out string expectedDAFSC, out string expectedCAFSC, out string expectedPAFSC, out string expectedPhone, out DateTime expectedDateOnStation)
 			{
 				input = _input;
 				expectedFirstName = _expectedFirstName;
 				expectedLastName = _expectedLastName;
 				expectedSSN = _expectedSSN;
-				expectedRank = _expectedRank;
+				expectedGrade = _expectedGrade;
 				expectedDAFSC = _expectedDAFSC;
 				expectedCAFSC = _expectedCAFSC;
 				expectedPAFSC = _expectedPAFSC;

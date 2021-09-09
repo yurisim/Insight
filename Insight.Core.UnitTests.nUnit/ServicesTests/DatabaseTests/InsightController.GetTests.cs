@@ -33,7 +33,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		public void GetCourseInstanceTest()
 		{
 			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
-			var course = controller.GetCourseByName("Underwater Basket Weaving");
+			var course = controller.GetCourseByName("Underwater Basket Weaving").Result;
 
 			var shouldExist = new CourseInstance()
 			{
