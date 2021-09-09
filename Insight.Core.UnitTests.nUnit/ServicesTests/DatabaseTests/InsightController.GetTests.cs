@@ -2,6 +2,7 @@
 using Insight.Core.Models;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -32,7 +33,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		public void GetCourseInstanceTest()
 		{
 			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
-			var course = controller.GetCourseByName("Underwater Basket Weaving");
+			var course = controller.GetCourseByName("Underwater Basket Weaving").Result;
 
 			var shouldExist = new CourseInstance()
 			{
@@ -47,6 +48,27 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			var parsedCourse = controller.GetCourseInstance(shouldExist).Result;
 
 			parsedCourse.Completion.Should().Be(DateTime.Today.AddHours('5'));
+		}
+
+		[Test]
+		public void GetOrgByAliasTests()
+		{
+			//arrange
+			string orgName = "random org name";
+			string orgAliasName = "this is my org alias";
+
+			var orgToAdd = new Org { Name = "random org name", Aliases = new List<OrgAlias>() };
+			var orgAliasesToAdd = new OrgAlias { Name = orgAliasName, Org = orgToAdd };
+
+			orgToAdd.Aliases.Add(orgAliasesToAdd);
+
+			controller.Add(orgToAdd);
+
+			//act
+			var orgAliasFromDB = controller.GetOrgByAlias(orgAliasName).Result;
+
+			//assert
+			orgAliasFromDB.Name.Should().Be(orgName.ToUpper());
 		}
 	}
 }

@@ -62,8 +62,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var m4Couse = insightController.GetCourseByName("M4 RIFLE/CARBINE GROUP C AFQC");
-			var m9Couse = insightController.GetCourseByName("M9 HG AFQC (INITIAL/RECURRING)");
+			var m4Couse = insightController.GetCourseByName("M4 RIFLE/CARBINE GROUP C AFQC").Result;
+			var m9Couse = insightController.GetCourseByName("M9 HG AFQC (INITIAL/RECURRING)").Result;
 
 			//assert
 			using (new AssertionScope())
@@ -129,10 +129,10 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			}
 		}
 
-		//[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectZeroPersonsTestCases))]
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectZeroPersonsTestCases))]
 		public void DigestSFMISTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
-			var (input, expectedOrg) = testCaseParameters;
+			var (input, _) = testCaseParameters;
 
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
@@ -145,38 +145,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var org = insightController.GetOrgByAlias(expectedOrg);
-			var orgs = insightController.GetAll<Org>().Result;
-
-			//assert
-			using (new AssertionScope())
-			{
-				detectedFileType.Should().Be(FileType.SFMIS);
-				digest.Should().BeOfType<DigestSFMIS>();
-
-				orgs.Count.Should().Be(1);
-				allPersons.Count.Should().Be(0);
-				org.Should().NotBeNull();
-			}
-		}
-
-		//[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_InvalidSquadronTestCases))]
-		public void DigestSFMISTest_InvalidSquadron(TestCaseObject testCaseParameters)
-		{
-			(IList<string> input, _) = testCaseParameters;
-
-			//arrange
-			FileType detectedFileType = Detector.DetectFileType(input);
-
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
-
-			//act
-			digest.CleanInput();
-			digest.DigestLines();
-
-			//arrange 2.0
-			var allPersons = insightController.GetAll<Person>().Result;
-			var orgs = insightController.GetAll<Org>().Result;
+			var allCourses = insightController.GetAll<Course>().Result;
+			var allCourseInstances = insightController.GetAll<CourseInstance>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -185,7 +155,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				digest.Should().BeOfType<DigestSFMIS>();
 
 				allPersons.Count.Should().Be(0);
-				orgs.Count.Should().Be(0);
+				allCourses.Count.Should().Be(0);
+				allCourseInstances.Count.Should().Be(0);
 			}
 		}
 
@@ -262,6 +233,43 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedEmail : "neil.chapman.2@us.af.mil"
 				),
 			};
+
+			public static object[] DigestSFMIS_ExpectZeroPersonsTestCases =
+			{
+				//test case - no email
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,,,,,",
+						"Export Description:  SFMISRoster,,,,,,,,,,,,,,,,,,,,",
+						"Name,Unit,PasCode,AEFI,AFSC,PayGrade,Email,Email4Career,Gender,DutyStatus,SecurityClearance,Security_Status,Security_Expire,TrainingNeeds,Course,Weapon_Model,Course_ID,Completion_Date,Expire_Date,Qualification,Arming_Group",
+						"ALSOP SOPHIE JANE,960 AIRBORNE AIR CTRL SQ (FFDFP0),TE1CFDFP,YR,013B3B,E2,,,F,TDY CONTGENCY,SCI(DCID 1/14 ELIGIBLE) - expires 24Jan24,expires,24-JAN-24,,M9 HG AFQC (INITIAL/RECURRING),M9,219882,2021-04-26,2022-04-30,QUALIFIED,",
+					},
+					""
+				),
+				//test case - no email
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,,,,,",
+						"Export Description:  SFMISRoster,,,,,,,,,,,,,,,,,,,,",
+						"Name,Unit,PasCode,AEFI,AFSC,PayGrade,Email,Email4Career,Gender,DutyStatus,SecurityClearance,Security_Status,Security_Expire,TrainingNeeds,Course,Weapon_Model,Course_ID,Completion_Date,Expire_Date,Qualification,Arming_Group",
+						"ALSOP SOPHIE JANE,960 AIRBORNE AIR CTRL SQ (FFDFP0),TE1CFDFP,YR,013B3B,E2,email@dne.com,email@dne.com,F,TDY CONTGENCY,SCI(DCID 1/14 ELIGIBLE) - expires 24Jan24,expires,24-JAN-24,,M9 HG AFQC (INITIAL/RECURRING),M9,219882,2021-04-26,2022-04-30,QUALIFIED,",
+					},
+					""
+				),
+				//test case - no email
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,,,,,",
+						"Export Description:  SFMISRoster,,,,,,,,,,,,,,,,,,,,",
+						"Name,Unit,PasCode,AEFI,AFSC,PayGrade,Email,Email4Career,Gender,DutyStatus,SecurityClearance,Security_Status,Security_Expire,TrainingNeeds,Course,Weapon_Model,Course_ID,Completion_Date,Expire_Date,Qualification,Arming_Group",
+						"ALSOP SOPHIE JANE,960 AIRBORNE AIR CTRL SQ (FFDFP0),TE1CFDFP,YR,013B3B,E2,garbage,garbage,F,TDY CONTGENCY,SCI(DCID 1/14 ELIGIBLE) - expires 24Jan24,expires,24-JAN-24,,M9 HG AFQC (INITIAL/RECURRING),M9,219882,2021-04-26,2022-04-30,QUALIFIED,",
+					},
+					""
+				),
+			};
 		}
 
 		/// <summary>
@@ -284,7 +292,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				_m4CourseCompletionExpected = m4CourseCompletionExpected;
 				_m9CourseCompletionExpected = m9CourseCompletionExpected;
 				_expectedEmail = expectedEmail;
-
 			}
 
 			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string m4CourseCompletionExpected, out string m9CourseCompletionExpected, out string email)

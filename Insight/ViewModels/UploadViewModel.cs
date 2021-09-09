@@ -21,8 +21,6 @@ namespace Insight.ViewModels
 
 		public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
 
-
-
 		public UploadViewModel()
 		{
 

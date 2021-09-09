@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Insight.Core.Services.Database
 {
@@ -96,25 +97,20 @@ namespace Insight.Core.Services.Database
 			return foundInstance;
 		}
 
-		public Course GetCourseByName(string courseName)
+		[ItemCanBeNull]
+		public async Task<Course> GetCourseByName(string courseName)
 		{
 			// now try to find the course with the name
-			Course foundCourse = null;
+			Task<Course> foundCourse= null;
 
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundCourses = insightContext.Courses.Where(course => course.Name == courseName)
-						.Include(course => course.CourseInstances);
-
-					//TODO implement better exceptions
-					if (foundCourses.Count() > 1)
-					{
-						throw new Exception("Too many found, should be null or 1");
-					}
-
-					foundCourse = foundCourses.FirstOrDefault();
+					foundCourse = insightContext.Courses
+						.Where(course => course.Name == courseName)
+						.Include(course => course.CourseInstances)
+						.FirstOrDefaultAsync();
 				}
 			}
 			//TODO implement exception
@@ -124,7 +120,8 @@ namespace Insight.Core.Services.Database
 			}
 
 			//returns person or null if none exist
-			return foundCourse;
+			// ReSharper disable once PossibleNullReferenceException
+			return await foundCourse;
 		}
 
 		/// <summary>
@@ -133,36 +130,28 @@ namespace Insight.Core.Services.Database
 		/// <param alias="alias"></param>
 		/// <param name="alias"></param>
 		/// <returns></returns>
-		public Org GetOrgByAlias(string alias)
+		[ItemCanBeNull]
+		public async Task<Org> GetOrgByAlias(string alias)
 		{
-			var orgs = new List<Org>();
-
-			Org org = null;
+			Task<Org> org;
 
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					orgs = insightContext.OrgAliases
-						.Where(x => x.Name == alias.ToUpper())?
-						.Select(x => x.Org).ToList();
-					//TODO implement exception
-					if (orgs.Count > 1)
-					{
-						throw new Exception("Too many Aliases found, count should not be greater than 1");
-					}
-
-					org = orgs.FirstOrDefault();
+					org = insightContext.OrgAliases
+						.Where(x => x.Name == alias.ToUpper())
+						.Select(x => x.Org).FirstOrDefaultAsync();
 				}
-
 			}
 			//TODO implement exception
 			catch (Exception e)
 			{
 				throw new Exception("Insight.db access error");
 			}
+
 			//returns org or null if none exist
-			return org;
+			return await org;
 		}
 
 		/// <summary>
