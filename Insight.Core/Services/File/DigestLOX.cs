@@ -106,9 +106,9 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO handle column mising (index of -1)
 				//need to make sure these are trimmed after quotes are removed

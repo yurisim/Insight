@@ -50,9 +50,9 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				// short name of person, format is "SmithJ" if name is "John Smith"
 				string shortName = splitLine[_shortNameIndex];
@@ -64,17 +64,12 @@ namespace Insight.Core.Services.File
 				// Find all people who have the short Name
 				var foundPerson = insightController.GetPersonByShortName(shortName);
 
-				if (foundPerson == null)
-				{
-					//TODO handle unfound person
-				}
-				else
-				{
-					// try to find the PEX Account
-					foundPerson.Flight = pexName;
+				if (foundPerson == null) continue;
+				
+				// try to find the PEX Account
+				foundPerson.Flight = pexName;
 
-					insightController.Update(foundPerson);
-				}
+				insightController.Update(foundPerson);
 			}
 		}
 	}

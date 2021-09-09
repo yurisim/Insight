@@ -73,9 +73,9 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				//a valid email is of the format firstname.lastname@domain.com
 				//optionally with '.#' after lastname or an underscore in last name (representing hyphenated last names).
@@ -97,35 +97,30 @@ namespace Insight.Core.Services.File
 
 				Person person = insightController.GetPersonByName(firstName, lastName).Result;
 
-				if (person == null)
-				{
-					//TODO handle null person
-				}
-				else
-				{
-					person.Email = splitLine[_emailIndex];
-					insightController.Update(person);
+				if (person == null) continue;
 
-					//CATM course is not empty
-					if (splitLine[_catmCourseNameIndex] != "")
+				person.Email = splitLine[_emailIndex];
+				insightController.Update(person);
+
+				//CATM course is not empty
+				if (splitLine[_catmCourseNameIndex] != "")
+				{
+					Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
+					DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
+					DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
+
+					CourseInstance courseInstance = new CourseInstance()
 					{
-						Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
-						DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
-						DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
+						Course = catmCourse,
+						Person = person,
+						Completion = catmCompletionDate,
+						Expiration = catmExperationDate
 
-						CourseInstance courseInstance = new CourseInstance()
-						{
-							Course = catmCourse,
-							Person = person,
-							Completion = catmCompletionDate,
-							Expiration = catmExperationDate
+						// TODO: Make custom expiration by JSON object
+						//Expiration = DateTime.Parse(completionDate).AddYears(1)
+					};
 
-							// TODO: Make custom expiration by JSON object
-							//Expiration = DateTime.Parse(completionDate).AddYears(1)
-						};
-
-						insightController.AddCourseInstance(courseInstance, catmCourse, person);
-					}
+					insightController.AddCourseInstance(courseInstance, catmCourse, person);
 				}
 			}
 		}
