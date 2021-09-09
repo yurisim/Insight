@@ -58,13 +58,14 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var course = insightController.GetCourseByName(courseName: expectedCourseName);
+			var course = insightController.GetCourseByName(courseName: expectedCourseName).Result;
 			CourseInstance courseInstanceToCheck = new CourseInstance()
 			{
 				Person = person,
 				Course = course,
 				Completion = expectedCourseCompletion,
-				Expiration = expectedCourseCompletion.AddDays(course.Interval * 365)
+				// in case the course is null, the null operator just sets it to 1 year expiration by default
+				Expiration = expectedCourseCompletion.AddDays((course?.Interval ?? 1) * 365)
 			};
 			CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
 
@@ -108,7 +109,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			var allPersons = insightController.GetAll<Person>().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
 			var courses = insightController.GetAll<Course>().Result;
-			var course = insightController.GetCourseByName(expectedCourseName);
+			var course = insightController.GetCourseByName(expectedCourseName).Result;
 
 			//assert
 			using (new AssertionScope())

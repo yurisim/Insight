@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Insight.Core.Models;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.Database
 {
@@ -103,7 +101,7 @@ namespace Insight.Core.Services.Database
 		public async Task<Course> GetCourseByName(string courseName)
 		{
 			// now try to find the course with the name
-			Task<Course> foundCourse;
+			Task<Course> foundCourse= null;
 
 			try
 			{
@@ -122,7 +120,8 @@ namespace Insight.Core.Services.Database
 			}
 
 			//returns person or null if none exist
-			return foundCourse;
+			// ReSharper disable once PossibleNullReferenceException
+			return await foundCourse;
 		}
 
 		/// <summary>
