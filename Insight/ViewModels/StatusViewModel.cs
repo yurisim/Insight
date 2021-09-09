@@ -1,15 +1,13 @@
 ﻿using Insight.Core.Models;
-using Insight.Core.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Insight.Core.Services.Database;
-using Windows.Networking;
-using System.Linq;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Insight.ViewModels
 {
@@ -31,7 +29,6 @@ namespace Insight.ViewModels
 
 			// Get the person objects needed
 			var peopleToProcess = await controller.GetAllPersons();
-
 
 			var peopleToDisplay = peopleToProcess.Select(person => new StatusViewItems
 			{

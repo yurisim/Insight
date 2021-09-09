@@ -262,16 +262,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedEmail : "neil.chapman.2@us.af.mil"
 				),
 			};
-
-			public static object[] DigestSFMIS_ExpectZeroPersonsTestCases =
-			{
-
-			};
-
-			public static object[] DigestSFMIS_InvalidSquadronTestCases =
-			{
-
-			};
 		}
 
 		/// <summary>
@@ -279,18 +269,12 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
-
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			string _m4CourseCompletionExpected { get; set; }
-
-			string _m9CourseCompletionExpected { get; set; }
-
-			string _expectedEmail { get; set; }
-
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly string _m4CourseCompletionExpected;
+			private readonly string _m9CourseCompletionExpected;
+			private readonly string _expectedEmail;
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string m4CourseCompletionExpected, string m9CourseCompletionExpected, string expectedEmail)
 			{
@@ -322,7 +306,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			public void Deconstruct(out IList<string> input, out string email)
 			{
 				input = _input;
-				email = _expectedEmail ;
+				email = _expectedEmail;
 			}
 		}
 	}

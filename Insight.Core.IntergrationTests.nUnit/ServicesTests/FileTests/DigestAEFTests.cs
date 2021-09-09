@@ -215,17 +215,12 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
-
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			Status _expectedTrainingOverallStatus { get; set; }
-
-			Status _expectedMedicalOverallStatus { get; set; }
-
-			Status _expectedPersonnelOverallStatus { get; set; }
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly Status _expectedTrainingOverallStatus;
+			private readonly Status _expectedMedicalOverallStatus;
+			private readonly Status _expectedPersonnelOverallStatus;
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, Status expectedTrainingOverallStatus, Status expectedMedicalOverallStatus, Status expectedPersonnelOverallStatus)
 			{
@@ -250,6 +245,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			public TestCaseObject(IList<string> input, string throwaway)
 			{
 				_input = input;
+				_ = throwaway;
 			}
 
 			public void Deconstruct(out IList<string> input, out string throwaway)

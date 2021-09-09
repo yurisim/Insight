@@ -14,18 +14,18 @@
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
-    <StackPanel x:Name="ContentArea">
-        <winui:InfoBar
+	<StackPanel x:Name="ContentArea">
+		<winui:InfoBar
            Padding="{StaticResource MediumLeftTopRightBottomMargin}"
             IsOpen="True"
             Severity="Error"
             Title="Update Data"
             Message="This is either your first time running this application or you have not updated your Unit's files for some time. Please navigate to the Upload page and update your documents!">
-            <winui:InfoBar.ActionButton>
-                <Button Content="Upload" Command="{x:Bind ViewModel.UploadPageCommand}"/>
-            </winui:InfoBar.ActionButton>
-        </winui:InfoBar>
-        <controls:AdaptiveGridView
+			<winui:InfoBar.ActionButton>
+				<Button Content="Upload" Command="{x:Bind ViewModel.UploadPageCommand}"/>
+			</winui:InfoBar.ActionButton>
+		</winui:InfoBar>
+		<controls:AdaptiveGridView
             Padding="{StaticResource MediumLeftRightMargin}"
             animations:Connected.ListItemElementName="itemThumbnail"
             animations:Connected.ListItemKey="animationKeyOverview"
@@ -34,28 +34,28 @@
             IsItemClickEnabled="True"
             SelectionMode="None"
             StretchContentForSingleRow="False">
-            <!--<controls:AdaptiveGridView.ItemTemplate>
+			<!--<controls:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="models:SampleOrder">-->
-            <Grid x:Name="itemThumbnail"
+			<Grid x:Name="itemThumbnail"
                         Padding="{StaticResource XSmallLeftTopRightBottomMargin}"
                         Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" PointerPressed="StackPanel_PointerPressed" Grid.Column="0">
-                    <SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="2" ScaleY="2"/>
-                        </SymbolIcon.RenderTransform>
-                    </SymbolIcon>
+				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" PointerPressed="StackPanel_PointerPressed" Grid.Column="0">
+					<SymbolIcon Symbol="Home" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+						<SymbolIcon.RenderTransform>
+							<CompositeTransform ScaleX="2" ScaleY="2"/>
+						</SymbolIcon.RenderTransform>
+					</SymbolIcon>
 
-                    <TextBlock Margin="{StaticResource XXSmallTopMargin}"
+					<TextBlock Margin="{StaticResource XXSmallTopMargin}"
                                 HorizontalAlignment="Center"
                                 Text="960 AACS"
 							   Tag="OrgBlock"
                                 Style="{ThemeResource BodyTextStyle}" VerticalAlignment="Center" />
-                </StackPanel>
-				
+				</StackPanel>
+
 			</Grid>
-            <!--</DataTemplate>
+			<!--</DataTemplate>
             </controls:AdaptiveGridView.ItemTemplate>-->
-        </controls:AdaptiveGridView>
-    </StackPanel>
+		</controls:AdaptiveGridView>
+	</StackPanel>
 </Page>

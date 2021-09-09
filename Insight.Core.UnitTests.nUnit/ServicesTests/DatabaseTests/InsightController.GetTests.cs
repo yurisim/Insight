@@ -2,10 +2,6 @@
 using Insight.Core.Models;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -14,8 +10,6 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		[Test]
 		public void GetNullCourseInstance()
 		{
-			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
-
 			var shouldNotExist = new CourseInstance()
 			{
 				Completion = DateTime.Today,

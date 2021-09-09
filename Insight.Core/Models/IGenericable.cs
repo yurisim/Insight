@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Insight.Core.Models
+﻿namespace Insight.Core.Models
 {
 	/// <summary>
 	/// This interface is used so that we can flag which models can be searched with generic methods

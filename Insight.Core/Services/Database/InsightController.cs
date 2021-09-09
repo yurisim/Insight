@@ -1,10 +1,6 @@
 ﻿using Insight.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace Insight.Core.Services.Database
 {
@@ -12,7 +8,7 @@ namespace Insight.Core.Services.Database
 
 	public partial class InsightController
 	{
-		private DbContextOptions<InsightContext> _dbContextOptions;
+		private readonly DbContextOptions<InsightContext> _dbContextOptions;
 
 		public InsightController(DbContextOptions<InsightContext> dbContextOptions)
 		{

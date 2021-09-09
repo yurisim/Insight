@@ -24,7 +24,8 @@ namespace Insight.Core.Models
 		/// <summary>
 		/// Duty AFSC
 		/// </summary>
-		public string DAFSC {
+		public string DAFSC
+		{
 			get => _dafsc;
 			set => _dafsc = value.ToUpper();
 		}
