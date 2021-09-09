@@ -37,7 +37,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAlphaRoster_ExpectOnePersonsTestCases))]
 		public void DigestLOXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
-			var (input, expectedFirstName, expectedLastName, expectedSSN, expectedRank, expectedDAFSC, expectedCAFSC, expectedPAFSC, expectedDateOnStation) = testCaseParameters;
+			var (input, expectedFirstName, expectedLastName, expectedSSN, expectedRank, expectedDAFSC, expectedCAFSC, expectedPAFSC, expectedHomePhone, expectedDateOnStation) = testCaseParameters;
 
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
@@ -68,7 +68,9 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				allPersons.Count.Should().Be(1);
 				person.Should().NotBeNull();
 
+				person.DateOnStation.Should().Be(expectedDateOnStation);
 				person.SSN.Should().Be(expectedSSN);
+				person.HomePhone.Should().Be(expectedHomePhone);
 				//TODO test rank once it's implemented
 				//person.Rank.Should().Be(expectedRank);
 				person.AFSC.DAFSC.Should().Be(expectedDAFSC);
@@ -125,7 +127,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"-3D034",
 					"-3D034",
 					"3D054",
-					"5039155972"
+					"5039155972",
+					DateTime.Parse("10-JUN-2020")
 				),
 
 				//test case - lower case AFSC input, no SSN dashes
@@ -142,7 +145,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"-3D034",
 					"-3D034",
 					"3D054",
-					"5039155972"
+					"5039155972",
+					DateTime.Parse("10-JUN-2020")
 				),
 			};
 
@@ -155,8 +159,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						},
 					"" // throwaway second paremeter since you can't deconstruct to a single object
 					),
-
-				
 			};
 		}
 
@@ -165,25 +167,18 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly string _expectedSSN;
+			private readonly Rank _expectedRank;
+			private readonly string _expectedDAFSC;
+			private readonly string _expectedCAFSC;
+			private readonly string _expectedPAFSC;
+			private readonly string _expectedPhone;
+			private readonly DateTime _expectedDateOnStation;
 
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			string _expectedSSN { get; set; }
-
-			Rank _expectedRank { get; set; }
-
-			string _expectedDAFSC { get; set; }
-
-			string _expectedCAFSC { get; set; }
-
-			string _expectedPAFSC { get; set; }
-
-			string _expectedPhone { get; set; }
-
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedSSN, Rank expectedRank, string expectedDAFSC, string expectedCAFSC, string expectedPAFSC, string expectedPhone)
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedSSN, Rank expectedRank, string expectedDAFSC, string expectedCAFSC, string expectedPAFSC, string expectedPhone, DateTime expectedDateOnStation)
 			{
 				_input = input;
 				_expectedFirstName = expectedFirstName;
@@ -194,9 +189,10 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				_expectedCAFSC = expectedCAFSC;
 				_expectedPAFSC = expectedPAFSC;
 				_expectedPhone = expectedPhone;
+				_expectedDateOnStation = expectedDateOnStation;
 			}
 
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedSSN, out Rank expectedRank, out string expectedDAFSC, out string expectedCAFSC, out string expectedPAFSC, out string expectedPhone)
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedSSN, out Rank expectedRank, out string expectedDAFSC, out string expectedCAFSC, out string expectedPAFSC, out string expectedPhone, out DateTime expectedDateOnStation)
 			{
 				input = _input;
 				expectedFirstName = _expectedFirstName;
@@ -207,11 +203,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				expectedCAFSC = _expectedCAFSC;
 				expectedPAFSC = _expectedPAFSC;
 				expectedPhone = _expectedPhone;
+				expectedDateOnStation = _expectedDateOnStation;
 			}
 
 			public TestCaseObject(IList<string> input, string throwaway)
 			{
 				_input = input;
+				_ = throwaway;
 			}
 
 			public void Deconstruct(out IList<string> input, out string throwaway)

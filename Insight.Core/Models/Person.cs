@@ -26,13 +26,13 @@ namespace Insight.Core.Models
 
 		public Rank Rank { get; set; }
 
-		public DeploymentStatus DeploymentStatus {  get; set; }
+		public DeploymentStatus DeploymentStatus { get; set; }
 
 		public string Name => $"{LastName}, {FirstName}";
 
 		public string HomePhone { get; set; }
 
-		public string Email {  get; set; }
+		public string Email { get; set; }
 
 		public long DoDID { get; set; }
 

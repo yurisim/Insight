@@ -68,7 +68,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			};
 			CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
 
-
 			//assert
 			using (new AssertionScope())
 			{
@@ -111,7 +110,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			var courses = insightController.GetAll<Course>().Result;
 			var course = insightController.GetCourseByName(expectedCourseName);
 
-
 			//assert
 			using (new AssertionScope())
 			{
@@ -121,7 +119,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				allPersons.Count.Should().Be(1);
 
 				//if a course was created, there should only be one and no releated courseInstances
-				if(course != null)
+				if (course != null)
 				{
 					courses.Count.Should().Be(1);
 					person.CourseInstances.Count.Should().Be(0);
@@ -229,15 +227,11 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
-
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			string _expectedCourseName { get; set; }
-
-			DateTime _expectedCourseCompletion { get; set; }
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly string _expectedCourseName;
+			private readonly DateTime _expectedCourseCompletion;
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedCourseName, DateTime expectedCourseCompletion)
 			{
@@ -276,6 +270,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			public TestCaseObject(IList<string> input, string throwaway)
 			{
 				_input = input;
+				_ = throwaway;
 			}
 
 			public void Deconstruct(out IList<string> input, out string throwaway)

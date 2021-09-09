@@ -4,25 +4,25 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Insight.Views
 {
-    public sealed partial class UploadPage : Page
-    {
-        public UploadViewModel ViewModel { get; } = new UploadViewModel();
+	public sealed partial class UploadPage : Page
+	{
+		public UploadViewModel ViewModel { get; } = new UploadViewModel();
 
-        public UploadPage()
-        {
-            InitializeComponent();
-        }
+		public UploadPage()
+		{
+			InitializeComponent();
+		}
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
+		protected override async void OnNavigatedTo(NavigationEventArgs e)
+		{
+			base.OnNavigatedTo(e);
 
-            await ViewModel.LoadDataAsync();
-        }
+			await ViewModel.LoadDataAsync();
+		}
 
-        private void UploadItemControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
+		private void UploadItemControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		{
 
-        }
-    }
+		}
+	}
 }

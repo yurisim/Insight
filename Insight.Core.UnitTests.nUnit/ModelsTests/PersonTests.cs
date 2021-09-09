@@ -7,7 +7,7 @@ namespace Insight.Core.UnitTests.nUnit.ModelsTests
 	[TestFixture]
 	public class PersonTests
 	{
-		[TestCase("lowercase","LOWERCASE")]
+		[TestCase("lowercase", "LOWERCASE")]
 		[TestCase("UPPERCASE", "UPPERCASE")]
 		[TestCase("mIxEdCaSiNg", "MIXEDCASING")]
 		[TestCase("idontknow,numbersandstuff&3236!!", "IDONTKNOW,NUMBERSANDSTUFF&3236!!")]

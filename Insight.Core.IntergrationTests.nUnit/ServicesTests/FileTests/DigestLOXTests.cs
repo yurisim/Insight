@@ -277,7 +277,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
 						"\"last name, \",FE,E-3G,AMN,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
 					},
-					expectedOrg: "960 AACS"  
+					expectedOrg: "960 AACS"
 				),
 
 				//test case - no last name
@@ -354,19 +354,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		public class TestCaseObject
 		{
-			IList<string> _input { get; set; }
-
-			string _expectedFirstName { get; set; }
-
-			string _expectedLastName { get; set; }
-
-			string _expectedFlight { get; set; }
-
-			string _expectedOrg { get; set; }
-
-			Rank _expectedRank { get; set; }
-
-			string _expectedCrewPosition { get; set; }
+			private readonly IList<string> _input;
+			private readonly string _expectedFirstName;
+			private readonly string _expectedLastName;
+			private readonly string _expectedFlight;
+			private readonly string _expectedOrg;
+			private readonly Rank _expectedRank;
+			private readonly string _expectedCrewPosition;
 
 			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight, string expectedOrg, Rank expectedRank, string expectedCrewPosition)
 			{

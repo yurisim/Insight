@@ -41,7 +41,7 @@ namespace Insight.Core.Services.File
 
 			//TODO does not upadate CAFSC/DAFSC if they're missing
 			//AFSC exists, returns it
-			if(afsc !=  null) { return afsc; }
+			if (afsc != null) { return afsc; }
 
 			//AFSC does not already exists, creates it
 			afsc = new AFSC()

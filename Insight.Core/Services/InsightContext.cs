@@ -60,7 +60,6 @@ namespace Insight.Core.Services
 			//modelBuilder.Entity<Person>()
 			//    .HasKey(c => new { c.PersonId });
 
-
 			// This makes the primary key of the below entity
 			modelBuilder.Entity<AFSC>()
 				.Property(entity => entity.Id)

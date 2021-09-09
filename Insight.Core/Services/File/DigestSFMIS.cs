@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Insight.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Insight.Core.Helpers;
-using Insight.Core.Models;
-using Insight.Core.Services.Database;
-using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -16,7 +13,7 @@ namespace Insight.Core.Services.File
 		private int _catmCompletionDateIndex;
 		private int _catmExperationDateIndex;
 
-		int IDigest.Priority { get => 5; }
+		int IDigest.Priority => 5;
 
 		public DigestSFMIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
@@ -79,11 +76,12 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
-
 				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]))
 				{
 					//if name is not valid, can't find associated person
 					//option is to try name optionally, but the fomatting is less than optimal
+
+					// TODO: There isn't a test case for this, when there's no email
 					continue;
 				}
 
@@ -92,10 +90,10 @@ namespace Insight.Core.Services.File
 
 				string firstName = names[0];
 				string lastName = names[1].Replace("_", "-");
-				
+
 				Person person = insightController.GetPersonByName(firstName, lastName).Result;
 
-				if(person == null)
+				if (person == null)
 				{
 					//TODO handle null person
 				}
@@ -105,7 +103,7 @@ namespace Insight.Core.Services.File
 					insightController.Update(person);
 
 					//CATM course is not empty
-					if(splitLine[_catmCourseNameIndex] != "")
+					if (splitLine[_catmCourseNameIndex] != "")
 					{
 						Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
 						DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);

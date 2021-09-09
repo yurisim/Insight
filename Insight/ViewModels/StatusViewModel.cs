@@ -1,15 +1,13 @@
 ﻿using Insight.Core.Models;
-using Insight.Core.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Insight.Core.Services.Database;
-using Windows.Networking;
-using System.Linq;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Insight.ViewModels
 {
@@ -17,10 +15,6 @@ namespace Insight.ViewModels
 	{
 		// This is a temporary solution for the custom binding. Would be better if we just accept a constructor of objects
 		public ObservableCollection<StatusViewItems> Source { get; set; } = new ObservableCollection<StatusViewItems>();
-
-		public StatusViewModel()
-		{
-		}
 
 		/// <summary>
 		/// Loads person objects into the status table whenever the page loads. This is called in the code behind of the object.
@@ -35,7 +29,6 @@ namespace Insight.ViewModels
 
 			// Get the person objects needed
 			var peopleToProcess = await controller.GetAllPersons();
-
 
 			var peopleToDisplay = peopleToProcess.Select(person => new StatusViewItems
 			{
@@ -52,8 +45,9 @@ namespace Insight.ViewModels
 				ReligiousFreedomExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Religious Freedom")?.Expiration,
 				SABCHandsOnExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care Hands On")?.Expiration,
 				SABCExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care (SABC)")?.Expiration,
+				HandGunExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "M9 HG AFQC (INITIAL/RECURRING)")?.Expiration,
+				Carbine_RifleExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "M4 RIFLE/CARBINE GROUP C AFQC")?.Expiration,
 			});
-
 
 			foreach (var person in peopleToDisplay)
 			{
@@ -99,6 +93,8 @@ namespace Insight.ViewModels
 		public DateTime? ReligiousFreedomExpiration { get; set; }
 		public DateTime? SABCHandsOnExpiration { get; set; }
 		public DateTime? SABCExpiration { get; set; }
+		public DateTime? Carbine_RifleExpiration { get; set; }
+		public DateTime? HandGunExpiration { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

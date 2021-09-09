@@ -154,7 +154,6 @@ namespace Insight.Core.Services.File
 					continue;
 				}
 
-
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
 
 				//This will assume if person is null at this point that a new one needs to be created.

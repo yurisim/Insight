@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Insight.Core.Services.Database
@@ -174,7 +173,6 @@ namespace Insight.Core.Services.Database
 			//returns person or null if none exist
 			return foundPerson;
 		}
-
 
 		/// <summary>
 		/// Returns person that matches First, Last, SSN or null if none exist

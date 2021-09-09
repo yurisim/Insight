@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Insight.Core.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Insight.Core.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -48,33 +48,12 @@ namespace Insight.Core.Services.File
 			}
 		}
 
-		/// <summary>
-		/// Determines which course on ETMS FileContents is for
-		/// </summary>
-		private Course CreateCourse(string courseName)
-		{
-			var foundCourse = insightController.GetCourseByName(courseName);
-
-			// If the course is not found, it will be null, so create the course
-			if (foundCourse == null)
-			{
-				// TODO make custom intervals for each course. Default is hard coded to 1 year
-				Course newCourse = new Course()
-				{
-					Name = courseName,
-					Interval = 1
-				};
-
-				insightController.Add(newCourse);
-
-				foundCourse = newCourse;
-			}
-			return foundCourse;
-		}
-
 		public void DigestLines()
 		{
-			if (FileContents.Count == 0) return;
+			if (FileContents.Count == 0)
+			{
+				return;
+			}
 
 			string courseName = FileContents[0].Split(',')[_courseTitleIndex];
 			Course course = base.GetOrCreateCourse(courseName);
@@ -92,7 +71,10 @@ namespace Insight.Core.Services.File
 				// TODO: Exception if person is not found
 				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
 
-				if (foundPerson == null) continue;
+				if (foundPerson == null)
+				{
+					continue;
+				}
 				//if (foundPerson.CourseInstances == null)
 				//{
 				//	foundPerson.CourseInstances = new List<CourseInstance>();

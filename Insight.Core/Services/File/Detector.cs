@@ -1,9 +1,6 @@
 ﻿using Insight.Core.Properties;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Insight.Core.Models;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Insight.Core.Services.File
@@ -13,7 +10,7 @@ namespace Insight.Core.Services.File
 	/// </summary>
 	public class Detector
 	{
-		private static Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
+		private static readonly Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
 			{
 				{FileType.AlphaRoster, Resources.AlphaRosterExpected},
 				{FileType.PEX, Resources.PEXExpected},
