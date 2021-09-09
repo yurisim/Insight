@@ -13,12 +13,11 @@
 	/// </summary>
 	public enum DeploymentStatus
 	{
-		///<summary>Unknown deployment status</summary>
-		Unknown,
+		//Regular is first so that it is the default value
+		///<summary>Normal operating procedures and is not scheduled for an upcoming deployment</summary>
+		Regular,
 		///<summary>Returning from deployment or on R&R</summary>
 		Resetting,
-		///<summary>Training to prepare for deployment</summary>
-		Training,
 		///<summary>Completed all defined training & readiness requirements</summary>
 		Ready,
 		///<summary>Ready and scheduled to deply</summary>

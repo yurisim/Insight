@@ -1,8 +1,9 @@
-﻿using Insight.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Insight.Core.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
@@ -76,12 +77,15 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = FileContents[i].Split(',').Select(d => d.Trim()).ToArray();
 
-				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]))
-				{
-					//if name is not valid, can't find associated person
-					//option is to try name optionally, but the fomatting is less than optimal
+				//a valid email is of the format firstname.lastname@domain.com
+				//optionally with '.#' after lastname or an underscore in last name (representing hyphenated last names).
+				//Only requirement after the @ symbol is that it must contain a period, with letters before and after it.
+				Regex emailFormat = new Regex(@"\w+\.\w+(\.\d*)?@.+\..+");
 
-					// TODO: There isn't a test case for this, when there's no email
+				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]) || !emailFormat.IsMatch(splitLine[_emailIndex]))
+				{
+					//if email is not valid, can't find associated person
+					//option is to try to parse name, but the fomatting is less than optimal
 					continue;
 				}
 
