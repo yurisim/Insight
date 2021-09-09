@@ -65,7 +65,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			controller.Add(orgToAdd);
 
 			//act
-			var orgAliasFromDB = controller.GetOrgByAlias(orgAliasName);
+			var orgAliasFromDB = controller.GetOrgByAlias(orgAliasName).Result;
 
 			//assert
 			orgAliasFromDB.Name.Should().Be(orgName.ToUpper());
