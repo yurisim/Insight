@@ -79,6 +79,24 @@ namespace Insight.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HANDGUN (.
+        /// </summary>
+        internal static string ARISHandGunExpected {
+            get {
+                return ResourceManager.GetString("ARISHandGunExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RIFLE/CARBINE (.
+        /// </summary>
+        internal static string ARISRifleCarbineExpected {
+            get {
+                return ResourceManager.GetString("ARISRifleCarbineExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PAS Description,Course Title,Last Name,First Name,Completion Date.
         /// </summary>
         internal static string ETMSExpected {

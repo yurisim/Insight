@@ -29,6 +29,9 @@ namespace Insight.Core.Services.File
 					return new DigestLOX(fileContents, dbContextOptions);
 				case FileType.SFMIS:
 					return new DigestSFMIS(fileContents, dbContextOptions);
+				case FileType.ARIS_Handgun:
+				case FileType.ARIS_Rifle_Carbine:
+					return new DigestARIS(fileContents, dbContextOptions);
 				default:
 					//TODO Throw custom exception indicating the digestor requested hasn't been implemented yet.
 					return null;

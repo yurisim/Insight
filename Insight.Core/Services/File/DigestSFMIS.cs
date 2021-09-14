@@ -102,9 +102,21 @@ namespace Insight.Core.Services.File
 				person.Email = splitLine[_emailIndex];
 				insightController.Update(person);
 
-				//CATM course is not empty
-				if (splitLine[_catmCourseNameIndex] != "")
+				string weaponType = "";
+				if (splitLine[_catmCourseNameIndex].Contains("M9"))
 				{
+					weaponType = WeaponCourseTypes.Handgun;
+				}
+				else if (splitLine[_catmCourseNameIndex].Contains("RIFLE/CARBINE"))
+				{
+					weaponType = WeaponCourseTypes.Rifle_Carbine;
+				}
+
+				//CATM course is not empty
+				if (weaponType != "")
+				{
+					
+
 					Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
 					DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
 					DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
