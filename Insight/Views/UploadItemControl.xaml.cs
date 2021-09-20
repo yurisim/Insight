@@ -1,67 +1,75 @@
-﻿using Insight.Core.Services.File;
-using Insight.Helpers;
-using Insight.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Insight.Core.Services.File;
+using Insight.Helpers;
+using Insight.ViewModels;
 
 namespace Insight.Views
 {
 	public sealed partial class UploadItemControl : UserControl
 	{
-		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
+		// TODO: No Longer need this.
+		public static readonly DependencyProperty FileTypeProperty =
+			DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
 
 		public UploadItemControl()
 		{
 			InitializeComponent();
 		}
 
+		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+
 		public string FileType
 		{
-			get { return (string)GetValue(FileTypeProperty); }
-			set { SetValue(FileTypeProperty, value); }
+			get => (string) GetValue(FileTypeProperty);
+			set => SetValue(FileTypeProperty, value);
 		}
 
-		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
-		// TODO: No Longer need this.
-		public static readonly DependencyProperty FileTypeProperty = DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
-
 		/// <summary>
-		/// TODO: Need to move this to view model. No
+		///     TODO: Need to move this to view model. No
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
 		{
+			// This is the file dialog returns a array of arrays of file contents
 			var contentsOfFiles = await FileService.GetFiles();
 
-			Debug.WriteLine("FilesRead");
+			var contentsToDigest = new List<IDigest>();
 
-			List<IDigest> FileDigest = new List<IDigest>();
-
-			foreach (List<string> linesOfFile in contentsOfFiles)
+			// This orders the file contents in the right 
+			foreach (var linesOfFile in contentsOfFiles)
 			{
 				// Refactor this to be a static method
-				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
+				var detectedFiletype = Detector.DetectFileType(linesOfFile);
 
-				if (detectedFiletype == Core.Models.FileType.Unknown)
-				{
-					throw new Exception("Unsupported file type");
-				}
+				//if (detectedFiletype == Core.Models.FileType.Unknown) throw new Exception("Unsupported file type");
 
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
-				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null));
+				contentsToDigest.Add(DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null));
 			}
 
-			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+			contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
-			foreach (var digest in FileDigest)
+			foreach (var content in contentsToDigest)
 			{
-				digest.CleanInput();
-				digest.DigestLines();
+				content.CleanInput();
+				content.DigestLines();
 			}
+
+			var dialog = new ContentDialog();
+			dialog.Title = "Upload Status";
+			dialog.CloseButtonText = "OK";
+			dialog.DefaultButton = ContentDialogButton.Close;
+			//dialog.Content = new ContentDialogContent();
+
+			var result = await dialog.ShowAsync();
+
 		}
 	}
 }
