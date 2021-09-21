@@ -17,7 +17,7 @@ namespace Insight.Core.Services.File
 
 		int IDigest.Priority => 1;
 
-		public DigestARIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		public DigestARIS(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
 		{
 
 		}
