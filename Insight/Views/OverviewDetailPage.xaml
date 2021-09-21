@@ -15,27 +15,42 @@
 			<local:PercentageColor x:Key="PercentageColorSelector">
 				<local:PercentageColor.VeryHighPercent>
 					<Style TargetType="TextBlock">
-						<Setter Property="Foreground" Value="Green" />
+						<Setter Property="Foreground" Value="DarkGreen" />
+						<Setter Property="HorizontalAlignment" Value="Left"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="Margin" Value="5"/>
 					</Style>
 				</local:PercentageColor.VeryHighPercent>
 				<local:PercentageColor.HighPercent>
 					<Style TargetType="TextBlock">
-						<Setter Property="Foreground" Value="YellowGreen" />
+						<Setter Property="Foreground" Value="Green" />
+						<Setter Property="HorizontalAlignment" Value="Left"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="Margin" Value="5"/>
 					</Style>
 				</local:PercentageColor.HighPercent>
 				<local:PercentageColor.MediumPercent>
 					<Style TargetType="TextBlock">
-						<Setter Property="Foreground" Value="Yellow" />
+						<Setter Property="Foreground" Value="Orange" />
+						<Setter Property="HorizontalAlignment" Value="Left"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="Margin" Value="5"/>
 					</Style>
 				</local:PercentageColor.MediumPercent>
 				<local:PercentageColor.LowPercent>
 					<Style TargetType="TextBlock">
-						<Setter Property="Foreground" Value="Orange" />
+						<Setter Property="Foreground" Value="OrangeRed" />
+						<Setter Property="HorizontalAlignment" Value="Left"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="Margin" Value="5"/>
 					</Style>
 				</local:PercentageColor.LowPercent>
 				<local:PercentageColor.VeryLowPercent>
 					<Style TargetType="TextBlock">
 						<Setter Property="Foreground" Value="Red" />
+						<Setter Property="HorizontalAlignment" Value="Left"/>
+						<Setter Property="VerticalAlignment" Value="Center"/>
+						<Setter Property="Margin" Value="5"/>
 					</Style>
 				</local:PercentageColor.VeryLowPercent>
 			</local:PercentageColor>
