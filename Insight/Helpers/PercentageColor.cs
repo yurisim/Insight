@@ -38,14 +38,27 @@ namespace Insight.Helpers
 			set;
 		}
 
+		/// <summary>
+		/// allows the Frontend to recieve the style
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="container"></param>
+		/// <returns></returns>
 		protected override Style SelectStyleCore(object item, DependencyObject container)
 		{
 			double cellValue;
 			DataGridCellInfo cellInfo = item as DataGridCellInfo;
 			double.TryParse(cellInfo.Value.ToString().TrimEnd('%'), out cellValue);
+			//Separated functional code for  testabliity 
 			return GetStyle(cellValue);
 		}
 
+
+		/// <summary>
+		/// Returns the style based on a given percent
+		/// </summary>
+		/// <param name="cellValue">Percentage in the given cell</param>
+		/// <returns>Style for the given cell</returns>
 		public Style GetStyle(double cellValue)
 		{
 			if (cellValue >= 90)
