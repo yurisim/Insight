@@ -1,6 +1,7 @@
 ﻿<Page
     x:Class="Insight.Views.OverviewDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:local="using:Insight.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
@@ -9,6 +10,36 @@
     mc:Ignorable="d">
 
 	<Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+
+		<Grid.Resources>
+			<local:PercentageColor x:Key="PercentageColorSelector">
+				<local:PercentageColor.VeryHighPercent>
+					<Style TargetType="TextBlock">
+						<Setter Property="Foreground" Value="Green" />
+					</Style>
+				</local:PercentageColor.VeryHighPercent>
+				<local:PercentageColor.HighPercent>
+					<Style TargetType="TextBlock">
+						<Setter Property="Foreground" Value="YellowGreen" />
+					</Style>
+				</local:PercentageColor.HighPercent>
+				<local:PercentageColor.MediumPercent>
+					<Style TargetType="TextBlock">
+						<Setter Property="Foreground" Value="Yellow" />
+					</Style>
+				</local:PercentageColor.MediumPercent>
+				<local:PercentageColor.LowPercent>
+					<Style TargetType="TextBlock">
+						<Setter Property="Foreground" Value="Orange" />
+					</Style>
+				</local:PercentageColor.LowPercent>
+				<local:PercentageColor.VeryLowPercent>
+					<Style TargetType="TextBlock">
+						<Setter Property="Foreground" Value="Red" />
+					</Style>
+				</local:PercentageColor.VeryLowPercent>
+			</local:PercentageColor>
+		</Grid.Resources>
 
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup>
@@ -95,9 +126,18 @@
                       Remove this column definitions and define columns for your data.
                       Consider adding header properties to Resources.resw-->
 						<tg:DataGridTextColumn Header="0960" PropertyName="Organization"/>
-						<tg:DataGridTextColumn Header="Medical" PropertyName="Medical"/>
-						<tg:DataGridTextColumn Header="Personnel" PropertyName="Personnel"/>
-						<tg:DataGridTextColumn Header="Training" PropertyName="Training"/>
+						<tg:DataGridTextColumn
+                            CellContentStyleSelector="{StaticResource PercentageColorSelector}"
+							Header="Medical"
+							PropertyName="Medical"/>
+						<tg:DataGridTextColumn
+                            CellContentStyleSelector="{StaticResource PercentageColorSelector}"
+							Header="Personnel"
+							PropertyName="Personnel"/>
+						<tg:DataGridTextColumn
+                            CellContentStyleSelector="{StaticResource PercentageColorSelector}"
+							Header="Training"
+							PropertyName="Training"/>
 					</tg:RadDataGrid.Columns>
 				</tg:RadDataGrid>
 
