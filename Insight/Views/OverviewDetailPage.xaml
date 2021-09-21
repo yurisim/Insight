@@ -18,7 +18,7 @@
 						<Setter Property="Foreground" Value="DarkGreen" />
 						<Setter Property="HorizontalAlignment" Value="Left"/>
 						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="Margin" Value="5"/>
+						<Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
 					</Style>
 				</local:PercentageColor.VeryHighPercent>
 				<local:PercentageColor.HighPercent>
@@ -26,7 +26,7 @@
 						<Setter Property="Foreground" Value="Green" />
 						<Setter Property="HorizontalAlignment" Value="Left"/>
 						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="Margin" Value="5"/>
+						<Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
 					</Style>
 				</local:PercentageColor.HighPercent>
 				<local:PercentageColor.MediumPercent>
@@ -34,7 +34,7 @@
 						<Setter Property="Foreground" Value="Orange" />
 						<Setter Property="HorizontalAlignment" Value="Left"/>
 						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="Margin" Value="5"/>
+						<Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
 					</Style>
 				</local:PercentageColor.MediumPercent>
 				<local:PercentageColor.LowPercent>
@@ -42,7 +42,7 @@
 						<Setter Property="Foreground" Value="OrangeRed" />
 						<Setter Property="HorizontalAlignment" Value="Left"/>
 						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="Margin" Value="5"/>
+						<Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
 					</Style>
 				</local:PercentageColor.LowPercent>
 				<local:PercentageColor.VeryLowPercent>
@@ -50,7 +50,7 @@
 						<Setter Property="Foreground" Value="Red" />
 						<Setter Property="HorizontalAlignment" Value="Left"/>
 						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="Margin" Value="5"/>
+						<Setter Property="Margin" Value="{StaticResource SmallLeftMargin}"/>
 					</Style>
 				</local:PercentageColor.VeryLowPercent>
 			</local:PercentageColor>
