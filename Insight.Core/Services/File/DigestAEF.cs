@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Insight.Core.Helpers;
 using Insight.Core.Models;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
 {
 	public class DigestAEF : AbstractDigest, IDigest
 	{
-		private int _nameIndex = -1;
-		private int _payGradeIndex = -1;
-		private int _unitIndex = -1;
-		private int _afscIndex = -1;
-		private int _personnelOverallStatusIndex = -1;
-		private int _medicalOverallStatusIndex = -1;
-		private int _trainingOverallStatusIndex = -1;
+		private int NameIndex = -1;
+		private int UnitIndex = -1;
+		private int PersonnelOverallStatusIndex = -1;
+		private int MedicalOverallStatusIndex = -1;
+		private int TrainingOverallStatusIndex = -1;
 
-		int IDigest.Priority { get => 2; }
+		int IDigest.Priority => 2;
 
-		public DigestAEF(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		public DigestAEF(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
 		{
 
 		}
@@ -46,7 +42,7 @@ namespace Insight.Core.Services.File
 				{
 					//FOUO/CUI warnings have been removed, checks that the current line is not the export description.
 					//If all of those things have been eliminated, it must be the column header's line
-					if(!lineToUpper.Contains("EXPORT DESCRIPTION: "))
+					if (!lineToUpper.Contains("EXPORT DESCRIPTION: "))
 					{
 						SetColumnIndexes(splitLine);
 						headersProcessed = true;
@@ -54,7 +50,7 @@ namespace Insight.Core.Services.File
 					//removes everything up to and including column headers
 					FileContents.RemoveAt(i);
 					i--;
-				}				
+				}
 			}
 		}
 
@@ -62,18 +58,17 @@ namespace Insight.Core.Services.File
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private void SetColumnIndexes(string[] columnHeaders)
+		private
+			void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
-			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_payGradeIndex = Array.IndexOf(columnHeaders, "PAYGRADE");
-			_unitIndex = Array.IndexOf(columnHeaders, "UNIT");
-			_afscIndex = Array.IndexOf(columnHeaders, "AFSC");
-			_personnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
-			_medicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
-			_trainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
+			NameIndex = Array.IndexOf(columnHeaders, "NAME");
+			UnitIndex = Array.IndexOf(columnHeaders, "UNIT");
+			PersonnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
+			MedicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
+			TrainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
 		}
 
 		/// <summary>
@@ -82,20 +77,20 @@ namespace Insight.Core.Services.File
 		/// <param name="File"></param>
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				//TODO refact to better handle format changes
 				//Check variables
-				string[] names = splitLine[_nameIndex].Split(' ').Select(x => x.ToUpperInvariant().Trim()).ToArray();
+				string[] names = splitLine[NameIndex].Split(' ').Select(x => x.Trim()).ToArray();
 				string firstName = names[1];
 				string lastName = names[0];
-				string unit = splitLine[_unitIndex];
-				string AFSC = splitLine[_afscIndex];
-				Status personnelStatus = StringManipulation.StatusReader(splitLine[_personnelOverallStatusIndex]);
-				Status medicalStatus = StringManipulation.StatusReader(splitLine[_medicalOverallStatusIndex]);
-				Status trainingStatus = StringManipulation.StatusReader(splitLine[_trainingOverallStatusIndex]);
+				//string unit = splitLine[UnitIndex];
+				//string AFSC = splitLine[AFSCIndex];
+				Status personnelStatus = StringManipulation.StatusReader(splitLine[PersonnelOverallStatusIndex]);
+				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
+				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);
 
 				Person person = insightController.GetPersonByName(firstName: firstName, lastName: lastName).Result;
 

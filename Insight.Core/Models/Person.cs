@@ -1,25 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Insight.Core.Models
 {
 	public class Person
 	{
+		private string _firstName;
+		private string _lastName;
+
 		[Key, Required]
 		public int Id { get; set; }
 
-		public string FirstName { get; set; }
+		public string FirstName
+		{
+			get => _firstName;
+			set => _firstName = value.ToUpperInvariant();
+		}
 
-		public string LastName { get; set; }
+		public string LastName
+		{
+			get => _lastName;
+			set => _lastName = value.ToUpperInvariant();
+		}
 
-		public Rank Rank { get; set; }
+		/// <summary>
+		/// This is the correct way to implement Grade/Rank, but because criteria didn't push for anything in particular, will implement lazy way.
+		/// </summary>
+		//public Grade Grade { get; set; }
+
+		public string Rank { get; set; }
+
+		public DeploymentStatus DeploymentStatus { get; set; }
 
 		public string Name => $"{LastName}, {FirstName}";
 
-		public string Phone { get; set; }
+		public string HomePhone { get; set; }
 
-		public string Email {  get; set; }
+		public string Email { get; set; }
 
 		public long DoDID { get; set; }
 
@@ -27,7 +45,7 @@ namespace Insight.Core.Models
 
 		public string CrewPosition { get; set; }
 
-		public string DateOnStation { get; set; }
+		public DateTime DateOnStation { get; set; }
 
 		public string Comments { get; set; }
 
@@ -45,12 +63,6 @@ namespace Insight.Core.Models
 
 		public PEX PEX { get; set; }
 
-		public List<CourseInstance> CourseInstances { get; set; }
-
-		public Person()
-		{
-			CourseInstances = new List<CourseInstance>();
-		}
-
+		public List<CourseInstance> CourseInstances { get; set; } = new List<CourseInstance>();
 	}
 }

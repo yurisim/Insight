@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Insight.Core.Helpers;
+using System.Text.RegularExpressions;
 using Insight.Core.Models;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
@@ -16,7 +14,7 @@ namespace Insight.Core.Services.File
 		private int _catmCompletionDateIndex;
 		private int _catmExperationDateIndex;
 
-		int IDigest.Priority { get => 5; }
+		int IDigest.Priority => 5;
 
 		public DigestSFMIS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
 		{
@@ -75,47 +73,54 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			for (int i = 0; i < FileContents.Count; i++)
+			foreach (string line in FileContents)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
+
+				//a valid email is of the format firstname.lastname@domain.com
+				//optionally with '.#' after lastname or an underscore in last name (representing hyphenated last names).
+				//Only requirement after the @ symbol is that it must contain a period, with letters before and after it.
+				Regex emailFormat = new Regex(@"\w+\.\w+(\.\d*)?@.+\..+");
+
+				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]) || !emailFormat.IsMatch(splitLine[_emailIndex]))
+				{
+					//if email is not valid, can't find associated person
+					//option is to try to parse name, but the fomatting is less than optimal
+					continue;
+				}
 
 				//name is extracted out of email due to the ambigious formatting of the name column in the source data and because it truncates it at 18 characters
 				string[] names = splitLine[_emailIndex].Substring(0, splitLine[_emailIndex].IndexOf("@")).Split('.');
 
 				string firstName = names[0];
 				string lastName = names[1].Replace("_", "-");
-				
+
 				Person person = insightController.GetPersonByName(firstName, lastName).Result;
 
-				if(person == null)
-				{
-					//TODO handle null person
-				}
-				else
-				{
-					person.Email = splitLine[_emailIndex];
-					insightController.Update(person);
+				if (person == null) continue;
 
-					//CATM course is not empty
-					if(splitLine[_catmCourseNameIndex] != "")
+				person.Email = splitLine[_emailIndex];
+				insightController.Update(person);
+
+				//CATM course is not empty
+				if (splitLine[_catmCourseNameIndex] != "")
+				{
+					Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
+					DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
+					DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
+
+					CourseInstance courseInstance = new CourseInstance()
 					{
-						Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
-						DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
-						DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
+						Course = catmCourse,
+						Person = person,
+						Completion = catmCompletionDate,
+						Expiration = catmExperationDate
 
-						CourseInstance courseInstance = new CourseInstance()
-						{
-							Course = catmCourse,
-							Person = person,
-							Completion = catmCompletionDate,
-							Expiration = catmExperationDate
+						// TODO: Make custom expiration by JSON object
+						//Expiration = DateTime.Parse(completionDate).AddYears(1)
+					};
 
-							// TODO: Make custom expiration by JSON object
-							//Expiration = DateTime.Parse(completionDate).AddYears(1)
-						};
-
-						insightController.AddCourseInstance(courseInstance, catmCourse, person);
-					}
+					insightController.AddCourseInstance(courseInstance, catmCourse, person);
 				}
 			}
 		}

@@ -8,7 +8,25 @@
 		Overdue = 4
 	}
 
-	public enum Rank
+	/// <summary>
+	/// Status of an individual's deployment readiness/preparedness 
+	/// </summary>
+	public enum DeploymentStatus
+	{
+		//Regular is first so that it is the default value
+		///<summary>Normal operating procedures and is not scheduled for an upcoming deployment</summary>
+		Regular,
+		///<summary>Returning from deployment or on R&R</summary>
+		Resetting,
+		///<summary>Completed all defined training & readiness requirements</summary>
+		Ready,
+		///<summary>Ready and scheduled to deply</summary>
+		Scheduled,
+		///<summary>Currently Deployed</summary>
+		Deployed,
+	}
+
+	public enum Grade
 	{
 		Unknown,
 		E1,
@@ -36,10 +54,15 @@
 	{
 		Unknown,
 		AlphaRoster,
+		///<summary>Patriot Excalibur</summary>
 		PEX,
+		///<summary>AEF Online</summary>
 		AEF,
+		///<summary>Patriot Excalibur</summary>
 		ETMS,
+		///<summary>Letter of Certifications</summary>
 		LOX,
+		///<summary>Security Forces Management Information System</summary>
 		SFMIS,
 	}
 }

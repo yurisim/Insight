@@ -6,7 +6,7 @@ namespace Insight.Core.Models
 	/// <summary>
 	/// Includes CBRN, CATM, SABC, Force Protection, Cyber Awareness, Law of War (Basic), Expeditionary
 	/// </summary>
-	public class Course
+	public class Course : IGenericable
 	{
 		[Key]
 		public int Id { get; set; }

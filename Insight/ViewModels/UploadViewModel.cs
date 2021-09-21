@@ -11,42 +11,40 @@ using System.Windows.Input;
 
 namespace Insight.ViewModels
 {
-    public class UploadViewModel : ObservableObject
-    {
-        private ICommand _itemClickCommand;
+	public class UploadViewModel : ObservableObject
+	{
+		private ICommand _itemClickCommand;
 
-        public ICommand ItemClickCommand => _itemClickCommand ?? (_itemClickCommand = new RelayCommand<SampleOrder>(OnItemClick));
+		public ICommand ItemClickCommand => _itemClickCommand ?? (_itemClickCommand = new RelayCommand<SampleOrder>(OnItemClick));
 
-        public UploadItemControl ViewModel { get; } = new UploadItemControl();
+		public UploadItemControl ViewModel { get; } = new UploadItemControl();
 
-        public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
+		public ObservableCollection<SampleOrder> Source { get; } = new ObservableCollection<SampleOrder>();
 
+		public UploadViewModel()
+		{
 
+		}
 
-        public UploadViewModel()
-        {
+		public async Task LoadDataAsync()
+		{
+			Source.Clear();
 
-        }
+			// Replace this with your actual data
+			System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetContentGridDataAsync();
+			foreach (SampleOrder item in data)
+			{
+				Source.Add(item);
+			}
+		}
 
-        public async Task LoadDataAsync()
-        {
-            Source.Clear();
-
-            // Replace this with your actual data
-            System.Collections.Generic.IEnumerable<SampleOrder> data = await SampleDataService.GetContentGridDataAsync();
-            foreach (SampleOrder item in data)
-            {
-                Source.Add(item);
-            }
-        }
-
-        private void OnItemClick(SampleOrder clickedItem)
-        {
-            if (clickedItem != null)
-            {
-                NavigationService.Frame.SetListDataItemForNextConnectedAnimation(clickedItem);
-                NavigationService.Navigate<OverviewDetailPage>(clickedItem.DoDID);
-            }
-        }
-    }
+		private void OnItemClick(SampleOrder clickedItem)
+		{
+			if (clickedItem != null)
+			{
+				NavigationService.Frame.SetListDataItemForNextConnectedAnimation(clickedItem);
+				NavigationService.Navigate<OverviewDetailPage>(clickedItem.DoDID);
+			}
+		}
+	}
 }

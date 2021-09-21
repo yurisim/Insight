@@ -10,86 +10,86 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition />
-        </TransitionCollection>
-    </Page.Transitions>
-    <Page.Resources>
-        <DataTemplate x:Key="ItemTemplate" x:DataType="model:SampleOrder">
-            <Grid Height="60">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <FontIcon
+	<Page.Transitions>
+		<TransitionCollection>
+			<NavigationThemeTransition />
+		</TransitionCollection>
+	</Page.Transitions>
+	<Page.Resources>
+		<DataTemplate x:Key="ItemTemplate" x:DataType="model:SampleOrder">
+			<Grid Height="60">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<FontIcon
                     Grid.Column="0"
                     VerticalAlignment="Center"
                     FontSize="32"
                     Glyph="{x:Bind Symbol}" />
-                <StackPanel
+				<StackPanel
                     Grid.Column="1"
                     Margin="{StaticResource SmallLeftMargin}"
                     VerticalAlignment="Center">
-                    <TextBlock Style="{ThemeResource ListTitleStyle}" Text="{x:Bind Organization}" />
-                    <TextBlock Style="{StaticResource ListSubTitleStyle}" Text="{x:Bind Status}" />
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
+					<TextBlock Style="{ThemeResource ListTitleStyle}" Text="{x:Bind Organization}" />
+					<TextBlock Style="{StaticResource ListSubTitleStyle}" Text="{x:Bind Status}" />
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
 
-        <DataTemplate x:Key="DetailsTemplate">
-            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <views:OrganizationsDetailControl ListMenuItem="{Binding}" />
-            </Grid>
-        </DataTemplate>
+		<DataTemplate x:Key="DetailsTemplate">
+			<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+				<views:OrganizationsDetailControl ListMenuItem="{Binding}" />
+			</Grid>
+		</DataTemplate>
 
-        <DataTemplate x:Key="NoSelectionContentTemplate">
-            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <TextBlock
+		<DataTemplate x:Key="NoSelectionContentTemplate">
+			<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+				<TextBlock
                     x:Uid="Organizations_NoSelection"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     TextAlignment="Center" />
-            </Grid>
-        </DataTemplate>
+			</Grid>
+		</DataTemplate>
 
-        <DataTemplate x:Key="ListHeaderTemplate">
-            <Grid Height="40">
-                <TextBlock
+		<DataTemplate x:Key="ListHeaderTemplate">
+			<Grid Height="40">
+				<TextBlock
                     x:Name="headerText"
                     VerticalAlignment="Center"
                     Style="{StaticResource ListTitleStyle}"
                     Text="{Binding}" />
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="MinimalListHeaderTemplate">
-            <Grid Height="40">
-                <TextBlock
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="MinimalListHeaderTemplate">
+			<Grid Height="40">
+				<TextBlock
                     x:Name="headerText"
                     Margin="96,0,0,0"
                     Text="{Binding}"
                     VerticalAlignment="Center"
                     Style="{StaticResource ListTitleStyle}" />
-            </Grid>
-        </DataTemplate>
-    </Page.Resources>
+			</Grid>
+		</DataTemplate>
+	</Page.Resources>
 
-    <Grid x:Name="ContentArea">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <!--641 is the default CompactModeThresholdWidth in NavigationView -->
-                        <AdaptiveTrigger MinWindowWidth="641" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource ListHeaderTemplate}" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <controls:ListDetailsView
+	<Grid x:Name="ContentArea">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup>
+				<VisualState>
+					<VisualState.StateTriggers>
+						<!--641 is the default CompactModeThresholdWidth in NavigationView -->
+						<AdaptiveTrigger MinWindowWidth="641" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource ListHeaderTemplate}" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+		<controls:ListDetailsView
             x:Name="ListDetailsViewControl"
             x:Uid="Organizations"
             BackButtonBehavior="Automatic"
@@ -101,5 +101,5 @@
             ListHeaderTemplate="{StaticResource MinimalListHeaderTemplate}"
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}" />
-    </Grid>
+	</Grid>
 </Page>

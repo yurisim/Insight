@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Insight.Core.Properties;
-using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Insight.Core.Services.File
@@ -52,37 +50,26 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			// TODO dialog exception for schema differences
-			if (!FileContents[0].StartsWith(Resources.PEXExpected))
+			foreach (string line in FileContents)
 			{
-				throw new NotImplementedException();
-			}
-
-			for (int i = 0; i < FileContents.Count; i++)
-			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				// short name of person, format is "SmithJ" if name is "John Smith"
-				string shortName = splitLine[_shortNameIndex].Trim();
+				string shortName = splitLine[_shortNameIndex];
 
 				// Flight Designation 
-				string pexName = splitLine[_pexDesignationIndex].Trim();
+				string pexName = splitLine[_pexDesignationIndex];
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
 				var foundPerson = insightController.GetPersonByShortName(shortName);
 
-				if (foundPerson == null)
-				{
-					//TODO handle unfound person
-				}
-				else
-				{
-					// try to find the PEX Account
-					foundPerson.Flight = pexName;
+				if (foundPerson == null) continue;
+				
+				// try to find the PEX Account
+				foundPerson.Flight = pexName;
 
-					insightController.Update(foundPerson);
-				}
+				insightController.Update(foundPerson);
 			}
 		}
 	}

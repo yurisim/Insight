@@ -1,43 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using Insight.Core.Helpers;
-using Insight.Core.Models;
-using Insight.Core.Properties;
-using Insight.Core.Services.Database;
+﻿using Insight.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Insight.Core.Services.File
 {
 	public class DigestETMS : AbstractDigest, IDigest
 	{
-		private int _pasDescriptionIndex = -1;
-		private int _courseTitleIndex = -1;
-		private int _lastNameIndex = -1;
-		private int _firstNameIndex = -1;
 		private int _completionDateIndex = -1;
+		private int _courseTitleIndex = -1;
+		private int _firstNameIndex = -1;
+		private int _lastNameIndex = -1;
+		private int _pasDescriptionIndex = -1;
+
+		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(
+			FileContents, dbContextOptions)
+		{
+		}
 
 		int IDigest.Priority => 3;
 
-		public DigestETMS(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
-		{
-
-		}
-
 		/// <summary>
-		/// Removed duplicate lines in the ETMS Report as well as any other formatting
+		///     Removed duplicate lines in the ETMS Report as well as any other formatting
 		/// </summary>
 		public void CleanInput()
 		{
 			//headers found and indexes set for the columns to be digested
-			bool headersProcessed = false;
+			var headersProcessed = false;
 
 			for (var i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var splitLine = FileContents[i].Split(',');
 				if (!headersProcessed)
 				{
 					SetColumnIndexes(splitLine);
@@ -54,8 +48,64 @@ namespace Insight.Core.Services.File
 			}
 		}
 
+		public void DigestLines()
+		{
+			//return if contents is empty
+			if (FileContents.Count == 0) return;
+
+			string courseName = FileContents[0].Split(',')[_courseTitleIndex];
+			Course course = base.GetOrCreateCourse(courseName);
+
+			// Parallel.ForEach(FileContents, t =>
+			foreach (string line in FileContents)
+			{
+				string[] splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
+				string squadron = splitLine[_pasDescriptionIndex].ToUpper();
+
+				string firstName = splitLine[_firstNameIndex];
+				string lastName = splitLine[_lastNameIndex];
+				string completionDate = splitLine[_completionDateIndex];
+
+				// TODO: Exception if person is not found
+				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
+
+				if (foundPerson == null) continue;
+
+				//if (foundPerson.CourseInstances == null)
+				//{
+				//	foundPerson.CourseInstances = new List<CourseInstance>();
+				//	insightController.Update(foundPerson);
+				//}
+				//	foundPerson.CourseInstances = new List<CourseInstance>();
+				//	insightController.Update(foundPerson);
+				//}
+
+				// TODO: Make this a try parse
+				var parsedCompletion = DateTime.Parse(completionDate);
+
+				var courseInstance = new CourseInstance
+				{
+					Course = course,
+					Person = foundPerson,
+					Completion = parsedCompletion,
+					Expiration = parsedCompletion.AddDays(course.Interval * 365)
+
+					// TODO: Make custom expiration by JSON object
+				};
+
+				// check if the course instance exists
+				var foundInstance = insightController.GetCourseInstance(courseInstance).Result;
+
+				// if no instance is found
+				if (foundInstance == null)
+				{
+					insightController.AddCourseInstance(courseInstance, course, foundPerson);
+				}
+			}
+		}
+
 		/// <summary>
-		/// Sets the indexes for columns of data that needs to be digested
+		///     Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
 		private void SetColumnIndexes(string[] columnHeaders)
@@ -70,55 +120,11 @@ namespace Insight.Core.Services.File
 			_completionDateIndex = Array.IndexOf(columnHeaders, "COMPLETION DATE");
 		}
 
-		public void DigestLines()
+		private T CreateOrReturn<T, T1>(string courseName, ref T1 entity)
 		{
-			string courseName = FileContents[1].Split(',')[_courseTitleIndex];
-			Course course = base.GetOrCreateCourse(courseName);
+			var foundEntity = insightController.GetCourseByName(courseName);
 
-			for (int i = 0; i < FileContents.Count; i++)
-			{
-				string[] splitLine = FileContents[i].Split(',');
-				string squadron = splitLine[_pasDescriptionIndex].ToUpper().Trim();
-
-				string firstName = splitLine[_firstNameIndex].ToUpperInvariant().Trim();
-				string lastName = splitLine[_lastNameIndex].ToUpperInvariant().Trim();
-				
-				string completionDate = splitLine[_completionDateIndex].Trim();
-
-				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName, includeSubref: true).Result;
-
-				if (foundPerson == null)
-				{
-					continue;
-				}
-				//if (foundPerson.CourseInstances == null)
-				//{
-				//	foundPerson.CourseInstances = new List<CourseInstance>();
-				//	insightController.Update(foundPerson);
-				//}
-
-				// TODO: Make this a try parse
-				var parsedCompletion = DateTime.Parse(completionDate);
-
-				CourseInstance courseInstance = new CourseInstance()
-				{
-					Course = course,
-					Person = foundPerson,
-					Completion = parsedCompletion,
-					Expiration = parsedCompletion.AddDays(course.Interval * 365)
-
-					// TODO: Make custom expiration by JSON object
-					//Expiration = DateTime.Parse(completionDate).AddYears(1)
-				};
-
-				insightController.AddCourseInstance(courseInstance, course, foundPerson);
-
-				//courseInstance.Course = CourseType;
-				//courseInstance.Person = foundPerson;
-
-				//InsightController.Update(courseInstance);
-			}
+			return default;
 		}
 	}
 }

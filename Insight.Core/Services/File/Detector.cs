@@ -1,9 +1,6 @@
 ﻿using Insight.Core.Properties;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Insight.Core.Models;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Insight.Core.Services.File
@@ -13,7 +10,7 @@ namespace Insight.Core.Services.File
 	/// </summary>
 	public class Detector
 	{
-		private static Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
+		private static readonly Dictionary<FileType, string> SupportedFileTypes = new Dictionary<FileType, string>()
 			{
 				{FileType.AlphaRoster, Resources.AlphaRosterExpected},
 				{FileType.PEX, Resources.PEXExpected},
@@ -29,32 +26,22 @@ namespace Insight.Core.Services.File
 		/// <returns></returns>
 		public static FileType DetectFileType(IList<string> inputFile)
 		{
-			if (inputFile == null || inputFile.Count == 0)
-			{
-				throw new ArgumentNullException("null or length 0");
-			}
-			var detectedFileType = FileType.Unknown;
+			if (inputFile == null) { return FileType.Unknown; }
 
-			string[] firstThreeLines = inputFile.Take(3).ToArray();
+			var firstThreeLines = inputFile.Take(3);
 
-			foreach (string line in firstThreeLines)
+			foreach (var line in firstThreeLines)
 			{
 				foreach (var supportedFileType in SupportedFileTypes)
 				{
-
 					if (line.Contains(supportedFileType.Value))
 					{
 						return supportedFileType.Key;
 					}
 				}
-
 			}
 
-			//if (detectedFileType == FileType.Unknown)
-			//{
-			//	throw new Exception(Resources.UnsupportedFileType);
-			//}
-
+			// If we get here, we didn't find a match
 			return FileType.Unknown;
 		}
 	}
