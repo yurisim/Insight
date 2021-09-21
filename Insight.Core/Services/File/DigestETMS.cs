@@ -31,6 +31,7 @@ namespace Insight.Core.Services.File
 
 			for (var i = 0; i < FileContents.Count; i++)
 			{
+				// why not start i = 1 instead of removign header?
 				var splitLine = FileContents[i].Split(',');
 				if (!headersProcessed)
 				{
