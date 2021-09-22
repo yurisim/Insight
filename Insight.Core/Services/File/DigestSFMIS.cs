@@ -117,7 +117,7 @@ namespace Insight.Core.Services.File
 				{
 					
 
-					Course catmCourse = base.GetOrCreateCourse(splitLine[_catmCourseNameIndex]);
+					Course catmCourse = base.GetOrCreateCourse(weaponType);
 					DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
 					DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
 
