@@ -62,16 +62,17 @@ namespace Insight.Views
 				content.DigestLines();
 			}
 
-			var dialog = new ContentDialog();
-			dialog.Title = "Upload Status";
-			dialog.CloseButtonText = "OK";
+			var dialog = new ContentDialog
+			{
+				Title = "Upload Status",
+				CloseButtonText = "OK",
 
-			// Make steps to concatenate all filenames into 1 string
+				// Make steps to concatenate all filenames into 1 string
+				Content = contentsOfFiles.fileNames[0],
+				DefaultButton = ContentDialogButton.Close
+			};
 
-			dialog.Content = contentsOfFiles.fileNames[0];
 
-
-			dialog.DefaultButton = ContentDialogButton.Close;
 			//dialog.Content = new ContentDialogContent();
 
 			var result = await dialog.ShowAsync();
