@@ -15,15 +15,4 @@ namespace Insight.Core.Models
 
 		public string Name { get; set; }
 	}
-
-	///// <summary>
-	///// Dummy System, run whenever the database is created.
-	///// </summary>
-	//public static class  MakeGradeAliases
-	//{
-	//	public static void CreateAlias
-	//	{
-
-	//	}
-	//}
 }

@@ -43,7 +43,7 @@ namespace Insight.Views
 			var contentsToDigest = new List<IDigest>();
 
 			// This orders the file contents in the right 
-			foreach (var linesOfFile in contentsOfFiles)
+			foreach (var linesOfFile in contentsOfFiles.fileContents)
 			{
 				// Refactor this to be a static method
 				var detectedFiletype = Detector.DetectFileType(linesOfFile);
@@ -65,6 +65,12 @@ namespace Insight.Views
 			var dialog = new ContentDialog();
 			dialog.Title = "Upload Status";
 			dialog.CloseButtonText = "OK";
+
+			// Make steps to concatenate all filenames into 1 string
+
+			dialog.Content = contentsOfFiles.fileNames[0];
+
+
 			dialog.DefaultButton = ContentDialogButton.Close;
 			//dialog.Content = new ContentDialogContent();
 
