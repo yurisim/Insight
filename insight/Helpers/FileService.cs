@@ -60,7 +60,7 @@ namespace Insight.Helpers
 		/// Method to 
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<(List<List<string>> fileContents, List<string> fileNames)> GetFiles()
+		public static async Task<(List<List<string>> fileContents, List<string> failedFileNames)> GetContentsOfFiles()
 		{
 
 			// This is the list of files that failed to process. If this list stays empty, that means there were no issues. 
@@ -105,4 +105,5 @@ namespace Insight.Helpers
 			return (fileCollection, failedFileNames);
 		}
 	}
+
 }
