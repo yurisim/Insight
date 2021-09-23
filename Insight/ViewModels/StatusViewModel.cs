@@ -47,8 +47,8 @@ namespace Insight.ViewModels
 				ReligiousFreedomExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Religious Freedom")?.Expiration,
 				SABCHandsOnExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care Hands On")?.Expiration,
 				SABCExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "Self Aid & Buddy Care (SABC)")?.Expiration,
-				HandGunExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "M9 HG AFQC (INITIAL/RECURRING)")?.Expiration,
-				Carbine_RifleExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == "M4 RIFLE/CARBINE GROUP C AFQC")?.Expiration,
+				HandGunExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == WeaponCourseTypes.Handgun)?.Expiration,
+				Carbine_RifleExpiration = person.CourseInstances.FirstOrDefault(coursePersonTook => coursePersonTook.Course.Name == WeaponCourseTypes.Rifle_Carbine)?.Expiration,
 			});
 
 			foreach (var person in peopleToDisplay)

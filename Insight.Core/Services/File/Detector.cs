@@ -36,7 +36,7 @@ namespace Insight.Core.Services.File
 			{
 				foreach (var supportedFileType in SupportedFileTypes)
 				{
-					if (line.Contains(supportedFileType.Value))
+					if (line.IndexOf(supportedFileType.Value, System.StringComparison.OrdinalIgnoreCase) >= 0)
 					{
 						return supportedFileType.Key;
 					}

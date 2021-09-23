@@ -150,7 +150,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 						"People Assigned,,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						",,,,,,,,,,,,",
-						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
 						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N",

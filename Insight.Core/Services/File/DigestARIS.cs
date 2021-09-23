@@ -15,7 +15,7 @@ namespace Insight.Core.Services.File
 		private int _completionDateIndex;
 		private int _expirationDateIndex;
 
-		int IDigest.Priority => 1;
+		int IDigest.Priority => 3;
 
 		public DigestARIS(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
 		{
@@ -29,17 +29,18 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
+				var line = FileContents[i].ToUpper();
 				if (!headersProcessed)
 				{
-					if (FileContents[i].Contains("HANDGUN"))
+					if (line.Contains("HANDGUN"))
 					{
 						_weaponType = WeaponCourseTypes.Handgun;
 					}
-					else if (FileContents[i].Contains("RIFLE/CARBINE"))
+					else if (line.Contains("RIFLE/CARBINE"))
 					{
 						_weaponType = WeaponCourseTypes.Rifle_Carbine;
 					}
-					else if (!new Regex("^,+$").IsMatch(FileContents[i]) && !FileContents[i].Contains("People Assigned"))
+					else if (!new Regex("^,+$").IsMatch(line) && !line.Contains("PEOPLE ASSIGNED"))
 					{
 						SetColumnIndexes(FileContents[i].Split(','));
 						headersProcessed = true;
@@ -71,6 +72,12 @@ namespace Insight.Core.Services.File
 		{
 			foreach (string line in FileContents)
 			{
+				//if index of name column is not valid, skip this person
+				//if(_nameIndex < 0)
+				//{
+				//	continue;
+				//}
+
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				string firstName = splitLine[_nameIndex + 1].Replace("\"", "").Trim();

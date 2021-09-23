@@ -159,10 +159,30 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"People Assigned,,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						",,,,,,,,,,,,",
-						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
 						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 May 2021,CURRENT,30 May 2022,QUALIFIED,Y,N,N"
+					},
+					expectedFirstName: "Sophie",
+					expectedLastName: "Alsop",
+					expectedFileType: FileType.ARIS_Rifle_Carbine,
+					courseCompletionExpected: DateTime.Parse("26 May 2021"),
+					courseExpirationExpected: DateTime.Parse("30 May 2022")
+
+				),
+				//test case - extra empty lines
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"People Assigned,,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
+						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 May 2021,CURRENT,30 May 2022,QUALIFIED,Y,N,N",
+						",,,,,,,,,,,,"
 					},
 					expectedFirstName: "Sophie",
 					expectedLastName: "Alsop",
@@ -197,7 +217,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"People Assigned,,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						",,,,,,,,,,,,",
-						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
 						"\", FirstName\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N"
@@ -212,7 +232,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"People Assigned,,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						",,,,,,,,,,,,",
-						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
 						"\", \",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N"
