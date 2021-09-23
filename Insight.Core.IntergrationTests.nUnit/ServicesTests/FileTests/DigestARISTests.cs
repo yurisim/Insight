@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
@@ -38,7 +37,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestARIS_ExpectOnePersonsTestCases))]
 		public void DigestARISTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
-			var (input, expectedFirstName, expectedLastName, expectedFileType) = testCaseParameters;
+			var (input, expectedFirstName, expectedLastName, expectedFileType, courseCompletionExpected, courseExpirationExpected) = testCaseParameters;
 
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
@@ -60,7 +59,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
 			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			Course course;
+
+			Course course = null;
 			if (expectedFileType == FileType.ARIS_Handgun)
 			{
 				course = insightController.GetCourseByName(WeaponCourseTypes.Handgun).Result;
@@ -69,12 +69,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			{
 				course = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
 			}
-			else
-			{
-				//Should never be run, test will fail if it does
-				course = new Course();
-			}
-
 			
 
 			//assert
@@ -83,16 +77,23 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				detectedFileType.Should().Be(expectedFileType);
 				digest.Should().BeOfType<DigestARIS>();
 
-				
-
 				allPersons.Count.Should().Be(1);
 
 				person.Should().NotBeNull();
 
-				person.FirstName.Should().Be(expectedFirstName.Trim().ToUpperInvariant());
-				person.LastName.Should().Be(expectedLastName.Trim().ToUpperInvariant());
+				CourseInstance courseInstanceToCheck = new CourseInstance()
+				{
+					Person = person,
+					Course = course,
+					Completion = courseCompletionExpected,
+					Expiration = courseExpirationExpected
+				};
+				CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
 
-				course.CourseInstances.Count.Should().NotBe(0);
+				courseInstanceFromDB.Should().NotBeNull();
+
+				course.CourseInstances.Should().HaveCount(1);
+				person.CourseInstances.Should().HaveCount(1);
 			}
 		}
 
@@ -100,7 +101,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		public void DigestARISTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
 			var (input, expectedFileType) = testCaseParameters;
-			
+
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
 
@@ -112,12 +113,15 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
+			var courses = insightController.GetAll<Course>().Result;
+
 
 			//assert
 			using (new AssertionScope())
 			{
 				detectedFileType.Should().Be(expectedFileType);
 				allPersons.Count.Should().Be(0);
+				courses.Count.Should().Be(0);
 
 			}
 		}
@@ -143,7 +147,9 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					},
 					expectedFirstName: "Sophie",
 					expectedLastName: "Alsop",
-					expectedFileType: FileType.ARIS_Handgun
+					expectedFileType: FileType.ARIS_Handgun,
+					courseCompletionExpected: DateTime.Parse("26 Apr 2021"),
+					courseExpirationExpected: DateTime.Parse("30 Apr 2022")
 				),
 
 				//test case - base case Rifle/Carbine
@@ -156,11 +162,14 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
-						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N"
+						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 May 2021,CURRENT,30 May 2022,QUALIFIED,Y,N,N"
 					},
 					expectedFirstName: "Sophie",
 					expectedLastName: "Alsop",
-					expectedFileType: FileType.ARIS_Rifle_Carbine
+					expectedFileType: FileType.ARIS_Rifle_Carbine,
+					courseCompletionExpected: DateTime.Parse("26 May 2021"),
+					courseExpirationExpected: DateTime.Parse("30 May 2022")
+
 				),
 			};
 
@@ -173,12 +182,12 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"People Assigned,,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						",,,,,,,,,,,,",
-						"RIFLE/CARBINE (Group B),,,,,,,,,,,,",
+						"HANDGUN (GROUP B),,,,,,,,,,,,",
 						",,,,,,,,,,,,",
 						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
-						"\"lastName, \",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N"
+						"\"lastName, \",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,5 Nov 2021,CURRENT,30 Nov 2022,QUALIFIED,Y,N,N"
 					},
-					expectedFileType: FileType.ARIS_Rifle_Carbine
+					expectedFileType: FileType.ARIS_Handgun
 				),
 
 				//test case - no last name
@@ -211,7 +220,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFileType: FileType.ARIS_Rifle_Carbine
 				),
 			};
-
 		}
 
 		/// <summary>
@@ -223,23 +231,28 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			private readonly string _expectedFirstName;
 			private readonly string _expectedLastName;
 			private readonly FileType _expectedFileType;
+			private readonly DateTime _courseCompletionExpected;
+			private readonly DateTime _courseExpirationExpected;
 
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, FileType expectedFileType)
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, FileType expectedFileType, DateTime courseCompletionExpected, DateTime courseExpirationExpected)
 			{
 				_input = input;
 				_expectedFirstName = expectedFirstName;
 				_expectedLastName = expectedLastName;
 				_expectedFileType = expectedFileType;
+				_courseCompletionExpected = courseCompletionExpected;
+				_courseExpirationExpected = courseExpirationExpected;
 			}
 
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out FileType expectedFileType)
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out FileType expectedFileType, out DateTime courseCompletionExpected, out DateTime courseExpirationExpected)
 			{
 				input = _input;
 				expectedFirstName = _expectedFirstName;
 				expectedLastName = _expectedLastName;
 				expectedFileType = _expectedFileType;
+				courseCompletionExpected = _courseCompletionExpected;
+				courseExpirationExpected = _courseExpirationExpected;
 			}
-
 
 			public TestCaseObject(IList<string> input, FileType expectedFileType)
 			{
