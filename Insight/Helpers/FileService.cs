@@ -19,7 +19,7 @@ namespace Insight.Helpers
 		/// <param name="files">collection of storage files</param>
 		/// <param name="fileNames">names of aforementioned files</param>
 		/// <returns>A list of token strings corresponding to the files that were placed there</returns>
-		private static List<string> RememberFiles(IEnumerable<StorageFile> files, ref List<string> fileNames)
+		private static List<string> RememberFiles(IEnumerable<StorageFile> files)
 		{
 			var tokenStrings = new List<string>();
 
@@ -27,7 +27,6 @@ namespace Insight.Helpers
 			{
 				var token = Guid.NewGuid().ToString();
 				tokenStrings.Add(token);
-				fileNames.Add(file.Name);
 
 				StorageApplicationPermissions.MostRecentlyUsedList.AddOrReplace(token, file);
 			}
@@ -57,11 +56,15 @@ namespace Insight.Helpers
 			}
 		}
 
-		public static async Task<(List<List<string>> fileContents, List<string> fileNames)> GetFiles()
+		/// <summary>
+		/// Method to 
+		/// </summary>
+		/// <returns></returns>
+		public static async Task<(List<List<string>> fileContents, List<string> failedFileNames)> GetContentsOfFiles()
 		{
 
-			// Move file to Future Access List
-			var fileNames = new List<string>();
+			// This is the list of files that failed to process. If this list stays empty, that means there were no issues. 
+			var failedFileNames = new List<string>();
 
 			// Represents the collection of files, with each element being their contents as an List
 			// of strings
@@ -80,7 +83,7 @@ namespace Insight.Helpers
 
 			if (files != null)
 			{
-				List<string> fileTokens = RememberFiles(files.ToArray(), ref fileNames);
+				List<string> fileTokens = RememberFiles(files.ToArray());
 
 				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
 				foreach (var fileToken in fileTokens)
@@ -99,7 +102,8 @@ namespace Insight.Helpers
 				}
 			}
 
-			return (fileCollection, fileNames);
+			return (fileCollection, failedFileNames);
 		}
 	}
+
 }

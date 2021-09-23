@@ -10,7 +10,7 @@ using Insight.ViewModels;
 
 namespace Insight.Views
 {
-	public sealed partial class UploadItemControl : UserControl
+	public sealed partial class UploadItemControl
 	{
 		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
 		// TODO: No Longer need this.
@@ -38,20 +38,28 @@ namespace Insight.Views
 		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
 		{
 			// This is the file dialog returns a array of arrays of file contents
-			var contentsOfFiles = await FileService.GetFiles();
+			var (fileContents, failedFileNames) = await FileService.GetContentsOfFiles();
 
 			var contentsToDigest = new List<IDigest>();
 
 			// This orders the file contents in the right 
-			foreach (var linesOfFile in contentsOfFiles.fileContents)
+			foreach (var linesOfFile in fileContents)
 			{
 				// Refactor this to be a static method
 				var detectedFiletype = Detector.DetectFileType(linesOfFile);
 
-				//if (detectedFiletype == Core.Models.FileType.Unknown) throw new Exception("Unsupported file type");
-
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
-				contentsToDigest.Add(DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null));
+				var digestor = DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null);
+
+				// If the file is an undetectable file type, it is null
+				if (digestor == null)
+				{
+					
+				}
+				else
+				{
+					contentsToDigest.Add(digestor);
+				}
 			}
 
 			contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
@@ -68,7 +76,7 @@ namespace Insight.Views
 				CloseButtonText = "OK",
 
 				// Make steps to concatenate all filenames into 1 string
-				Content = contentsOfFiles.fileNames[0],
+				Content = failedFileNames[0],
 				DefaultButton = ContentDialogButton.Close
 			};
 
