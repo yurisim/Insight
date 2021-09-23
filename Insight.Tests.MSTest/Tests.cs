@@ -1,6 +1,7 @@
 ﻿using System;
 using Insight.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
 
 namespace Insight.Tests.MSTest
 {
@@ -43,5 +44,7 @@ namespace Insight.Tests.MSTest
 			StatusViewModel vm = new StatusViewModel();
 			Assert.IsNotNull(vm);
 		}
+
+		
 	}
 }

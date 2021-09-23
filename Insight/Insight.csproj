@@ -148,6 +148,7 @@
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\FileService.cs" />
+    <Compile Include="Helpers\PercentageColor.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\StatusPageGenerateColumnCommand.cs" />
     <Compile Include="Services\ActivationService.cs" />
