@@ -53,23 +53,20 @@ namespace Insight.Views
 				var digestor = DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null);
 
 				// If the file is an undetectable file type, it is null
-				if (digestor == null)
-				{
-					
-				}
-				else
+				if (digestor != null)
 				{
 					contentsToDigest.Add(digestor);
 				}
-			}
 
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
 				var digest = DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null);
 
 				if (digest != null)
 				{
-					FileDigest.Add(digest);
+					contentsToDigest.Add(digest);
 				}
+			}
+
 			contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
 			foreach (var content in contentsToDigest)
