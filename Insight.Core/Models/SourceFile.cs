@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Insight.Core.Models
 {
-	public class GradeAlias
+	public class SourceFile
 	{
-		[Key, Required]
+		[Key]
 		public int Id { get; set; }
 
-		public Grade Grade { get; set; }
-
 		public string Name { get; set; }
+
+		public DateTime DateUploaded { get; set; }
 	}
 }

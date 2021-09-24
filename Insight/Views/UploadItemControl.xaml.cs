@@ -1,72 +1,89 @@
-﻿using Insight.Core.Services.File;
-using Insight.Helpers;
-using Insight.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Insight.Core.Services.File;
+using Insight.Helpers;
+using Insight.ViewModels;
+using System.Resources;
 
 namespace Insight.Views
 {
-	public sealed partial class UploadItemControl : UserControl
+	public sealed partial class UploadItemControl
 	{
-		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
+		// TODO: No Longer need this.
+		public static readonly DependencyProperty FileTypeProperty =
+			DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
 
 		public UploadItemControl()
 		{
 			InitializeComponent();
 		}
 
+		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+
 		public string FileType
 		{
-			get { return (string)GetValue(FileTypeProperty); }
-			set { SetValue(FileTypeProperty, value); }
+			get => (string) GetValue(FileTypeProperty);
+			set => SetValue(FileTypeProperty, value);
 		}
 
-		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
-		// TODO: No Longer need this.
-		public static readonly DependencyProperty FileTypeProperty = DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
-
 		/// <summary>
-		/// TODO: Need to move this to view model. No
+		///     TODO: Need to move this to view model. No
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
 		{
-			var contentsOfFiles = await FileService.GetFiles();
+			// This is the file dialog returns a array of arrays of file contents
+			var (fileContents, failedFileNames) = await FileService.GetContentsOfFiles();
 
-			Debug.WriteLine("FilesRead");
+			var contentsToDigest = new List<IDigest>();
 
-			List<IDigest> FileDigest = new List<IDigest>();
-
-			foreach (List<string> linesOfFile in contentsOfFiles)
+			// This orders the file contents in the right 
+			foreach (var linesOfFile in fileContents)
 			{
 				// Refactor this to be a static method
-				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
-
-				if (detectedFiletype == Core.Models.FileType.Unknown)
-				{
-					throw new Exception("Unsupported file type");
-				}
+				var detectedFiletype = Detector.DetectFileType(linesOfFile);
 
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
-				var digest = DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null);
+				var digestor = DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null);
 
-				if (digest != null)
+				// If the file is an undetectable file type, it is null
+				if (digestor != null)
 				{
-					FileDigest.Add(digest);
+					contentsToDigest.Add(digestor);
 				}
 			}
 
-			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+			contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
-			foreach (var digest in FileDigest)
-			{
-				digest.CleanInput();
-				digest.DigestLines();
+			foreach (var content in contentsToDigest)
+			{ 
+				content.CleanInput();
+				content.DigestLines();
 			}
+
+			// why can't I link the resource file? doesn't seem to work in Strings or in Resource.resw :(
+			const string uploadItem_FilesSuccess = "Files were successfully uploaded!";
+			const string uploadItem_FilesFailure = "One or more items have failed. The following files could not be digested:";
+
+			var dialog = new ContentDialog
+			{
+				Title = "Upload Status",
+				CloseButtonText = "OK",
+
+				// Make steps to concatenate all filenames into 1 string
+				Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure,
+
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			var result = await dialog.ShowAsync();
+
 		}
 	}
 }

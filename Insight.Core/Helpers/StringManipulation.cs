@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Insight.Core.Helpers
 {
-	public class StringManipulation
+	public static class StringManipulation
 	{
 		/// <summary>
 		/// Converts string to have proper title case.

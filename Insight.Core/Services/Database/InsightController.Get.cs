@@ -157,7 +157,7 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Gets AFSC by name
 		/// </summary>
-		/// <param name="name"></param>
+		/// <param name="pafsc"></param>
 		/// <returns></returns>
 		public async Task<AFSC> GetAFSC(string pafsc)
 		{

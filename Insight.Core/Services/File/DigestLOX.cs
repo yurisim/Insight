@@ -149,7 +149,7 @@ namespace Insight.Core.Services.File
 				}
 
 				//continue if invalid first/last name
-				if (String.IsNullOrWhiteSpace(firstName) || String.IsNullOrWhiteSpace(lastName))
+				if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
 				{
 					continue;
 				}

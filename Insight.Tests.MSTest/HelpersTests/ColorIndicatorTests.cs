@@ -5,12 +5,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
 
 namespace Insight.Tests.MSTest.HelpersTests
 {
-	class ColorIndicatorTests
+	internal class ColorIndicatorTests
 	{
 		[UITestMethod]
 		public void TestPercentageVeryHighStyleSelector()
 		{
 			PercentageColor percentageColor = new PercentageColor();
+
 			Assert.AreEqual(percentageColor.VeryHighPercent, percentageColor.GetStyle(95));
 		}
 

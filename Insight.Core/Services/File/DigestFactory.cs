@@ -1,6 +1,7 @@
 ﻿using Insight.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Insight.Core.Services.File
 {
@@ -12,7 +13,8 @@ namespace Insight.Core.Services.File
 		/// <param name="fileType">Type of file digest to be created</param>
 		/// <param name="fileContents">Contents of file to be digested</param>
 		/// <param name="dbContextOptions"></param>
-		/// <returns>Returns IDigest object</returns>
+		/// <returns>Returns IDigest object, can be null</returns>
+		[CanBeNull]
 		public static IDigest GetDigestor(FileType fileType, IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions)
 		{
 			switch (fileType)
@@ -32,8 +34,9 @@ namespace Insight.Core.Services.File
 				case FileType.ARIS_Handgun:
 				case FileType.ARIS_Rifle_Carbine:
 					return new DigestARIS(fileContents, dbContextOptions);
+				case FileType.Unknown:
+					return null;
 				default:
-					//TODO Throw custom exception indicating the digestor requested hasn't been implemented yet.
 					return null;
 			}
 		}
