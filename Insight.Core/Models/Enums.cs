@@ -1,5 +1,11 @@
 ﻿namespace Insight.Core.Models
 {
+	public class WeaponCourseTypes
+	{
+		public const string Handgun = "M9 Handgun Course";
+		public const string Rifle_Carbine = "M4 Rifle/Carbine Course";
+	}
+
 	public enum Status
 	{
 		Unknown = 0,
@@ -64,5 +70,9 @@
 		LOX,
 		///<summary>Security Forces Management Information System</summary>
 		SFMIS,
+		///<summary>Automated Readiness Information System; Handgun</summary>
+		ARIS_Handgun,
+		///<summary>Automated Readiness Information System; Rifle/Carbine</summary>
+		ARIS_Rifle_Carbine,
 	}
 }
