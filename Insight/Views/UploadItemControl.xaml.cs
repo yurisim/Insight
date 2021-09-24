@@ -52,7 +52,12 @@ namespace Insight.Views
 				}
 
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
-				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null));
+				var digest = DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null);
+
+				if (digest != null)
+				{
+					FileDigest.Add(digest);
+				}
 			}
 
 			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));

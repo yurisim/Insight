@@ -123,6 +123,44 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 				},
 				//end test case
 
+				//test case - detect ARIS_Handgun
+				new object[] {
+					//input - FOUO header/footer
+					new List<string>
+					{
+						"People Assigned,,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"HANDGUN (GROUP B),,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
+						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N",
+
+					},
+					//expected
+					FileType.ARIS_Handgun
+				},
+				//end test case
+
+				//test case - detect ARIS_Rifle/Carbine
+				new object[] {
+					//input - FOUO header/footer
+					new List<string>
+					{
+						"People Assigned,,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)",
+						",,,,,,,,,,,,",
+						"Name,Organizations,Control AFSC,Duty AFSC,Rank,Scheduled Date,Last Completion Date,Status,Qual Expiration Date,Qual Status,User Assigned,Do Not Schedule,Licensed",
+						"\"Alsop, Sophie\",960 AIRBORNE AIR CTRL SQ FFDFP0,,,AMN,,26 Apr 2021,CURRENT,30 Apr 2022,QUALIFIED,Y,N,N",
+
+					},
+					//expected
+					FileType.ARIS_Rifle_Carbine
+				},
+				//end test case
+
 				//test case - empty list
 				new object[] {
 					//input - FOUO header/footer

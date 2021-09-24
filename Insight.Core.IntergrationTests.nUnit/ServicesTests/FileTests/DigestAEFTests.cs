@@ -98,7 +98,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				detectedFileType.Should().Be(FileType.AEF);
 				digest.Should().BeOfType<DigestAEF>();
 
-				allPersons.Count.Should().Be(0);
+				allPersons.Should().HaveCount(0);
 			}
 		}
 
@@ -161,7 +161,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedTrainingOverallStatus : Status.Current
 				),
 
-				//test case - base case
+				//test case - No statuses
 				new TestCaseObject(
 					input: new List<string>
 					{
@@ -183,11 +183,11 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			public static object[] DigestAEF_ExpectZeroPersonsTestCases =
 			{
-				//test case - no data rows
+				//test case - no person that exists in database
 				new TestCaseObject(
 					input: new List<string>
 					{
-						"\"1The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
 						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
 						"Name,Course Count,DRC Status for Email,PayGrade,AEFI,Unit,PASCode,AFSC,Gender,Duty Status,Personnel,Medical,Training,Has AEF Account,Visited AEF Online,Checklist Status,ModeTip",
 						"SMITH JOHN,0,,E3,YR,552 AIR CON/NETWORKS SQ (FFKG80),TE1CFKG8,3D054,M,PRES FOR DUTY,,,,Y,Y,Member Started,",
@@ -196,11 +196,11 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"" //throwaway parameter since you can't deconstruct to a single parameter
 				),
 
-				//test case - no person that exists in database
+				//test case - no data rows
 				new TestCaseObject(
 					input: new List<string>
 					{
-						"\"2The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
 						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
 						"Name,Course Count,DRC Status for Email,PayGrade,AEFI,Unit,PASCode,AFSC,Gender,Duty Status,Personnel,Medical,Training,Has AEF Account,Visited AEF Online,Checklist Status,ModeTip",
 						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",

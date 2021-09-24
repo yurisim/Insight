@@ -18,6 +18,8 @@ namespace Insight.Core.Services.File
 				{FileType.ETMS, Resources.ETMSExpected},
 				{FileType.LOX, Resources.LOXExpected},
 				{FileType.SFMIS, Resources.SFMISExpected},
+				{FileType.ARIS_Handgun, Resources.ARISHandGunExpected},
+				{FileType.ARIS_Rifle_Carbine, Resources.ARISRifleCarbineExpected},
 			};
 
 		/// <summary>
@@ -28,13 +30,13 @@ namespace Insight.Core.Services.File
 		{
 			if (inputFile == null) { return FileType.Unknown; }
 
-			var firstThreeLines = inputFile.Take(3);
+			var firstFewLines = inputFile.Take(4);
 
-			foreach (var line in firstThreeLines)
+			foreach (var line in firstFewLines)
 			{
 				foreach (var supportedFileType in SupportedFileTypes)
 				{
-					if (line.Contains(supportedFileType.Value))
+					if (line.IndexOf(supportedFileType.Value, System.StringComparison.OrdinalIgnoreCase) >= 0)
 					{
 						return supportedFileType.Key;
 					}

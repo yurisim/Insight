@@ -24,6 +24,8 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.FileTests
 		[TestCase(FileType.LOX, typeof(DigestLOX))]
 		[TestCase(FileType.PEX, typeof(DigestPEX))]
 		[TestCase(FileType.SFMIS, typeof(DigestSFMIS))]
+		[TestCase(FileType.ARIS_Handgun, typeof(DigestARIS))]
+		[TestCase(FileType.ARIS_Rifle_Carbine, typeof(DigestARIS))]
 		public void DigestFactoryTestCases(FileType input, Type expected)
 		{
 			//arange
