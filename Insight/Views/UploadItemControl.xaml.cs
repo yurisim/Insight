@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Insight.Core.Services.File;
 using Insight.Helpers;
 using Insight.ViewModels;
+using System.Resources;
 
 namespace Insight.Views
 {
@@ -70,18 +71,20 @@ namespace Insight.Views
 				content.DigestLines();
 			}
 
+			// why can't I link the resource file? doesn't seem to work in Strings or in Resource.resw :(
+			const string uploadItem_FilesSuccess = "Files were successfully uploaded!";
+			const string uploadItem_FilesFailure = "One or more items have failed. The following files could not be digested:";
+
 			var dialog = new ContentDialog
 			{
 				Title = "Upload Status",
 				CloseButtonText = "OK",
 
 				// Make steps to concatenate all filenames into 1 string
-				Content = failedFileNames[0],
+				Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure,
+
 				DefaultButton = ContentDialogButton.Close
 			};
-
-
-			//dialog.Content = new ContentDialogContent();
 
 			var result = await dialog.ShowAsync();
 
