@@ -12,11 +12,12 @@ namespace Insight.Core.Services.Database
 	{
 		/// <summary>
 		/// Returns all Person objects from database
+		/// TODO :// Take off the includes and make other methods to handle specific cases
 		/// </summary>
 		/// <returns></returns>
 		public async Task<List<Person>> GetAllPersons()
 		{
-			List<Person> persons;
+			var persons = new List<Person>();
 
 			try
 			{
@@ -37,7 +38,7 @@ namespace Insight.Core.Services.Database
 			}
 			catch (Exception)
 			{
-				throw new Exception("Insight.db access error");
+				//throw new Exception("Insight.db access error");
 			}
 
 			return persons;

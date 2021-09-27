@@ -9,7 +9,7 @@ namespace Insight.Core.Services.File
 {
 	public class DigestLOX : AbstractDigest, IDigest
 	{
-		int IDigest.Priority { get => 0; }
+		int IDigest.Priority => 0;
 
 		//indexes of columns of the named piece of data. Set to -1 so that they're not defaulted to 0, since 0 is possible desired/valid index.
 		private int _firstNameIndex = -1;
@@ -21,7 +21,18 @@ namespace Insight.Core.Services.File
 
 		private string _squadron = "";
 
-		public DigestLOX(IList<string> FileContents, DbContextOptions<InsightContext> dbContextOptions) : base(FileContents, dbContextOptions)
+		private readonly List<string> HeadersToIgnore = new List<string>()
+		{
+			"CONTROLLED UNCLASSIFIED INFORMATION",
+			"FOR OFFICIAL USE ONLY",
+			"(CONTROLLED WITH STANDARD DISSEMINATION)",
+			"LETTER OF CERTIFICATIONS",
+			"FLIGHT QUALS",
+			"DUAL QUAL"
+		};
+	 
+
+		public DigestLOX(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
 		{
 
 		}
@@ -33,36 +44,40 @@ namespace Insight.Core.Services.File
 		{
 			//headers found and indexes set for the columns to be digested
 			bool headersProcessed = false;
+
 			//end of file found, no more person data left
 			bool endOfDataReached = false;
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
+				var lineToUpper = FileContents[i].ToUpper().Split(',');
+				//string[] splitLine = FileContents[i].Split(',');
 
 				//if column headers are not processed yet, we're still in the top section of the file before the person data
 				if (!headersProcessed)
 				{
-					string lineToUpper = FileContents[i].ToUpper();
-
-					//finds squadron string
+					// finds squadron string
+					// This command helps find "552 ACNS" from "Squadron: 552 ACNS"
 					Regex regexSquadron = new Regex(@"^Squadron: (.+?),", RegexOptions.IgnoreCase);
+
 					if (regexSquadron.IsMatch(FileContents[i]))
 					{
 						_squadron = regexSquadron.Match(FileContents[i]).Groups[1].Value;
+
 					}
-					//checks for strings that identify lines that can be ignored
-					else if (!lineToUpper.Contains("CONTROLLED UNCLASSIFIED INFORMATION")
-						&& !lineToUpper.Contains("FOR OFFICAL USE ONLY")
-						&& !lineToUpper.Contains("CONTROLLED WITH STANDARD DISSEMINATION")
-						&& !lineToUpper.Contains("LETTER OF CERTIFICATIONS")
-						&& !(lineToUpper.Contains("FLIGHT QUALS") && lineToUpper.Contains("DUAL QUAL")))
+					else if (HeadersToIgnore.Any(header => lineToUpper.Contains(header)))
 					{
-						//Sets the index of the data columnns that need to be accessed
-						SetColumnIndexes(splitLine);
+						//finds lines that should be ignored and skips them
+					}
+                    else
+                    {
+						//through process of elimination, everything has been removed from above the person data except for the column headers
+						//Sets the index of the data columns that need to be accessed
+						SetColumnIndexes(lineToUpper);
 
 						headersProcessed = true;
 					}
+
 					FileContents.RemoveAt(i);
 					i--;
 				}
@@ -76,7 +91,7 @@ namespace Insight.Core.Services.File
 					}
 
 					//remove persons with a mds of "E-3G(II)" or anything after the end of data
-					if (splitLine[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
+					if (lineToUpper[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
 					{
 						FileContents.RemoveAt(i);
 						i--;
@@ -168,6 +183,7 @@ namespace Insight.Core.Services.File
 						Training = new Training(),
 						Personnel = new Personnel(),
 						PEX = new PEX(),
+						Rank = rank,
 						//Organization = org,
 					};
 					insightController.Add(person);

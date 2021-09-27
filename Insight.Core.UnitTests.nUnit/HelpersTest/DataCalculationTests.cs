@@ -17,10 +17,10 @@ namespace Insight.Core.UnitTests.nUnit.HelpersTest
 			var (input, expectedOverallPercent) = testCaseParameters;
 
 			//act
-			decimal OverallPercent = DataCalculation.GetReadinessPercentage(input);
+			decimal overallPercent = DataCalculation.GetReadinessPercentage(input);
 
 			//assert
-			OverallPercent.Should().Be(expectedOverallPercent);
+			_ = overallPercent.Should().Be(expectedOverallPercent);
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.GetReadinessPercentageByCatagoryTestCases))]
