@@ -3,23 +3,28 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Insight.Core.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
 	public partial class InsightControllerTests
 	{
 		[TestCase("SmithJ", "John", "Smith")]
-		public void GetPersonByShortNameTest(string shortName, string expectedFirstName, string expectedLastName)
+		public void GetPersonsShortName_Expect__One(string shortName, string expectedFirstName, string expectedLastName)
 		{
 			//arrange
 
 			//act
-			var person = controller.GetPersonByShortName(shortName);
+			var persons = controller.GetPersonsByShortName(shortName)?.Result;
 
 			//assert
-			person.Should().NotBeNull();
-			person.FirstName = expectedFirstName;
-			person.LastName = expectedLastName;
+			persons?.Should().HaveCount(1);
+
+			Debug.Assert(persons != null, nameof(persons) + " != null");
+
+			persons.First().FirstName = expectedFirstName;
+			persons.First().LastName = expectedLastName;
 		}
 
 		[Test]

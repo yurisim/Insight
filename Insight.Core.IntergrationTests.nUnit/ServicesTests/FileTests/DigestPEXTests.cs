@@ -77,7 +77,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestPEX_ExpectZeroPersonsTestCases))]
 		public void DigestPEXTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
-			var (input, _) = testCaseParameters;
+			(IList<string> input, string _) = testCaseParameters;
 
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
