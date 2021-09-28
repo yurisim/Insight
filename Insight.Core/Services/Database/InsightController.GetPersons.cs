@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Insight.Core.Services.Database
 {
@@ -120,11 +121,10 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Returns person that matches shortName within a organization
 		/// </summary>
-		/// <param name="firstName"></param>
-		/// <param name="lastName"></param>
+		/// <param name="shortName">A "shortName" is a name like SmithJ</param>
 		/// <returns></returns>
-		/// 
-		public Person GetPersonByShortName(string shortName)
+		[CanBeNull]
+		public async Task<List<Person>> GetPersonsByShortName(string shortName)
 		{
 
 			// break up shortname into first letters and last name
@@ -145,25 +145,20 @@ namespace Insight.Core.Services.Database
 			var lastName = shortName.Substring(0, indexOfCapital);
 
 			// now try to find the person with the name
-			Person foundPerson = null;
+			List<Person> foundPersons = null;
+
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundPeople = insightContext.Persons
+					foundPersons = await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(person => person.FirstName.Contains(firstLetters.ToUpperInvariant()) && person.LastName == lastName.ToUpperInvariant());
-
-					//TODO implement better exceptions
-					if (foundPeople.Count() > 1)
-					{
-						throw new Exception("Too many Persons found, should be null or 1");
-					}
-
-					foundPerson = foundPeople.FirstOrDefault();
+						.Where(person => person.FirstName.Contains(firstLetters.ToUpperInvariant())
+										 && person.LastName == lastName.ToUpperInvariant())
+						.ToListAsync();
 				}
 			}
 			//TODO implement exception
@@ -172,7 +167,7 @@ namespace Insight.Core.Services.Database
 				Debug.WriteLine(e);
 			}
 			//returns person or null if none exist
-			return foundPerson;
+			return foundPersons;
 		}
 
 		/// <summary>

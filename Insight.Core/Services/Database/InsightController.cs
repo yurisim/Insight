@@ -28,26 +28,27 @@ namespace Insight.Core.Services.Database
 		/// <summary>
 		/// Ensures database has been created.
 		/// </summary>
-		public void EnsureDatabaseCreated()
+		public async void EnsureDatabaseCreated()
 		{
-			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+			using (var insightContext = new InsightContext(_dbContextOptions))
 			{
 				//Ensure database is created
-				_ = insightContext.Database.EnsureCreated();
+				_ = await insightContext.Database.EnsureCreatedAsync();
 			}
 		}
 
 		/// <summary>
 		/// Ensures database has been deleted.
 		/// </summary>
-		public void EnsureDatabaseDeleted()
+		public async void EnsureDatabaseDeleted()
 		{
 			using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 			{
 				//Ensure database is created
-				_ = insightContext.Database.EnsureDeleted();
+				_ = await insightContext.Database.EnsureDeletedAsync();
 			}
 		}
+
 
 		/// <summary>
 		/// Add entity
@@ -94,37 +95,6 @@ namespace Insight.Core.Services.Database
 			}
 			//TODO implement exception
 		}
-
-		/// <summary>
-		/// This is a generic method used to either Get an Entity or if it's not found then to create the entity and return it.
-		/// TODO do not use not complete.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TOutput"></typeparam>
-		/// <param name="entity"></param>
-		/// <returns></returns>
-		//public async Task<T> GetOrCreate<T>(T entity)
-		//	where T: IGenericable
-		//{
-		//	var foundEntity = entity;
-
-		//	try
-		//	{
-		//		using (InsightContext insightContext = new InsightContext(_dbContextOptions))
-		//		{
-		//			foundEntity = (T)insightContext.FindAsync(entity.GetType(), entity.Id).Result;
-
-		//		}
-		//	}
-		//	//TODO implement exception
-		//	catch (Exception e)
-		//	{
-		//		Debug.WriteLine(e);
-		//	}
-
-		//	//returns person or null if none exist
-		//	return foundEntity;
-		//}
 
 		/// <summary>
 		/// Update entity in database

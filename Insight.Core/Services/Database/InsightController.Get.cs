@@ -46,10 +46,11 @@ namespace Insight.Core.Services.Database
 		/// <typeparam name="T"></typeparam>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public async Task<T> GetByID<T>(int id)
-			where T : class
+		[ItemCanBeNull]
+		public async Task<T> GetByID<T>(int id) where T : class
 		{
 			Task<T> output;
+
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
@@ -57,8 +58,6 @@ namespace Insight.Core.Services.Database
 					output = insightContext.FindAsync<T>(id).AsTask();
 				}
 			}
-
-			//TODO implement exception
 			catch (Exception e)
 			{
 				throw new Exception(e.Message);
@@ -72,12 +71,13 @@ namespace Insight.Core.Services.Database
 		/// If it doesn't exist, it spits out null. 
 		/// </summary>
 		/// <returns></returns>
+		[CanBeNull]
 		public async Task<CourseInstance> GetCourseInstance(CourseInstance instanceToCheck)
 		{
 			CourseInstance foundInstance;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
 					foundInstance = await insightContext.CourseInstances
 						.Include(p => p.Person)
@@ -97,11 +97,16 @@ namespace Insight.Core.Services.Database
 			return foundInstance;
 		}
 
+		/// <summary>
+		/// Gets course by its name
+		/// </summary>
+		/// <param name="courseName"></param>
+		/// <returns></returns>
 		[ItemCanBeNull]
 		public async Task<Course> GetCourseByName(string courseName)
 		{
 			// now try to find the course with the name
-			Task<Course> foundCourse= null;
+			Task<Course> foundCourse = null ;
 
 			try
 			{

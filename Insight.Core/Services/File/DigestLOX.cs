@@ -19,6 +19,10 @@ namespace Insight.Core.Services.File
 		private int _flightIndex = -1;
 		private int _crewPositionIndex = -1;
 
+
+		private const int Offset = 1; //this offset is to account for the comma in the Name field
+
+
 		private string _squadron = "";
 
 		private readonly List<string> HeadersToIgnore = new List<string>()
@@ -46,26 +50,26 @@ namespace Insight.Core.Services.File
 			bool headersProcessed = false;
 
 			//end of file found, no more person data left
-			bool endOfDataReached = false;
+			var endOfDataReached = false;
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				var lineToUpper = FileContents[i].ToUpper().Split(',');
-				//string[] splitLine = FileContents[i].Split(',');
+				var lineUpper = FileContents[i].ToUpper();
+				var splitUpperLine = lineUpper.Split(',');
 
 				//if column headers are not processed yet, we're still in the top section of the file before the person data
 				if (!headersProcessed)
 				{
 					// finds squadron string
 					// This command helps find "552 ACNS" from "Squadron: 552 ACNS"
-					Regex regexSquadron = new Regex(@"^Squadron: (.+?),", RegexOptions.IgnoreCase);
+					var regexSquadron = new Regex(@"^Squadron: (.+?),", RegexOptions.IgnoreCase);
 
-					if (regexSquadron.IsMatch(FileContents[i]))
+					if (regexSquadron.IsMatch(lineUpper))
 					{
-						_squadron = regexSquadron.Match(FileContents[i]).Groups[1].Value;
+						_squadron = regexSquadron.Match(lineUpper).Groups[1].Value;
 
 					}
-					else if (HeadersToIgnore.Any(header => lineToUpper.Contains(header)))
+					else if (HeadersToIgnore.Any(header => lineUpper.Contains(header)))
 					{
 						//finds lines that should be ignored and skips them
 					}
@@ -73,7 +77,7 @@ namespace Insight.Core.Services.File
                     {
 						//through process of elimination, everything has been removed from above the person data except for the column headers
 						//Sets the index of the data columns that need to be accessed
-						SetColumnIndexes(lineToUpper);
+						SetColumnIndexes(splitUpperLine);
 
 						headersProcessed = true;
 					}
@@ -84,14 +88,14 @@ namespace Insight.Core.Services.File
 				//person data and the end of person data can only be reached after column headers are processed
 				else
 				{
-					//checls if end of person data reached. assumes a completely empty line signals of person data
+					//checks if end of person data reached. assumes a completely empty line signals of person data
 					if (new Regex("^,+$").IsMatch(FileContents[i]))
 					{
 						endOfDataReached = true;
 					}
 
 					//remove persons with a mds of "E-3G(II)" or anything after the end of data
-					if (lineToUpper[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
+					if (splitUpperLine[_mdsIndex].Trim() == "E-3G(II)" || endOfDataReached)
 					{
 						FileContents.RemoveAt(i);
 						i--;
@@ -109,14 +113,12 @@ namespace Insight.Core.Services.File
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
 
-			int offset = 1;  //this offset is to account for the comma in the Name field
-
 			_lastNameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_firstNameIndex = _lastNameIndex + offset;
-			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + offset;
-			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + offset;
-			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + offset;
-			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + offset;
+			_firstNameIndex = _lastNameIndex + Offset; // offset
+			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + Offset; // offset
+			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + Offset; // offset
+			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + Offset; // offset
+			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + Offset; // offset
 		}
 
 		public void DigestLines()
@@ -125,7 +127,7 @@ namespace Insight.Core.Services.File
 			{
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
-				//TODO handle column mising (index of -1)
+				//TODO handle column missing (index of -1)
 				//need to make sure these are trimmed after quotes are removed
 				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
 				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
@@ -136,7 +138,7 @@ namespace Insight.Core.Services.File
 				string flight = splitLine[_flightIndex];
 
 				//return if invalid squadron
-				if (String.IsNullOrWhiteSpace(_squadron))
+				if (string.IsNullOrWhiteSpace(_squadron))
 				{
 					return;
 				}
