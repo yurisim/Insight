@@ -106,19 +106,19 @@ namespace Insight.Core.Services.File
 
 		/// <summary>
 		/// Sets the indexes for columns of data that needs to be digested
+		/// Values must be in all caps
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
 		private void SetColumnIndexes(string[] columnHeaders)
 		{
-			//Converts everything to upper case for comparison
-			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
+			columnHeaders = columnHeaders.Select(d => d.Trim()).ToArray();
 
 			_lastNameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_firstNameIndex = _lastNameIndex + Offset; // offset
-			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + Offset; // offset
-			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + Offset; // offset
-			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + Offset; // offset
-			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + Offset; // offset
+			_firstNameIndex = _lastNameIndex + Offset; // needs offset
+			_crewPositionIndex = Array.IndexOf(columnHeaders, "CP") + Offset; // needs offset
+			_mdsIndex = Array.IndexOf(columnHeaders, "MDS") + Offset; // needs offset
+			_rankIndex = Array.IndexOf(columnHeaders, "RANK") + Offset; // needs offset
+			_flightIndex = Array.IndexOf(columnHeaders, "FLIGHT") + Offset; // needs offset
 		}
 
 		public void DigestLines()
