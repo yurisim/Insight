@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Insight.Core.Helpers;
 
 namespace Insight.Core.Services.Database
 {
@@ -52,7 +53,7 @@ namespace Insight.Core.Services.Database
 		/// <returns></returns>
 		public async Task<List<Person>> GetAllPersons(Org org)
 		{
-			List<Person> persons;
+			var persons = new List<Person>();
 
 			try
 			{
@@ -80,15 +81,15 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public async Task<Person> GetPersonByName(string firstName, string lastName, bool includeSubref = true)
+		public async Task<List<Person>> GetPersonsByName(string firstName, string lastName, bool includeSubref = true)
 		{
-			Person person;
+			var persons = new List<Person>();
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					// TODO Make if else or make more readable
-					var persons = includeSubref ? await insightContext.Persons
+					persons = includeSubref ? await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
@@ -103,8 +104,6 @@ namespace Insight.Core.Services.Database
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-
-					person = persons.FirstOrDefault();
 				}
 
 			}
@@ -115,7 +114,7 @@ namespace Insight.Core.Services.Database
 			}
 
 			//returns person or null if none exist
-			return person;
+			return persons;
 		}
 
 		/// <summary>
@@ -126,25 +125,8 @@ namespace Insight.Core.Services.Database
 		[CanBeNull]
 		public async Task<List<Person>> GetPersonsByShortName(string shortName)
 		{
+			var (firstLetters, lastName) = StringManipulation.ConvertShortNameToNames(shortName);
 
-			// break up shortname into first letters and last name
-			// if name is SmithJ, then J Smith
-
-			// TODO MAKE MORE FACTORS to find the correct person
-
-			int indexOfCapital;
-			for (indexOfCapital = shortName.Length - 1; indexOfCapital >= 0; indexOfCapital--)
-			{
-				if (char.IsUpper(shortName[indexOfCapital]))
-				{
-					break;
-				}
-			}
-
-			var firstLetters = shortName.Substring(indexOfCapital);
-			var lastName = shortName.Substring(0, indexOfCapital);
-
-			// now try to find the person with the name
 			List<Person> foundPersons = null;
 
 			try
@@ -177,29 +159,25 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <param name="SSN"></param>
 		/// <returns></returns>
-		public Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
+		public async Task<List<Person>> GetPersonsByNameSSN(string firstName, string lastName, string SSN)
 		{
 			//TODO refactor to reuse code more and have better methods
-			List<Person> persons = new List<Person>();
-			Person person;
+			var persons = new List<Person>();
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					persons = await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToList();
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToListAsync();
 					//TODO implement better exceptions
 					if (persons.Count > 1)
 					{
 						throw new Exception("Too many Persons found, should be null or 1");
 					}
-
-					person = persons.FirstOrDefault();
-
 				}
 			}
 			//TODO implement exception
@@ -208,7 +186,7 @@ namespace Insight.Core.Services.Database
 				throw new Exception("Insight.db access error");
 			}
 			//returns person or null if none exist
-			return person;
+			return persons;
 		}
 	}
 }

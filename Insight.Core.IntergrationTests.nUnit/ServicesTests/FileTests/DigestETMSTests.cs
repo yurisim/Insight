@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -57,8 +58,11 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var course = insightController.GetCourseByName(courseName: expectedCourseName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var course = insightController.GetCoursesByName(courseName: expectedCourseName).Result.FirstOrDefault();
+
+			var allCourseInstances = insightController.GetAll<CourseInstance>().Result;
+
 			CourseInstance courseInstanceToCheck = new CourseInstance()
 			{
 				Person = person,
@@ -67,7 +71,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				// in case the course is null, the null operator just sets it to 1 year expiration by default
 				Expiration = expectedCourseCompletion.AddDays((course?.Interval ?? 1) * 365)
 			};
-			CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
+			CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())
@@ -107,9 +111,9 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var courses = insightController.GetAll<Course>().Result;
-			var course = insightController.GetCourseByName(expectedCourseName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var allCourses = insightController.GetAll<Course>().Result;
+			var course = insightController.GetCoursesByName(expectedCourseName).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())
@@ -122,14 +126,14 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				//if a course was created, there should only be one and no releated courseInstances
 				if (course != null)
 				{
-					courses.Count.Should().Be(1);
+					allCourses.Count.Should().Be(1);
 					person.CourseInstances.Count.Should().Be(0);
 					course.CourseInstances.Count.Should().Be(0);
 				}
 				//else, no couse was created
 				else
 				{
-					courses.Count.Should().Be(0);
+					allCourses.Count.Should().Be(0);
 				}
 			}
 		}

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using FluentAssertions;
 using System.Reflection;
+using System.Linq;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -76,14 +77,14 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		public void UpdatePerson()
 		{
 			//arrange
-			var person = controller.GetPersonByName("John", "Smith").Result;
+			var person = controller.GetPersonsByName("John", "Smith").Result.FirstOrDefault();
 
 			person.FirstName = "Johnathan";
 
 			//act
 			controller.Update(person);
 
-			var personFromDB = controller.GetPersonByName("Johnathan", "Smith").Result;
+			var personFromDB = controller.GetPersonsByName("Johnathan", "Smith").Result.FirstOrDefault();
 			//assert
 
 			personFromDB.Id.Should().Be(person.Id);

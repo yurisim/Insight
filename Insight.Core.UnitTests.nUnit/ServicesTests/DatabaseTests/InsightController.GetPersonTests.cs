@@ -46,7 +46,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		[Test]
 		public void GetPersonByName()
 		{
-			var person = controller.GetPersonByName("John", "Smith").Result;
+			var person = controller.GetPersonsByName("John", "Smith").Result.FirstOrDefault();
 
 			person.Should().NotBeNull();
 		}
@@ -57,7 +57,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
+			var person = controller.GetPersonsByName("JOHN", "SMITH").Result.FirstOrDefault();
 
 			//assert
 			person.Should().NotBeNull();
@@ -69,7 +69,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var person = controller.GetPersonByName("I should", "not exist").Result;
+			var person = controller.GetPersonsByName("I should", "not exist").Result.FirstOrDefault();
 
 			//assert
 			person.Should().BeNull();
@@ -84,7 +84,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//act
 			controller.Add(person);
 
-			var personFromDB = controller.GetPersonByName("Jonathan", "Xander").Result;
+			var personFromDB = controller.GetPersonsByName("Jonathan", "Xander").Result.FirstOrDefault();
 
 			//assert
 			person.Id.Should().Be(personFromDB.Id);
@@ -96,7 +96,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var person = controller.GetPersonByNameSSN("Graham", "Soyer", "123456789");
+			var person = controller.GetPersonsByNameSSN("Graham", "Soyer", "123456789").Result.FirstOrDefault();
 
 			//assert
 			person.Should().NotBeNull();
@@ -108,7 +108,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var person = controller.GetPersonByNameSSN("random", "name", "123456789");
+			var person = controller.GetPersonsByNameSSN("random", "name", "123456789").Result.FirstOrDefault();
 
 			//assert
 			person.Should().BeNull();
@@ -120,7 +120,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var person = controller.GetPersonByNameSSN("John", "Smith", "123456789");
+			var person = controller.GetPersonsByNameSSN("John", "Smith", "123456789").Result.FirstOrDefault();
 
 			//assert
 			person.Should().BeNull();

@@ -49,7 +49,6 @@ namespace Insight.Core.Services.Database
 			}
 		}
 
-
 		/// <summary>
 		/// Add entity
 		/// </summary>

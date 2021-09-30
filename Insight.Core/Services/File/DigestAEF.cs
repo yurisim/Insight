@@ -92,7 +92,8 @@ namespace Insight.Core.Services.File
 				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
 				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);
 
-				Person person = insightController.GetPersonByName(firstName: firstName, lastName: lastName).Result;
+				//TODO handle picking which person in front end
+				Person person = insightController.GetPersonsByName(firstName: firstName, lastName: lastName).Result.FirstOrDefault();
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)
