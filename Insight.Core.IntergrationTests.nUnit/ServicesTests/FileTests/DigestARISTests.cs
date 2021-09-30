@@ -69,6 +69,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			{
 				course = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
 			}
+			
 
 			//assert
 			using (new AssertionScope())
@@ -93,58 +94,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 				course.CourseInstances.Should().HaveCount(1);
 				person.CourseInstances.Should().HaveCount(1);
-			}
-		}
-
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAris_ExpectOnePeron_ZeroCouresTestCases))]
-		public void DigestARISTest_ExpectOnePerson_ZeroCourses(TestCaseObject testCaseParameters)
-		{
-			var (input, expectedFirstName, expectedLastName, expectedFileType) = testCaseParameters;
-
-			//arrange
-			FileType detectedFileType = Detector.DetectFileType(input);
-
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
-
-			//creates person entity in DB so there's someone to look up
-			Person personToCreateInDB = new Person()
-			{
-				FirstName = expectedFirstName,
-				LastName = expectedLastName,
-			};
-			insightController.Add(personToCreateInDB);
-
-			//act
-			digest.CleanInput();
-			digest.DigestLines();
-
-			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var allCourses = insightController.GetAll<Course>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-
-			Course course = null;
-			if (expectedFileType == FileType.ARIS_Handgun)
-			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Handgun).Result;
-			}
-			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
-			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
-			}
-
-			//assert
-			using (new AssertionScope())
-			{
-				detectedFileType.Should().Be(expectedFileType);
-				digest.Should().BeOfType<DigestARIS>();
-
-				allPersons.Count.Should().Be(1);
-				allCourses.Should().HaveCount(0);
-
-				person.Should().NotBeNull();
-
-				person.CourseInstances.Should().BeNullOrEmpty();
 			}
 		}
 
@@ -220,8 +169,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFileType: FileType.ARIS_Rifle_Carbine,
 					courseCompletionExpected: DateTime.Parse("26 May 2021"),
 					courseExpirationExpected: DateTime.Parse("30 May 2022")
-				),
 
+				),
 				//test case - extra empty lines
 				new TestCaseObject(
 					input: new List<string>
@@ -240,27 +189,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFileType: FileType.ARIS_Rifle_Carbine,
 					courseCompletionExpected: DateTime.Parse("26 May 2021"),
 					courseExpirationExpected: DateTime.Parse("30 May 2022")
-				),
-			};
 
-			public static object[] DigestAris_ExpectOnePeron_ZeroCouresTestCases =
-			{
-				//test case - extra empty lines
-				new TestCaseObject(
-					input: new List<string>
-					{
-						"People Assigned,,,,,,,,,,,,",
-						",,,,,,,,,,,,",
-						",,,,,,,,,,,,",
-						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
-						",,,,,,,,,,,,",
-						"Name,these,are,random,columns",
-						"\"Alsop, Sophie\",more,random,stuff,yaknow",
-						",,,,,,,,,,,,"
-					},
-					expectedFirstName: "Sophie",
-					expectedLastName: "Alsop",
-					expectedFileType: FileType.ARIS_Rifle_Carbine
 				),
 			};
 
@@ -344,23 +273,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				courseCompletionExpected = _courseCompletionExpected;
 				courseExpirationExpected = _courseExpirationExpected;
 			}
-
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, FileType expectedFileType)
-			{
-				_input = input;
-				_expectedFirstName = expectedFirstName;
-				_expectedLastName = expectedLastName;
-				_expectedFileType = expectedFileType;
-			}
-
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out FileType expectedFileType)
-			{
-				input = _input;
-				expectedFirstName = _expectedFirstName;
-				expectedLastName = _expectedLastName;
-				expectedFileType = _expectedFileType;
-			}
-
 
 			public TestCaseObject(IList<string> input, FileType expectedFileType)
 			{

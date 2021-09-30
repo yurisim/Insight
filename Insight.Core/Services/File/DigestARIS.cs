@@ -15,8 +15,6 @@ namespace Insight.Core.Services.File
 		private int _completionDateIndex;
 		private int _expirationDateIndex;
 
-		private const int Offset = 1; //this offset is to account for the comma in the Name field
-
 		int IDigest.Priority => 3;
 
 		public DigestARIS(IList<string> fileContents, DbContextOptions<InsightContext> dbContextOptions) : base(fileContents, dbContextOptions)
@@ -65,22 +63,25 @@ namespace Insight.Core.Services.File
 
 			//dont forget to add +1 to all other indexes
 			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
-			_organizationIndex = Array.IndexOf(columnHeaders, "ORGANIZATIONS"); //needs offset
-			_completionDateIndex = Array.IndexOf(columnHeaders, "LAST COMPLETION DATE"); //needs offset
-			_expirationDateIndex = Array.IndexOf(columnHeaders, "QUAL EXPIRATION DATE"); //needs offset
+			_organizationIndex = Array.IndexOf(columnHeaders, "ORGANIZATIONS") + 1;
+			_completionDateIndex = Array.IndexOf(columnHeaders, "LAST COMPLETION DATE") + 1;
+			_expirationDateIndex = Array.IndexOf(columnHeaders, "QUAL EXPIRATION DATE") + 1;
 		}
 
 		public void DigestLines()
 		{
-			if (string.IsNullOrWhiteSpace(_weaponType)) return;
-			if (_completionDateIndex <= -1) return;
-
 			foreach (string line in FileContents)
 			{
+				//if index of name column is not valid, skip this person
+				//if(_nameIndex < 0)
+				//{
+				//	continue;
+				//}
+
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
-				string firstName = splitLine.ElementAtOrDefault(_nameIndex + 1).Replace("\"", "").Trim();
-				string lastName = splitLine.ElementAtOrDefault(_nameIndex).Replace("\"", "").Trim();
+				string firstName = splitLine[_nameIndex + 1].Replace("\"", "").Trim();
+				string lastName = splitLine[_nameIndex].Replace("\"", "").Trim();
 
 				//TODO look for existing person and update if it exists
 				var person = insightController.GetPersonByName(firstName, lastName).Result;
@@ -88,17 +89,11 @@ namespace Insight.Core.Services.File
 				// If you don't find the person (because we value LOXs, throw them out)
 				if (person == null) continue;
 
-				if (_completionDateIndex <= -1 || _completionDateIndex > splitLine.Length) return;
-
-				var catmCompletionString = splitLine.ElementAtOrDefault(_completionDateIndex + Offset);
-				var catmExperationString = splitLine.ElementAtOrDefault(_expirationDateIndex + Offset);
-
-				if (!string.IsNullOrWhiteSpace(splitLine.ElementAtOrDefault(_completionDateIndex + Offset)) || !string.IsNullOrWhiteSpace(catmCompletionString))
+				if (splitLine[_completionDateIndex] != "")
 				{
 					Course catmCourse = base.GetOrCreateCourse(_weaponType);
-
-					DateTime catmCompletionDate = DateTime.Parse(catmCompletionString);
-					DateTime catmExperationDate = !string.IsNullOrWhiteSpace(catmExperationString) ? DateTime.Parse(catmExperationString) :
+					DateTime catmCompletionDate = DateTime.Parse(splitLine[_completionDateIndex]);
+					DateTime catmExperationDate = splitLine[_expirationDateIndex] != "" ? DateTime.Parse(splitLine[_expirationDateIndex]) :
 						catmCompletionDate.AddDays((catmCourse?.Interval ?? 1) * 365);
 
 					CourseInstance courseInstance = new CourseInstance()
