@@ -120,18 +120,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFlight: "A"
 				),
 
-				//test case - base case
-				new TestCaseObject(
-					input: new List<string>
-					{
-						"PEX Designation,ShortName",
-						"A,SmithJ",
-					},
-					expectedFirstName: "John",
-					expectedLastName: "Smith",
-					expectedFlight: "A"
-				),
-
 				//test case - no flight provided
 				new TestCaseObject(
 					input: new List<string>
@@ -143,7 +131,6 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Smith",
 					expectedFlight: ""
 				),
-
 
 				//test case - no flight provided
 				new TestCaseObject(
