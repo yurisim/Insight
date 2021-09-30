@@ -50,7 +50,7 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
-			//detector requires all columns to work, so there is no case where columns can be missing and digest PEX run
+			//detector requires all columns to work in a specific order, so there is no case where columns can be missing and digest PEX run
 
 			foreach (string line in FileContents)
 			{

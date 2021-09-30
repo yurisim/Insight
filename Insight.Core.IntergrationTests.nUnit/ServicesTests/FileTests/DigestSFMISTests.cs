@@ -34,7 +34,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			insightController.EnsureDatabaseDeleted();
 		}
 
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectOnePersonsTestCases))]
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectOnePersons_TestCases))]
 		public void DigestSFMISTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
 			var (input, expectedFirstName, expectedLastName, strm4CourseCompletionExpected, strm9CourseCompletionExpected, expectedEmail) = testCaseParameters;
@@ -129,7 +129,51 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			}
 		}
 
-		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectZeroPersonsTestCases))]
+
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectOnePerson_ZeroCourseInstances_TestCases))]
+		public void DigestSFMIS_ExpectOnePerson_ZeroCourseInstances(TestCaseObject testCaseParameters)
+		{
+			var (input, expectedFirstName, expectedLastName, expectedEmail) = testCaseParameters;
+
+			//arrange
+			FileType detectedFileType = Detector.DetectFileType(input);
+
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+
+			//creates person entity in DB so there's someone to look up
+			Person personToCreateInDB = new Person()
+			{
+				FirstName = expectedFirstName,
+				LastName = expectedLastName,
+			};
+			insightController.Add(personToCreateInDB);
+
+			//act
+			digest.CleanInput();
+			digest.DigestLines();
+
+			//arrange 2.0
+			var allPersons = insightController.GetAllPersons().Result;
+			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var allCourses = insightController.GetAll<Course>().Result;
+
+			//assert
+			using (new AssertionScope())
+			{
+				detectedFileType.Should().Be(FileType.SFMIS);
+				digest.Should().BeOfType<DigestSFMIS>();
+
+				allPersons.Count.Should().Be(1);
+
+				person.Should().NotBeNull();
+				person.Email.Should().Be(expectedEmail);
+
+				allCourses.Should().HaveCount(0);
+			}
+		}
+
+
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestSFMIS_ExpectZeroPersons_TestCases))]
 		public void DigestSFMISTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
 			var (input, _) = testCaseParameters;
@@ -165,7 +209,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		/// </summary>
 		private class TestCasesObjects
 		{
-			public static object[] DigestSFMIS_ExpectOnePersonsTestCases =
+			public static object[] DigestSFMIS_ExpectOnePersons_TestCases =
 			{
 				//test case - base case - m9, header
 				new TestCaseObject(
@@ -234,7 +278,23 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				),
 			};
 
-			public static object[] DigestSFMIS_ExpectZeroPersonsTestCases =
+			public static object[] DigestSFMIS_ExpectOnePerson_ZeroCourseInstances_TestCases =
+			{
+				//test case - only email
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Export Description:  SFMISRoster",
+						"Email4Career",
+						"sophie.alsop@us.af.mil",
+					},
+					expectedFirstName : "Sophie",
+					expectedLastName: "Alsop",
+					expectedEmail: "sophie.alsop@us.af.mil"
+				),
+			};
+
+			public static object[] DigestSFMIS_ExpectZeroPersons_TestCases =
 			{
 				//test case - no email
 				new TestCaseObject(
@@ -247,6 +307,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					},
 					""
 				),
+
 				//test case - no email
 				new TestCaseObject(
 					input: new List<string>
@@ -258,6 +319,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					},
 					""
 				),
+
 				//test case - no email
 				new TestCaseObject(
 					input: new List<string>
@@ -301,6 +363,23 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				expectedLastName = _expectedLastName;
 				m4CourseCompletionExpected = _m4CourseCompletionExpected;
 				m9CourseCompletionExpected = _m9CourseCompletionExpected;
+				email = _expectedEmail;
+			}
+
+
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedEmail)
+			{
+				_input = input;
+				_expectedFirstName = expectedFirstName;
+				_expectedLastName = expectedLastName;
+				_expectedEmail = expectedEmail;
+			}
+
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string email)
+			{
+				input = _input;
+				expectedFirstName = _expectedFirstName;
+				expectedLastName = _expectedLastName;
 				email = _expectedEmail;
 			}
 
