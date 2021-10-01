@@ -60,7 +60,7 @@ namespace Insight.Helpers
 		/// Method to 
 		/// </summary>
 		/// <returns></returns>
-		public static async Task<(List<List<string>> fileContents, List<string> failedFileNames)> GetContentsOfFiles()
+		public static async Task<(List<List<string>> fileContents, List<string> failedFileNames, List<string> fileNames)> GetContentsOfFiles()
 		{
 
 			// This is the list of files that failed to process. If this list stays empty, that means there were no issues. 
@@ -69,7 +69,7 @@ namespace Insight.Helpers
 			// Represents the collection of files, with each element being their contents as an List
 			// of strings
 			var fileCollection = new List<List<string>>();
-
+			var fileNames = new List<string>();
 			var picker = new FileOpenPicker
 			{
 				ViewMode = PickerViewMode.Thumbnail,
@@ -83,26 +83,41 @@ namespace Insight.Helpers
 
 			if (files != null)
 			{
+				fileNames = files.Select(file => file.Name).ToList();
+
 				List<string> fileTokens = RememberFiles(files.ToArray());
 
 				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
-				foreach (var fileToken in fileTokens)
+				for (var i = 0; i < fileTokens.Count; i++)
 				{
-					// get the file object
-					var fileObject = await GetFileFromToken(fileToken);
+					var fileToken = fileTokens[i];
 
-					// get the lines from the file object
-					var fileLines = await FileIO.ReadLinesAsync(fileObject);
+					try
+					{
+						// get the file object
+						var fileObject = await GetFileFromToken(fileToken);
 
-					// add to collection
-					fileCollection.Add(fileLines.ToList());
+						// get the lines from the file object
+						var fileLines = await FileIO.ReadLinesAsync(fileObject);
+
+						// add to collection
+						fileCollection.Add(fileLines.ToList());
+					}
+					catch
+					{
+						failedFileNames.Add(fileNames[i]);
+					}
+					finally
+					{
+						ForgetFile(fileToken);
+					}
 
 					// forget the file
-					ForgetFile(fileToken);
+					
 				}
 			}
 
-			return (fileCollection, failedFileNames);
+			return (fileCollection, failedFileNames, fileNames);
 		}
 	}
 
