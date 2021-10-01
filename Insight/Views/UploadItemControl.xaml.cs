@@ -39,15 +39,24 @@ namespace Insight.Views
 		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
 		{
 			// This is the file dialog returns a array of arrays of file contents
-			var (fileContents, failedFileNames) = await FileService.GetContentsOfFiles();
+			var (fileContents, failedFileNames, fileNames) = await FileService.GetContentsOfFiles();
 
 			var contentsToDigest = new List<IDigest>();
 
 			// This orders the file contents in the right 
-			foreach (var linesOfFile in fileContents)
+			for (var i = 0; i < fileContents.Count; i++)
 			{
+
+				var linesOfFile = fileContents[i];
 				// Refactor this to be a static method
 				var detectedFiletype = Detector.DetectFileType(linesOfFile);
+
+				//If detector cannot read the file type then it cannot be digested
+				if (detectedFiletype == Core.Models.FileType.Unknown)
+				{
+					failedFileNames.Add(fileNames[i]);
+					continue;
+				}
 
 				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
 				var digestor = DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null);
@@ -70,14 +79,18 @@ namespace Insight.Views
 			// why can't I link the resource file? doesn't seem to work in Strings or in Resource.resw :(
 			const string uploadItem_FilesSuccess = "Files were successfully uploaded!";
 			const string uploadItem_FilesFailure = "One or more items have failed. The following files could not be digested:";
-
+			string concatFailed = "";
+			foreach (var fileName in failedFileNames)
+			{
+				concatFailed += Environment.NewLine + fileName;
+			}
 			var dialog = new ContentDialog
 			{
 				Title = "Upload Status",
 				CloseButtonText = "OK",
 
 				// Make steps to concatenate all filenames into 1 string
-				Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure,
+				Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure + concatFailed,
 
 				DefaultButton = ContentDialogButton.Close
 			};
