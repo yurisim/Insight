@@ -35,7 +35,7 @@ namespace Insight.Core.UnitTests.nUnit.HelpersTest
 			//arange
 
 			//act
-			var (partialFirstName, lastName) = StringManipulation.ConvertShortNameToNames(shortName);
+			var (_, lastName) = StringManipulation.ConvertShortNameToNames(shortName);
 
 			//assert
 			lastName.Should().BeNullOrEmpty();

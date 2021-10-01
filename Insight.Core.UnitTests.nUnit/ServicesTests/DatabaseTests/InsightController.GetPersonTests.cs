@@ -182,6 +182,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 				person.SSN = expectedSSN;
 			}
 		}
+
 		[TestCase("doesnot", "exist", "123456789")]
 		[TestCase("", "", "")]
 		[TestCase(" ", " ", " ")]
@@ -192,7 +193,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//arrange
 
 			//act
-			var persons = controller.GetPersonsByNameSSN("random", "name", "123456789").Result;
+			var persons = controller.GetPersonsByNameSSN(expectedFirstName, expectedLastName, expectedSSN).Result;
 
 			//assert
 			persons.Should().BeNullOrEmpty();
@@ -209,7 +210,5 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//assert
 			persons.Should().BeNullOrEmpty();
 		}
-
-		
 	}
 }
