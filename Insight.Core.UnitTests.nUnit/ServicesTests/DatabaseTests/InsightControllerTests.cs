@@ -28,7 +28,15 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			controller = new InsightController(dbContextOptions);
 
 			SeedDb();
+		}
 
+		/// <summary>
+		/// Teardown run after every test
+		/// </summary>
+		[TearDown]
+		public void TearDown()
+		{
+			controller.EnsureDatabaseDeleted();
 		}
 
 		/// <summary>
@@ -85,19 +93,11 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			//act
 			controller.Update(person);
 
+			//Can not guarantee that this get's the correct person. Not sure if they're an alternative, since the user via front end handles collisions
 			var personFromDB = controller.GetPersonsByName("Johnathan", "Smith").Result.FirstOrDefault();
 			//assert
 
 			personFromDB.Id.Should().Be(person.Id);
-		}
-
-		/// <summary>
-		/// Teardown run after every test
-		/// </summary>
-		[TearDown]
-		public void TearDown()
-		{
-			controller.EnsureDatabaseDeleted();
 		}
 
 		/// <summary>

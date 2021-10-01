@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Insight.Core.Models;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FluentAssertions.Execution;
 
@@ -168,7 +166,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		}
 
 		[TestCase("Graham", "Soyer", "123456789")]
-		public void GetPersonsByNameSSN_ExpectOne( string expectedFirstName, string expectedLastName, string expectedSSN)
+		public void GetPersonsByNameSSN_ExpectOne(string expectedFirstName, string expectedLastName, string expectedSSN)
 		{
 			var persons = controller.GetPersonsByNameSSN("Graham", "Soyer", "123456789").Result;
 			var person = persons.FirstOrDefault();
