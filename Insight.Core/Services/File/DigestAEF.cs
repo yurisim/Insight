@@ -58,8 +58,7 @@ namespace Insight.Core.Services.File
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private
-			void SetColumnIndexes(string[] columnHeaders)
+		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();

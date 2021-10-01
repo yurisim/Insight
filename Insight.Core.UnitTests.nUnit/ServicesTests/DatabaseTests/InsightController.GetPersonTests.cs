@@ -5,34 +5,18 @@ using Insight.Core.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FluentAssertions.Execution;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
 	public partial class InsightControllerTests
 	{
-		[TestCase("SmithJ", "John", "Smith")]
-		public void GetPersonsShortName_Expect__One(string shortName, string expectedFirstName, string expectedLastName)
-		{
-			//arrange
-
-			//act
-			var persons = controller.GetPersonsByShortName(shortName)?.Result;
-
-			//assert
-			persons?.Should().HaveCount(1);
-
-			Debug.Assert(persons != null, nameof(persons) + " != null");
-
-			persons.First().FirstName = expectedFirstName;
-			persons.First().LastName = expectedLastName;
-		}
-
 		[Test]
 		public async Task GetPeople()
 		{
 			var people = await controller.GetAllPersons();
 
-			people.Count.Should().Be(5);
+			people.Count.Should().Be(6);
 		}
 
 		[Test]
@@ -40,90 +24,192 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		{
 			var people = await controller.GetAll<Person>();
 
-			people.Count.Should().Be(5);
+			people.Count.Should().Be(6);
 		}
 
 		[Test]
-		public void GetPersonByName()
+		public void GetPersonsByName_ExpectOne()
 		{
-			var person = controller.GetPersonsByName("John", "Smith").Result.FirstOrDefault();
 
-			person.Should().NotBeNull();
+			var persons = controller.GetPersonsByName("John", "Smith").Result;
+			var person = persons.FirstOrDefault();
+
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(1);
+				person.Should().NotBeNull();
+				person.Name.Should().Be("SMITH, JOHN");
+			}
 		}
 
 		[Test]
-		public void GetPersonCaps()
+		public void GetPersonsByName_ExpectTwo()
 		{
-			//arrange
+			var persons = controller.GetPersonsByName("Joe", "Murray").Result;
+			var person0 = persons.ElementAtOrDefault(0);
+			var person1 = persons.ElementAtOrDefault(1);
 
-			//act
-			var person = controller.GetPersonsByName("JOHN", "SMITH").Result.FirstOrDefault();
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(2);
 
-			//assert
-			person.Should().NotBeNull();
+				person0.Should().NotBeNull();
+				person0.Name.Should().Be("MURRAY, JOE");
+
+				person1.Should().NotBeNull();
+				person1.Name.Should().Be("MURRAY, JOE");
+			}
 		}
 
-		[Test]
-		public void GetNullPerson()
-		{
-			//arrange
-
-			//act
-			var person = controller.GetPersonsByName("I should", "not exist").Result.FirstOrDefault();
-
-			//assert
-			person.Should().BeNull();
-		}
-
-		[Test]
-		public void AddPerson()
-		{
-			//arrange
-			var person = new Person { FirstName = "Jonathan", LastName = "Xander" };
-
-			//act
-			controller.Add(person);
-
-			var personFromDB = controller.GetPersonsByName("Jonathan", "Xander").Result.FirstOrDefault();
-
-			//assert
-			person.Id.Should().Be(personFromDB.Id);
-		}
-
-		[Test]
-		public void GetPersonByNameSSN_Good()
+		[TestCase("I should", "not exist")]
+		[TestCase("John", "not exist")]
+		[TestCase(null, null)]
+		[TestCase("", "")]
+		[TestCase(" ", " ")]
+		[TestCase("idk", "Smith")]
+		public void GetPersonsByName_ExpectNone(string firstName, string lastName)
 		{
 			//arrange
 
 			//act
-			var person = controller.GetPersonsByNameSSN("Graham", "Soyer", "123456789").Result.FirstOrDefault();
+			var persons = controller.GetPersonsByName(firstName, lastName).Result;
 
 			//assert
-			person.Should().NotBeNull();
+			persons.Should().BeNullOrEmpty();
 		}
 
 		[Test]
-		public void GetPersonByNameSSN_DoesNotExist()
+		public void GetPersonsCaps()
 		{
 			//arrange
 
 			//act
-			var person = controller.GetPersonsByNameSSN("random", "name", "123456789").Result.FirstOrDefault();
+			var persons = controller.GetPersonsByName("JOHN", "SMITH").Result;
+			var person = persons.FirstOrDefault();
 
-			//assert
-			person.Should().BeNull();
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(1);
+				person.Should().NotBeNull();
+				person.Name.Should().Be("SMITH, JOHN");
+			}
 		}
 
 		[Test]
-		public void GetPersonByNameSSN_PersonExistsButNoSSN()
+		public void AddThenGetPersons()
+		{
+			//arrange
+			var personToAdd = new Person { FirstName = "Jonathan", LastName = "Xander" };
+
+			//act
+			controller.Add(personToAdd);
+
+			var persons = controller.GetPersonsByName("Jonathan", "Xander").Result;
+			var person = persons.FirstOrDefault();
+
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(1);
+				person.Should().NotBeNull();
+				person.Id.Should().Be(personToAdd.Id);
+				person.Name.Should().Be("XANDER, JONATHAN");
+			}
+		}
+
+		[TestCase("SmithJ", "John", "Smith")]
+		[TestCase("TurnerAnnab", "Annabell", "Turner")]
+		public void GetPersonsShortName_ExpectOne(string shortName, string expectedFirstName, string expectedLastName)
 		{
 			//arrange
 
 			//act
-			var person = controller.GetPersonsByNameSSN("John", "Smith", "123456789").Result.FirstOrDefault();
+			var persons = controller.GetPersonsByShortName(shortName).Result;
+			var person = persons.FirstOrDefault();
 
 			//assert
-			person.Should().BeNull();
+			persons.Should().HaveCount(1);
+
+			person.FirstName = expectedFirstName;
+			person.LastName = expectedLastName;
 		}
+
+		[TestCase("MurrayJ", "JOE", "MURRAY")]
+		[TestCase("MurrayJo", "JOE", "MURRAY")]
+		[TestCase("MurrayJoe", "JOE", "MURRAY")]
+		public void GetPersonsShortName_ExpectTwo(string shortName, string expectedFirstName, string expectedLastName)
+		{
+			var persons = controller.GetPersonsByShortName(shortName)?.Result;
+
+			var person0 = persons.ElementAtOrDefault(0);
+			var person1 = persons.ElementAtOrDefault(1);
+
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(2);
+
+				person0.Should().NotBeNull();
+				person0.Name.Should().Be($"{expectedLastName}, {expectedFirstName}");
+
+				person1.Should().NotBeNull();
+				person1.Name.Should().Be("MURRAY, JOE");
+			}
+		}
+
+		[TestCase("doesnotexist")]
+		[TestCase("")]
+		[TestCase(" ")]
+		[TestCase(null)]
+		[TestCase("i dont know")]
+		public void GetPersonsShortName_ExpectNone(string shortName)
+		{
+			var persons = controller.GetPersonsByShortName(shortName)?.Result;
+
+			persons.Should().BeNullOrEmpty();
+		}
+
+		[TestCase("Graham", "Soyer", "123456789")]
+		public void GetPersonsByNameSSN_ExpectOne( string expectedFirstName, string expectedLastName, string expectedSSN)
+		{
+			var persons = controller.GetPersonsByNameSSN("Graham", "Soyer", "123456789").Result;
+			var person = persons.FirstOrDefault();
+
+			using (new AssertionScope())
+			{
+				persons.Should().HaveCount(1);
+
+				person.FirstName = expectedFirstName;
+				person.LastName = expectedLastName;
+				person.SSN = expectedSSN;
+			}
+		}
+		[TestCase("doesnot", "exist", "123456789")]
+		[TestCase("", "", "")]
+		[TestCase(" ", " ", " ")]
+		[TestCase(null, null, null)]
+		[TestCase("i dont", "know", "adgadga")]
+		public void GetPersonsByNameSSN_ExpectNone(string expectedFirstName, string expectedLastName, string expectedSSN)
+		{
+			//arrange
+
+			//act
+			var persons = controller.GetPersonsByNameSSN("random", "name", "123456789").Result;
+
+			//assert
+			persons.Should().BeNullOrEmpty();
+		}
+
+		[Test]
+		public void GetPersonsByNameSSN_PersonExistsButNoSSN()
+		{
+			//arrange
+
+			//act
+			var persons = controller.GetPersonsByNameSSN("John", "Smith", "123456789").Result;
+
+			//assert
+			persons.Should().BeNullOrEmpty();
+		}
+
+		
 	}
 }

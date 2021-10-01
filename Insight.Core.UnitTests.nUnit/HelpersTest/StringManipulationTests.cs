@@ -6,12 +6,13 @@ using NUnit.Framework;
 namespace Insight.Core.UnitTests.nUnit.HelpersTest
 {
 	[TestFixture]
-	public class HelpersTests
+	public class StringManipulationTests
 	{
 		[TestCase("SmithJ", "J", "Smith")]
 		[TestCase("SmithJa", "Ja", "Smith")]
 		[TestCase("SimsssYo", "Yo", "Simsss")]
-		public void ConvertShortNameToNames(string shortName, string expectedFirstName, string expectedLastName)
+		[TestCase("YamatoJ", "J", "Yamato")]
+		public void ConvertShortNameToNames_GoodInput(string shortName, string expectedFirstName, string expectedLastName)
 		{
 			//arange
 
@@ -21,6 +22,23 @@ namespace Insight.Core.UnitTests.nUnit.HelpersTest
 			//assert
 			partialFirstName.Should().Be(expectedFirstName);
 			lastName.Should().Be(expectedLastName);
+		}
+
+		[TestCase("Yamatoj")]
+		[TestCase("yamatoj")]
+		[TestCase("yamatoj")]
+		[TestCase("")]
+		[TestCase(" ")]
+		[TestCase(null)]
+		public void ConvertShortNameToNames_BadInput(string shortName)
+		{
+			//arange
+
+			//act
+			var (partialFirstName, lastName) = StringManipulation.ConvertShortNameToNames(shortName);
+
+			//assert
+			lastName.Should().BeNullOrEmpty();
 		}
 
 		[TestCase("this is a sentence", "This Is A Sentence")]

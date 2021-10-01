@@ -39,7 +39,8 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			var persons = new List<Person>
 			{
 				new() { FirstName = "John", LastName = "Smith" },
-				new() { FirstName = "Hacob", LastName = "Smith" },
+				new() { FirstName = "Joe", LastName = "Murray" },
+				new() { FirstName = "Joe", LastName = "Murray" },
 				new() { FirstName = "Constantine", LastName = "Quintrell" },
 				new() { FirstName = "Annabell", LastName = "Turner" },
 				new() { FirstName = "Graham", LastName = "Soyer" , SSN = "123456789" },

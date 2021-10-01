@@ -13,6 +13,8 @@ namespace Insight.Core.Helpers
 		public static (string, string) ConvertShortNameToNames(string shortName)
 		{
 
+			if (string.IsNullOrEmpty(shortName)) return (null, null);
+
 			// break up shortname into first letters and last name
 			// if name is SmithJ, then J Smith
 
@@ -25,6 +27,12 @@ namespace Insight.Core.Helpers
 				{
 					break;
 				}
+			}
+
+			//no caps for last name found
+			if (indexOfCapital < 0)
+			{
+				return (null, null);
 			}
 
 			var firstLetters = shortName.Substring(indexOfCapital);
