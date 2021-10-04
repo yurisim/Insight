@@ -62,13 +62,16 @@ namespace Insight.Core.Services.File
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
-				var foundPerson = insightController.GetPersonsByShortName(shortName)?.Result;
+				var foundPersons = insightController.GetPersonsByShortName(shortName)?.Result;
 
-				if (foundPerson != null && foundPerson.Count > 0)
+				//TODO handle picking which person in the frontend
+				var person = foundPersons.FirstOrDefault();
+
+				if (foundPersons != null && foundPersons.Count > 0)
 				{
-					foundPerson.First().Flight = pexName;
+					person.Flight = pexName;
 
-					insightController.Update(foundPerson);
+					insightController.Update(person);
 				}
 
 				// try to find the PEX Account
