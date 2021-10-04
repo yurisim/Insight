@@ -67,9 +67,10 @@ namespace Insight.Core.Services.File
 				string lastName = splitLine[_lastNameIndex];
 				string completionDate = splitLine[_completionDateIndex];
 
-				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
+				//TODO handle picking which person in the frontend
+				var foundPerson = insightController.GetPersonsByName(firstName, lastName, true).Result.FirstOrDefault();
 
+				// TODO: Exception if person is not found
 				if (foundPerson == null) continue;
 
 				//if (foundPerson.CourseInstances == null)
@@ -95,7 +96,8 @@ namespace Insight.Core.Services.File
 				};
 
 				// check if the course instance exists
-				var foundInstance = insightController.GetCourseInstance(courseInstance).Result;
+				//TODO handle picking which one in frontend
+				var foundInstance = insightController.GetCourseInstances(courseInstance).Result.FirstOrDefault();
 
 				// if no instance is found
 				if (foundInstance == null)
@@ -123,7 +125,7 @@ namespace Insight.Core.Services.File
 
 		private T CreateOrReturn<T, T1>(string courseName, ref T1 entity)
 		{
-			var foundEntity = insightController.GetCourseByName(courseName);
+			var foundEntity = insightController.GetCoursesByName(courseName);
 
 			return default;
 		}

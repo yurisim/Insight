@@ -2,6 +2,7 @@
 using Insight.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Insight.Core.Services.File
 {
@@ -37,7 +38,8 @@ namespace Insight.Core.Services.File
 		/// <returns></returns>
 		protected AFSC GetOrCreateAFSC(string pafsc, string cafsc, string dafsc)
 		{
-			AFSC afsc = insightController.GetAFSC(pafsc: pafsc).Result;
+			//TODO handle picking which person in the frontend
+			AFSC afsc = insightController.GetAFSCs(pafsc: pafsc).Result.FirstOrDefault();
 
 			//TODO does not upadate CAFSC/DAFSC if they're missing
 			//AFSC exists, returns it
@@ -61,7 +63,8 @@ namespace Insight.Core.Services.File
 		/// </summary>
 		protected Course GetOrCreateCourse(string name)
 		{
-			Course course = insightController.GetCourseByName(name).Result;
+			//TODO handle picking which person in the frontend
+			Course course = insightController.GetCoursesByName(name).Result.FirstOrDefault();
 
 			//if a course for passed name already exists, return it
 			if (course != null) { return course; }

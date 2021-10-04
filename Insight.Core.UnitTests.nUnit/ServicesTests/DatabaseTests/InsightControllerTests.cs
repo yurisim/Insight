@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using FluentAssertions;
 using System.Reflection;
+using System.Linq;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -27,7 +28,15 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			controller = new InsightController(dbContextOptions);
 
 			SeedDb();
+		}
 
+		/// <summary>
+		/// Teardown run after every test
+		/// </summary>
+		[TearDown]
+		public void TearDown()
+		{
+			controller.EnsureDatabaseDeleted();
 		}
 
 		/// <summary>
@@ -38,7 +47,8 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			var persons = new List<Person>
 			{
 				new() { FirstName = "John", LastName = "Smith" },
-				new() { FirstName = "Hacob", LastName = "Smith" },
+				new() { FirstName = "Joe", LastName = "Murray" },
+				new() { FirstName = "Joe", LastName = "Murray" },
 				new() { FirstName = "Constantine", LastName = "Quintrell" },
 				new() { FirstName = "Annabell", LastName = "Turner" },
 				new() { FirstName = "Graham", LastName = "Soyer" , SSN = "123456789" },
@@ -76,26 +86,18 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		public void UpdatePerson()
 		{
 			//arrange
-			var person = controller.GetPersonByName("John", "Smith").Result;
+			var person = controller.GetPersonsByName("John", "Smith").Result.FirstOrDefault();
 
 			person.FirstName = "Johnathan";
 
 			//act
 			controller.Update(person);
 
-			var personFromDB = controller.GetPersonByName("Johnathan", "Smith").Result;
+			//Can not guarantee that this get's the correct person. Not sure if they're an alternative, since the user via front end handles collisions
+			var personFromDB = controller.GetPersonsByName("Johnathan", "Smith").Result.FirstOrDefault();
 			//assert
 
 			personFromDB.Id.Should().Be(person.Id);
-		}
-
-		/// <summary>
-		/// Teardown run after every test
-		/// </summary>
-		[TearDown]
-		public void TearDown()
-		{
-			controller.EnsureDatabaseDeleted();
 		}
 
 		/// <summary>

@@ -58,8 +58,7 @@ namespace Insight.Core.Services.File
 		/// Sets the indexes for columns of data that needs to be digested
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private
-			void SetColumnIndexes(string[] columnHeaders)
+		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
@@ -92,7 +91,8 @@ namespace Insight.Core.Services.File
 				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
 				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);
 
-				Person person = insightController.GetPersonByName(firstName: firstName, lastName: lastName).Result;
+				//TODO handle picking which person in front end
+				Person person = insightController.GetPersonsByName(firstName: firstName, lastName: lastName).Result.FirstOrDefault();
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null)

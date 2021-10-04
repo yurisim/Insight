@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -48,8 +49,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = _insightController.GetAllPersons().Result;
-			var person = _insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var org = _insightController.GetOrgByAlias(expectedOrg).Result;
+			var person = _insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var org = _insightController.GetOrgsByAlias(expectedOrg).Result.FirstOrDefault();
 			var orgs = _insightController.GetAll<Org>().Result;
 
 			//assert
@@ -88,7 +89,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = _insightController.GetAll<Person>().Result;
-			var org = _insightController.GetOrgByAlias(expectedOrg);
+			var org = _insightController.GetOrgsByAlias(expectedOrg);
 			var orgs = _insightController.GetAll<Org>().Result;
 
 			//assert
