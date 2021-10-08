@@ -8,6 +8,7 @@ using Insight.Core.Services.File;
 using Insight.Helpers;
 using Insight.ViewModels;
 using System.Resources;
+using Insight.Core.Helpers;
 
 namespace Insight.Views
 {
@@ -36,7 +37,8 @@ namespace Insight.Views
 		}
 
 		/// <summary>
-		///     TODO: Need to move this to view model. No
+		///     TODO: Need to move this to view model. Really need to refactor this.
+		///		
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -45,14 +47,13 @@ namespace Insight.Views
 			// This is the file dialog returns a array of arrays of file contents
 			var (fileContents, failedFileNames, fileNames) = await FileService.GetContentsOfFiles();
 
-			List<IDigest> contentsToDigest = new List<IDigest>();
+			var contentsToDigest = new List<IDigest>();
 
 			if (fileNames.Count > 0)
 			{
 				// This orders the file contents in the right 
 				for (var i = 0; i < fileContents.Count; i++)
 				{
-
 					var linesOfFile = fileContents[i];
 					// Refactor this to be a static method
 					var detectedFiletype = Detector.DetectFileType(linesOfFile);
@@ -76,26 +77,30 @@ namespace Insight.Views
 
 				contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
-				foreach (IDigest content in contentsToDigest)
+				// instantiate i outside of loop
+				for (var i = 0; i < contentsToDigest.Count; i++)
 				{
-					content.CleanInput();
-					content.DigestLines();
+					try
+					{
+						var content = contentsToDigest[i];
+
+						content.CleanInput();
+						content.DigestLines();
+					}
+					catch
+					{
+						failedFileNames.Add(fileNames[i]);
+					}
 				}
 
-				string concatFailed = "";
+				var concatFailed = StringManipulation.FileNameFormatter(failedFileNames);
 
-				foreach (string fileName in failedFileNames)
-				{
-					concatFailed += Environment.NewLine + fileName;
-				}
-
-
-				ContentDialog dialog = new ContentDialog
+				var dialog = new ContentDialog
 				{
 					Title = "Upload Status",
 					CloseButtonText = "OK",
 
-					// Make steps to concatenate all filenames into 1 string
+					// Make steps to concatenate all file names into 1 string
 					Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure + concatFailed,
 
 					DefaultButton = ContentDialogButton.Close
