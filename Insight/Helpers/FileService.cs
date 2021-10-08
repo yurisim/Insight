@@ -70,6 +70,7 @@ namespace Insight.Helpers
 			// of strings
 			var fileCollection = new List<List<string>>();
 			var fileNames = new List<string>();
+
 			var picker = new FileOpenPicker
 			{
 				ViewMode = PickerViewMode.Thumbnail,
@@ -81,40 +82,42 @@ namespace Insight.Helpers
 			// Allow user to pick multiple files
 			var files = await picker.PickMultipleFilesAsync();
 
-			if (files != null)
+			// if user doesn't pick any files, just return the empty contents
+			if (files == null) return (fileCollection, failedFileNames, fileNames);
+
+			// else
+			fileNames = files.Select(file => file.Name).ToList();
+
+
+			var fileTokens = RememberFiles(files).ToArray();
+
+			// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
+			for (var i = 0; i < fileTokens.Length; i++)
 			{
-				fileNames = files.Select(file => file.Name).ToList();
+				var fileToken = fileTokens[i];
 
-				List<string> fileTokens = RememberFiles(files.ToArray());
-
-				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
-				for (var i = 0; i < fileTokens.Count; i++)
+				try
 				{
-					var fileToken = fileTokens[i];
+					// get the file object
+					var fileObject = await GetFileFromToken(fileToken);
 
-					try
-					{
-						// get the file object
-						var fileObject = await GetFileFromToken(fileToken);
+					// get the lines from the file object
+					var fileLines = await FileIO.ReadLinesAsync(fileObject);
 
-						// get the lines from the file object
-						var fileLines = await FileIO.ReadLinesAsync(fileObject);
-
-						// add to collection
-						fileCollection.Add(fileLines.ToList());
-					}
-					catch
-					{
-						failedFileNames.Add(fileNames[i]);
-					}
-					finally
-					{
-						ForgetFile(fileToken);
-					}
-
-					// forget the file
-					
+					// add to collection
+					fileCollection.Add(fileLines.ToList());
 				}
+				catch
+				{
+					failedFileNames.Add(fileNames[i]);
+				}
+				finally
+				{
+					ForgetFile(fileToken);
+				}
+
+				// forget the file
+					
 			}
 
 			return (fileCollection, failedFileNames, fileNames);
