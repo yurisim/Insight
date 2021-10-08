@@ -9,11 +9,11 @@ namespace Insight.Core.Services.File
 {
 	public class DigestAEF : AbstractDigest, IDigest
 	{
-		private int NameIndex = -1;
-		private int UnitIndex = -1;
-		private int PersonnelOverallStatusIndex = -1;
-		private int MedicalOverallStatusIndex = -1;
-		private int TrainingOverallStatusIndex = -1;
+		private int _nameIndex = -1;
+		private int _unitIndex = -1;
+		private int _personnelOverallStatusIndex = -1;
+		private int _medicalOverallStatusIndex = -1;
+		private int _trainingOverallStatusIndex = -1;
 
 		int IDigest.Priority => 2;
 
@@ -29,9 +29,9 @@ namespace Insight.Core.Services.File
 
 			for (int i = 0; i < FileContents.Count; i++)
 			{
-				string[] splitLine = FileContents[i].Split(',');
 				string lineToUpper = FileContents[i].ToUpper();
 				//finds and removes any FOUO/CUI warning
+				//This is outside of the if (!headersProcessed) check so that it removes FOUO/CUI footers
 				if (lineToUpper.Contains("FOR OFFICIAL USE ONLY") || lineToUpper.Contains("CONTROLLED UNCLASSIFIED INFORMATION"))
 				{
 					FileContents.RemoveAt(i);
@@ -44,7 +44,7 @@ namespace Insight.Core.Services.File
 					//If all of those things have been eliminated, it must be the column header's line
 					if (!lineToUpper.Contains("EXPORT DESCRIPTION: "))
 					{
-						SetColumnIndexes(splitLine);
+						SetColumnIndexes(lineToUpper.Split(','));
 						headersProcessed = true;
 					}
 					//removes everything up to and including column headers
@@ -56,18 +56,19 @@ namespace Insight.Core.Services.File
 
 		/// <summary>
 		/// Sets the indexes for columns of data that needs to be digested
+		/// Values must be in all caps
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
 		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
-			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
+			columnHeaders = columnHeaders.Select(d => d.Trim()).ToArray();
 
-			NameIndex = Array.IndexOf(columnHeaders, "NAME");
-			UnitIndex = Array.IndexOf(columnHeaders, "UNIT");
-			PersonnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
-			MedicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
-			TrainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
+			_nameIndex = Array.IndexOf(columnHeaders, "NAME");
+			_unitIndex = Array.IndexOf(columnHeaders, "UNIT");
+			_personnelOverallStatusIndex = Array.IndexOf(columnHeaders, "PERSONNEL");
+			_medicalOverallStatusIndex = Array.IndexOf(columnHeaders, "MEDICAL");
+			_trainingOverallStatusIndex = Array.IndexOf(columnHeaders, "TRAINING");
 		}
 
 		/// <summary>
@@ -78,27 +79,27 @@ namespace Insight.Core.Services.File
 		{
 			foreach (string line in FileContents)
 			{
+				//if _nameIndex is not valid, there is no way to get person objects so break since there is no point looping through anything more
+				if (_nameIndex <= -1) break;
+
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
-				//TODO refact to better handle format changes
 				//Check variables
-				string[] names = splitLine[NameIndex].Split(' ').Select(x => x.Trim()).ToArray();
+				string[] names = splitLine[_nameIndex].Split(' ').Select(x => x.Trim()).ToArray();
 				string firstName = names[1];
 				string lastName = names[0];
 				//string unit = splitLine[UnitIndex];
 				//string AFSC = splitLine[AFSCIndex];
-				Status personnelStatus = StringManipulation.StatusReader(splitLine[PersonnelOverallStatusIndex]);
-				Status medicalStatus = StringManipulation.StatusReader(splitLine[MedicalOverallStatusIndex]);
-				Status trainingStatus = StringManipulation.StatusReader(splitLine[TrainingOverallStatusIndex]);
 
 				//TODO handle picking which person in front end
 				Person person = insightController.GetPersonsByName(firstName: firstName, lastName: lastName).Result.FirstOrDefault();
 
 				//TODO handle user existing in AEF but not in alpha roster
-				if (person == null)
-				{
-					continue;
-				}
+				if (person == null) continue;
+
+				Status personnelStatus = StringManipulation.StatusReader(splitLine.ElementAtOrDefault(_personnelOverallStatusIndex));
+				Status medicalStatus = StringManipulation.StatusReader(splitLine.ElementAtOrDefault(_medicalOverallStatusIndex));
+				Status trainingStatus = StringManipulation.StatusReader(splitLine.ElementAtOrDefault(_trainingOverallStatusIndex));
 
 				//PERSONNEL
 				if (person.Personnel == null)

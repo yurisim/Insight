@@ -36,7 +36,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAlphaRoster_ExpectOnePersonsTestCases))]
-		public void DigestLOXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
+		public void DigestAlphaRosterTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
 			var (input, expectedFirstName, expectedLastName, expectedSSN, expectedRank, expectedDAFSC, expectedCAFSC, expectedPAFSC, expectedHomePhone, expectedDateOnStation) = testCaseParameters;
 
@@ -81,7 +81,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAlphaRoster_ExpectZeroPersonsTestCases))]
-		public void DigestLOXTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
+		public void DigestAlphaRosterTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
 			(IList<string> input, _) = testCaseParameters;
 
@@ -153,6 +153,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			public static object[] DigestAlphaRoster_ExpectZeroPersonsTestCases =
 			{
+				//test case - no person data provided
 				new TestCaseObject(
 					new List<string>
 						{

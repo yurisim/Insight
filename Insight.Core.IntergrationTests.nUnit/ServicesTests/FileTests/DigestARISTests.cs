@@ -16,7 +16,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 	public class DigestARISTests
 	{
 
-		public InsightController insightController;
+		public InsightController InsightController;
 
 		private static readonly DbContextOptions<InsightContext> dbContextOptions =
 			new DbContextOptionsBuilder<InsightContext>()
@@ -26,13 +26,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[SetUp]
 		public void SetUp()
 		{
-			insightController = new InsightController(dbContextOptions);
+			InsightController = new InsightController(dbContextOptions);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			insightController.EnsureDatabaseDeleted();
+			InsightController.EnsureDatabaseDeleted();
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestARIS_ExpectOnePersonsTestCases))]
@@ -51,26 +51,25 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				FirstName = expectedFirstName,
 				LastName = expectedLastName,
 			};
-			insightController.Add(personToCreateInDB);
+			InsightController.Add(personToCreateInDB);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var allPersons = InsightController.GetAllPersons().Result;
+			var person = InsightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			Course course = null;
 			if (expectedFileType == FileType.ARIS_Handgun)
 			{
-				course = insightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
 			}
 			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
 			{
-				course = insightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
 			}
-			
 
 			//assert
 			using (new AssertionScope())
@@ -89,12 +88,66 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					Completion = courseCompletionExpected,
 					Expiration = courseExpirationExpected
 				};
-				CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
+				CourseInstance courseInstanceFromDB = InsightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 				courseInstanceFromDB.Should().NotBeNull();
 
 				course.CourseInstances.Should().HaveCount(1);
 				person.CourseInstances.Should().HaveCount(1);
+			}
+		}
+
+		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAris_ExpectOnePeron_ZeroCouresTestCases))]
+		public void DigestARISTest_ExpectOnePerson_ZeroCourses(TestCaseObject testCaseParameters)
+		{
+			var (input, expectedFirstName, expectedLastName, expectedFileType) = testCaseParameters;
+
+			//arrange
+			FileType detectedFileType = Detector.DetectFileType(input);
+
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+
+			//creates person entity in DB so there's someone to look up
+			Person personToCreateInDB = new Person()
+			{
+				FirstName = expectedFirstName,
+				LastName = expectedLastName,
+			};
+			InsightController.Add(personToCreateInDB);
+
+			//act
+			digest.CleanInput();
+			digest.DigestLines();
+
+			//arrange 2.0
+			var allPersons = InsightController.GetAllPersons().Result;
+			var allCourses = InsightController.GetAll<Course>().Result;
+			var person = InsightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+
+			Course course = null;
+
+			if (expectedFileType == FileType.ARIS_Handgun)
+			{
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
+			}
+
+			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
+			{
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
+			}
+
+			//assert
+			using (new AssertionScope())
+			{
+				detectedFileType.Should().Be(expectedFileType);
+				digest.Should().BeOfType<DigestARIS>();
+
+				allPersons.Count.Should().Be(1);
+				allCourses.Should().HaveCount(0);
+
+				person.Should().NotBeNull();
+
+				person.CourseInstances.Should().BeNullOrEmpty();
 			}
 		}
 
@@ -113,8 +166,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAll<Person>().Result;
-			var courses = insightController.GetAll<Course>().Result;
+			var allPersons = InsightController.GetAll<Person>().Result;
+			var courses = InsightController.GetAll<Course>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -168,8 +221,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFileType: FileType.ARIS_Rifle_Carbine,
 					courseCompletionExpected: DateTime.Parse("26 May 2021"),
 					courseExpirationExpected: DateTime.Parse("30 May 2022")
-
 				),
+
 				//test case - extra empty lines
 				new TestCaseObject(
 					input: new List<string>
@@ -188,7 +241,27 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFileType: FileType.ARIS_Rifle_Carbine,
 					courseCompletionExpected: DateTime.Parse("26 May 2021"),
 					courseExpirationExpected: DateTime.Parse("30 May 2022")
+				),
+			};
 
+			public static object[] DigestAris_ExpectOnePeron_ZeroCouresTestCases =
+			{
+				//test case - extra empty lines
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"People Assigned,,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Rifle/Carbine (Group B)),,,,,,,,,,,,",
+						",,,,,,,,,,,,",
+						"Name,these,are,random,columns",
+						"\"Alsop, Sophie\",more,random,stuff,yaknow",
+						",,,,,,,,,,,,"
+					},
+					expectedFirstName: "Sophie",
+					expectedLastName: "Alsop",
+					expectedFileType: FileType.ARIS_Rifle_Carbine
 				),
 			};
 
@@ -272,6 +345,23 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				courseCompletionExpected = _courseCompletionExpected;
 				courseExpirationExpected = _courseExpirationExpected;
 			}
+
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, FileType expectedFileType)
+			{
+				_input = input;
+				_expectedFirstName = expectedFirstName;
+				_expectedLastName = expectedLastName;
+				_expectedFileType = expectedFileType;
+			}
+
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out FileType expectedFileType)
+			{
+				input = _input;
+				expectedFirstName = _expectedFirstName;
+				expectedLastName = _expectedLastName;
+				expectedFileType = _expectedFileType;
+			}
+
 
 			public TestCaseObject(IList<string> input, FileType expectedFileType)
 			{

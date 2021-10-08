@@ -134,6 +134,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedFlight: ""
 				),
 
+
 				//test case - no flight provided
 				new TestCaseObject(
 					input: new List<string>

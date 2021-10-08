@@ -180,6 +180,24 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedTrainingOverallStatus : Status.Unknown
 				),
 
+				//test case - no columns other than name
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
+						"Name",
+						"SMITH JOHN",
+
+					},
+					expectedFirstName: "John",
+					expectedLastName: "Smith",
+					expectedPersonnelOverallStatus : Status.Unknown,
+					expectedMedicalOverallStatus : Status.Unknown,
+					expectedTrainingOverallStatus : Status.Unknown
+				),
+
+				
+
 			};
 
 			public static object[] DigestAEF_ExpectZeroPersonsTestCases =
@@ -205,6 +223,18 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
 						"Name,Course Count,DRC Status for Email,PayGrade,AEFI,Unit,PASCode,AFSC,Gender,Duty Status,Personnel,Medical,Training,Has AEF Account,Visited AEF Online,Checklist Status,ModeTip",
 						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+					},
+					"" //throwaway parameter since you can't deconstruct to a single parameter
+				),
+
+				//test case - no column headers
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
+						"these,are,random,header,names",
+						"SMITH JOHN,and,random,data,values",
+
 					},
 					"" //throwaway parameter since you can't deconstruct to a single parameter
 				),

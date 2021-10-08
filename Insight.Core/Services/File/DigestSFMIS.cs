@@ -41,7 +41,7 @@ namespace Insight.Core.Services.File
 					//If all of those things have been eliminated, it must be the column header's line
 					if (!lineToUpper.Contains("EXPORT DESCRIPTION: "))
 					{
-						string[] splitLine = FileContents[i].Split(',');
+						string[] splitLine = lineToUpper.Split(',');
 						SetColumnIndexes(splitLine);
 						headersProcessed = true;
 					}
@@ -59,12 +59,13 @@ namespace Insight.Core.Services.File
 
 		/// <summary>
 		/// Sets the indexes for columns of data that needs to be digested
+		/// Values must be in all caps
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
 		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
-			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
+			columnHeaders = columnHeaders.Select(d => d.Trim()).ToArray();
 			_emailIndex = Array.IndexOf(columnHeaders, "EMAIL4CAREER");
 			_catmCourseNameIndex = Array.IndexOf(columnHeaders, "COURSE");
 			_catmCompletionDateIndex = Array.IndexOf(columnHeaders, "COMPLETION_DATE");
@@ -81,8 +82,8 @@ namespace Insight.Core.Services.File
 				//optionally with '.#' after lastname or an underscore in last name (representing hyphenated last names).
 				//Only requirement after the @ symbol is that it must contain a period, with letters before and after it.
 				Regex emailFormat = new Regex(@"\w+\.\w+(\.\d*)?@.+\..+");
-
-				if (string.IsNullOrWhiteSpace(splitLine[_emailIndex]) || !emailFormat.IsMatch(splitLine[_emailIndex]))
+				
+				if (string.IsNullOrWhiteSpace(splitLine.ElementAtOrDefault(_emailIndex)) || !emailFormat.IsMatch(splitLine.ElementAtOrDefault(_emailIndex)))
 				{
 					//if email is not valid, can't find associated person
 					//option is to try to parse name, but the fomatting is less than optimal
@@ -104,11 +105,16 @@ namespace Insight.Core.Services.File
 				insightController.Update(person);
 
 				string weaponType = "";
-				if (splitLine[_catmCourseNameIndex].Contains("M9"))
+
+				var weaponTypeInput = splitLine.ElementAtOrDefault(_catmCourseNameIndex);
+
+				if (weaponTypeInput == null) continue;
+
+				if (splitLine.ElementAtOrDefault(_catmCourseNameIndex).Contains("M9"))
 				{
 					weaponType = WeaponCourseTypes.Handgun;
 				}
-				else if (splitLine[_catmCourseNameIndex].Contains("RIFLE/CARBINE"))
+				else if (splitLine.ElementAtOrDefault(_catmCourseNameIndex).Contains("RIFLE/CARBINE"))
 				{
 					weaponType = WeaponCourseTypes.Rifle_Carbine;
 				}
@@ -116,8 +122,6 @@ namespace Insight.Core.Services.File
 				//CATM course is not empty
 				if (weaponType != "")
 				{
-					
-
 					Course catmCourse = base.GetOrCreateCourse(weaponType);
 					DateTime catmCompletionDate = DateTime.Parse(splitLine[_catmCompletionDateIndex]);
 					DateTime catmExperationDate = DateTime.Parse(splitLine[_catmExperationDateIndex]);
