@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.AI.MachineLearning;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
@@ -14,9 +16,10 @@ namespace Insight.Helpers
 		/// This remembers the file that the user selects so that it can be accessed
 		/// by the program. It returns a token so that it can be accessed at a later date. 
 		/// </summary>
-		/// <param name="files"></param>
+		/// <param name="files">collection of storage files</param>
+		/// <param name="fileNames">names of aforementioned files</param>
 		/// <returns>A list of token strings corresponding to the files that were placed there</returns>
-		public static List<string> RememberFiles(StorageFile[] files)
+		private static List<string> RememberFiles(IEnumerable<StorageFile> files)
 		{
 			var tokenStrings = new List<string>();
 
@@ -36,7 +39,7 @@ namespace Insight.Helpers
 		/// </summary>
 		/// <param name="token"></param>
 		/// <returns></returns>
-		public static async Task<StorageFile> GetFileFromToken(string token)
+		private static async Task<StorageFile> GetFileFromToken(string token)
 		{
 			return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token);
 		}
@@ -45,7 +48,7 @@ namespace Insight.Helpers
 		/// Forgets a file
 		/// </summary>
 		/// <param name="token"></param>
-		public static void ForgetFile(string token)
+		private static void ForgetFile(string token)
 		{
 			if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
 			{
@@ -53,13 +56,21 @@ namespace Insight.Helpers
 			}
 		}
 
-		public static async Task<List<List<string>>> GetFiles()
+		/// <summary>
+		/// Method to 
+		/// </summary>
+		/// <returns></returns>
+		public static async Task<(List<List<string>> fileContents, List<string> failedFileNames, List<string> fileNames)> GetContentsOfFiles()
 		{
+
+			// This is the list of files that failed to process. If this list stays empty, that means there were no issues. 
+			var failedFileNames = new List<string>();
+
 			// Represents the collection of files, with each element being their contents as an List
 			// of strings
 			var fileCollection = new List<List<string>>();
+			var fileNames = new List<string>();
 
-			//TODO feature idea - make title of file dialog show what type of file you're uploading (AEF, alpha, etc)
 			var picker = new FileOpenPicker
 			{
 				ViewMode = PickerViewMode.Thumbnail,
@@ -71,13 +82,21 @@ namespace Insight.Helpers
 			// Allow user to pick multiple files
 			var files = await picker.PickMultipleFilesAsync();
 
-			if (files != null)
-			{
-				// Move file to Future Access List
-				var fileTokens = RememberFiles(files.ToArray());
+			// if user doesn't pick any files, just return the empty contents
+			if (files == null) return (fileCollection, failedFileNames, fileNames);
 
-				// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
-				foreach (var fileToken in fileTokens)
+			// else
+			fileNames = files.Select(file => file.Name).ToList();
+
+
+			var fileTokens = RememberFiles(files).ToArray();
+
+			// for each item in the collection of fileTokens, fetch that item and add it to the filecollection
+			for (var i = 0; i < fileTokens.Length; i++)
+			{
+				var fileToken = fileTokens[i];
+
+				try
 				{
 					// get the file object
 					var fileObject = await GetFileFromToken(fileToken);
@@ -87,13 +106,22 @@ namespace Insight.Helpers
 
 					// add to collection
 					fileCollection.Add(fileLines.ToList());
-
-					// forget the file
+				}
+				catch
+				{
+					failedFileNames.Add(fileNames[i]);
+				}
+				finally
+				{
 					ForgetFile(fileToken);
 				}
+
+				// forget the file
+					
 			}
 
-			return fileCollection;
+			return (fileCollection, failedFileNames, fileNames);
 		}
 	}
+
 }

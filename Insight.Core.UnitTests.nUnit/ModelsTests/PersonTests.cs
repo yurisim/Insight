@@ -7,6 +7,11 @@ namespace Insight.Core.UnitTests.nUnit.ModelsTests
 	[TestFixture]
 	public class PersonTests
 	{
+		/// <summary>
+		/// Tests if the property of Person correctly upper cases the first and last names.
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="expected"></param>
 		[TestCase("lowercase", "LOWERCASE")]
 		[TestCase("UPPERCASE", "UPPERCASE")]
 		[TestCase("mIxEdCaSiNg", "MIXEDCASING")]

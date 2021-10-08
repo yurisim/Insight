@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Insight.Core.Helpers;
 
 namespace Insight.Core.Services.Database
 {
@@ -12,17 +14,18 @@ namespace Insight.Core.Services.Database
 	{
 		/// <summary>
 		/// Returns all Person objects from database
+		/// TODO :// Take off the includes and make other methods to handle specific cases
 		/// </summary>
 		/// <returns></returns>
 		public async Task<List<Person>> GetAllPersons()
 		{
-			List<Person> persons;
+			var foundPersons = new List<Person>();
 
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = await insightContext.Persons
+					foundPersons = await insightContext.Persons
 						.Include(person => person.Medical)
 						.Include(person => person.Personnel)
 						.Include(person => person.Training)
@@ -35,12 +38,13 @@ namespace Insight.Core.Services.Database
 					//.Select(person => person)?.ToListAsync();
 				}
 			}
-			catch (Exception)
+			catch
 			{
-				throw new Exception("Insight.db access error");
+				//return null if there's a problem
+				return null;
 			}
-
-			return persons;
+			//returns person or empty array if none exist
+			return foundPersons;
 		}
 
 		/// <summary>
@@ -50,13 +54,13 @@ namespace Insight.Core.Services.Database
 		/// <returns></returns>
 		public async Task<List<Person>> GetAllPersons(Org org)
 		{
-			List<Person> persons;
+			var foundPersons = new List<Person>();
 
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = await insightContext.Persons.Where(x => x.Organization == org)
+					foundPersons = await insightContext.Persons.Where(x => x.Organization == org)
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
@@ -64,12 +68,13 @@ namespace Insight.Core.Services.Database
 						.Select(x => x)?.ToListAsync();
 				}
 			}
-			catch (Exception)
+			catch
 			{
-				throw new Exception("Insight.db access error");
+				//return null if there's a problem
+				return null;
 			}
-
-			return persons;
+			//returns person or empty array if none exist
+			return foundPersons;
 		}
 
 		/// <summary>
@@ -78,15 +83,18 @@ namespace Insight.Core.Services.Database
 		/// <param name="firstName"></param>
 		/// <param name="lastName"></param>
 		/// <returns></returns>
-		public async Task<Person> GetPersonByName(string firstName, string lastName, bool includeSubref = true)
+		public async Task<List<Person>> GetPersonsByName(string firstName, string lastName, bool includeSubref = true)
 		{
-			Person person;
+			if (firstName == null || lastName == null) return null;
+
+			var foundPersons = new List<Person>();
+
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
 					// TODO Make if else or make more readable
-					var persons = includeSubref ? await insightContext.Persons
+					foundPersons = includeSubref ? await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
@@ -95,83 +103,50 @@ namespace Insight.Core.Services.Database
 						.Include(p => p.CourseInstances).ThenInclude(courseInstance => courseInstance.Course)
 						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync()
 						: await insightContext.Persons.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant())?.ToListAsync();
-
-					//TODO implement better exceptions
-					if (persons.Count > 1)
-					{
-						throw new Exception("Too many Persons found, should be null or 1");
-					}
-
-					person = persons.FirstOrDefault();
 				}
-
 			}
-			//TODO implement exception
-			catch (Exception e)
+			catch
 			{
-				throw new Exception("Insight.db access error");
+				//return null if there's a problem
+				return null;
 			}
-
-			//returns person or null if none exist
-			return person;
+			//returns person or empty array if none exist
+			return foundPersons;
 		}
 
 		/// <summary>
 		/// Returns person that matches shortName within a organization
 		/// </summary>
-		/// <param name="firstName"></param>
-		/// <param name="lastName"></param>
+		/// <param name="shortName">A "shortName" is a name like SmithJ</param>
 		/// <returns></returns>
-		/// 
-		public Person GetPersonByShortName(string shortName)
+		[CanBeNull]
+		public async Task<List<Person>> GetPersonsByShortName(string shortName)
 		{
+			var (firstLetters, lastName) = StringManipulation.ConvertShortNameToNames(shortName);
 
-			// break up shortname into first letters and last name
-			// if name is SmithJ, then J Smith
+			List<Person> foundPersons = null;
 
-			// TODO MAKE MORE FACTORS to find the correct person
-
-			int indexOfCapital;
-			for (indexOfCapital = shortName.Length - 1; indexOfCapital >= 0; indexOfCapital--)
-			{
-				if (char.IsUpper(shortName[indexOfCapital]))
-				{
-					break;
-				}
-			}
-
-			var firstLetters = shortName.Substring(indexOfCapital);
-			var lastName = shortName.Substring(0, indexOfCapital);
-
-			// now try to find the person with the name
-			Person foundPerson = null;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					var foundPeople = insightContext.Persons
+					foundPersons = await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(person => person.FirstName.Contains(firstLetters.ToUpperInvariant()) && person.LastName == lastName.ToUpperInvariant());
-
-					//TODO implement better exceptions
-					if (foundPeople.Count() > 1)
-					{
-						throw new Exception("Too many Persons found, should be null or 1");
-					}
-
-					foundPerson = foundPeople.FirstOrDefault();
+						.Where(person => person.FirstName.Contains(firstLetters.ToUpperInvariant())
+										 && person.LastName == lastName.ToUpperInvariant())
+						.ToListAsync();
 				}
 			}
-			//TODO implement exception
-			catch (Exception e)
+			catch
 			{
-				Debug.WriteLine(e);
+				//return null if there's a problem
+				return null;
 			}
-			//returns person or null if none exist
-			return foundPerson;
+			//returns person or empty array if none exist
+			return foundPersons;
 		}
 
 		/// <summary>
@@ -181,38 +156,29 @@ namespace Insight.Core.Services.Database
 		/// <param name="lastName"></param>
 		/// <param name="SSN"></param>
 		/// <returns></returns>
-		public Person GetPersonByNameSSN(string firstName, string lastName, string SSN)
+		public async Task<List<Person>> GetPersonsByNameSSN(string firstName, string lastName, string SSN)
 		{
 			//TODO refactor to reuse code more and have better methods
-			List<Person> persons = new List<Person>();
-			Person person;
+			var foundPersons = new List<Person>();
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					persons = insightContext.Persons
+					foundPersons = await insightContext.Persons
 						.Include(p => p.Medical)
 						.Include(p => p.Personnel)
 						.Include(p => p.Training)
 						.Include(p => p.Organization)
-						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToList();
-					//TODO implement better exceptions
-					if (persons.Count > 1)
-					{
-						throw new Exception("Too many Persons found, should be null or 1");
-					}
-
-					person = persons.FirstOrDefault();
-
+						.Where(x => x.FirstName == firstName.ToUpperInvariant() && x.LastName == lastName.ToUpperInvariant() && x.SSN == SSN).ToListAsync();
 				}
 			}
-			//TODO implement exception
-			catch (Exception)
+			catch
 			{
-				throw new Exception("Insight.db access error");
+				//return null if there's a problem
+				return null;
 			}
-			//returns person or null if none exist
-			return person;
+			//returns person or empty array if none exist
+			return foundPersons;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -34,50 +35,51 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestPEX_ExpectOnePersonsTestCases))]
-		//public void DigestPEXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
-		//{
-		//	var (input, expectedFirstName, expectedLastName, expectedFlight) = testCaseParameters;
+		public void DigestPEXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
+		{
+			var (input, expectedFirstName, expectedLastName, expectedFlight) = testCaseParameters;
 
-		//	//arrange
-		//	FileType detectedFileType = Detector.DetectFileType(input);
+			//arrange
+			FileType detectedFileType = Detector.DetectFileType(input);
 
-		//	IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
 
-		//	//creates person entity in DB so there's someone to look up
-		//	Person personToCreateInDB = new Person()
-		//	{
-		//		FirstName = expectedFirstName,
-		//		LastName = expectedLastName,
-		//	};
-		//	insightController.Add(personToCreateInDB);
+			//creates person entity in DB so there's someone to look up
+			Person personToCreateInDB = new Person()
+			{
+				FirstName = expectedFirstName,
+				LastName = expectedLastName,
+			};
+			insightController.Add(personToCreateInDB);
 
-		//	//act
-		//	digest.CleanInput();
-		//	digest.DigestLines();
+			//act
+			digest.CleanInput();
+			digest.DigestLines();
 
-		//	//arrange 2.0
-		//	var allPersons = insightController.GetAllPersons().Result;
-		//	var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			//arrange 2.0
+			var allPersons = insightController.GetAllPersons().Result;
+			var persons = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var person = persons.FirstOrDefault();
 
-		//	//assert
-		//	using (new AssertionScope())
-		//	{
-		//		detectedFileType.Should().Be(FileType.PEX);
-		//		digest.Should().BeOfType<DigestPEX>();
+			//assert
+			using (new AssertionScope())
+			{
+				detectedFileType.Should().Be(FileType.PEX);
+				digest.Should().BeOfType<DigestPEX>();
 
-		//		allPersons.Count.Should().Be(1);
-		//		person.Should().NotBeNull();
-
-		//		person.FirstName.Should().Be(expectedFirstName.Trim().ToUpperInvariant());
-		//		person.LastName.Should().Be(expectedLastName.Trim().ToUpperInvariant());
-		//		person.Flight.Equals(expectedFlight);
-		//	}
-		//}
+				allPersons.Count.Should().Be(1);
+				
+				person.Should().NotBeNull();
+				person.FirstName.Should().Be(expectedFirstName.Trim().ToUpperInvariant());
+				person.LastName.Should().Be(expectedLastName.Trim().ToUpperInvariant());
+				person.Flight.Equals(expectedFlight);
+			}
+		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestPEX_ExpectZeroPersonsTestCases))]
 		public void DigestPEXTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
-			var (input, _) = testCaseParameters;
+			(IList<string> input, string _) = testCaseParameters;
 
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
@@ -131,6 +133,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Smith",
 					expectedFlight: ""
 				),
+
 
 				//test case - no flight provided
 				new TestCaseObject(

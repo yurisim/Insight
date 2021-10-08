@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -56,7 +57,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())
@@ -98,7 +99,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				detectedFileType.Should().Be(FileType.AEF);
 				digest.Should().BeOfType<DigestAEF>();
 
-				allPersons.Count.Should().Be(0);
+				allPersons.Should().HaveCount(0);
 			}
 		}
 
@@ -161,7 +162,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedTrainingOverallStatus : Status.Current
 				),
 
-				//test case - base case
+				//test case - No statuses
 				new TestCaseObject(
 					input: new List<string>
 					{
@@ -179,15 +180,33 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedTrainingOverallStatus : Status.Unknown
 				),
 
+				//test case - no columns other than name
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
+						"Name",
+						"SMITH JOHN",
+
+					},
+					expectedFirstName: "John",
+					expectedLastName: "Smith",
+					expectedPersonnelOverallStatus : Status.Unknown,
+					expectedMedicalOverallStatus : Status.Unknown,
+					expectedTrainingOverallStatus : Status.Unknown
+				),
+
+				
+
 			};
 
 			public static object[] DigestAEF_ExpectZeroPersonsTestCases =
 			{
-				//test case - no data rows
+				//test case - no person that exists in database
 				new TestCaseObject(
 					input: new List<string>
 					{
-						"\"1The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
 						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
 						"Name,Course Count,DRC Status for Email,PayGrade,AEFI,Unit,PASCode,AFSC,Gender,Duty Status,Personnel,Medical,Training,Has AEF Account,Visited AEF Online,Checklist Status,ModeTip",
 						"SMITH JOHN,0,,E3,YR,552 AIR CON/NETWORKS SQ (FFKG80),TE1CFKG8,3D054,M,PRES FOR DUTY,,,,Y,Y,Member Started,",
@@ -196,14 +215,26 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					"" //throwaway parameter since you can't deconstruct to a single parameter
 				),
 
-				//test case - no person that exists in database
+				//test case - no data rows
 				new TestCaseObject(
 					input: new List<string>
 					{
-						"\"2The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
 						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
 						"Name,Course Count,DRC Status for Email,PayGrade,AEFI,Unit,PASCode,AFSC,Gender,Duty Status,Personnel,Medical,Training,Has AEF Account,Visited AEF Online,Checklist Status,ModeTip",
 						"\"The information herein is For Official Use Only (FOUO) which must be protected under the FOIA and Privacy Act, as amended.  Unauthorized disclosure or misuse of this PERSONAL INFORMATION may result in criminal and/or civil penalties.\",,,,,,,,,,,,,,,,",
+					},
+					"" //throwaway parameter since you can't deconstruct to a single parameter
+				),
+
+				//test case - no column headers
+				new TestCaseObject(
+					input: new List<string>
+					{
+						"Export Description:  UnitRoster,,,,,,,,,,,,,,,,",
+						"these,are,random,header,names",
+						"SMITH JOHN,and,random,data,values",
+
 					},
 					"" //throwaway parameter since you can't deconstruct to a single parameter
 				),

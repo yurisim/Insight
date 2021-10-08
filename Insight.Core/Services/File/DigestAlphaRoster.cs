@@ -34,18 +34,19 @@ namespace Insight.Core.Services.File
 				throw new NotImplementedException();
 			}
 
-			SetColumnIndexes(FileContents[0].Split(','));
+			SetColumnIndexes(FileContents[0].ToUpper().Split(','));
 			FileContents.RemoveAt(0);
 		}
 
 		/// <summary>
 		/// Sets the indexes for columns of data that needs to be digested
+		/// Values must be in all caps
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
 		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
-			columnHeaders = columnHeaders.Select(d => d.ToUpper().Trim()).ToArray();
+			columnHeaders = columnHeaders.Select(d => d.Trim()).ToArray();
 
 			int offset = 1;  //this offset is to account for the comma in the Name field
 
@@ -64,18 +65,19 @@ namespace Insight.Core.Services.File
 		{
 			foreach (string line in FileContents)
 			{
+				// Alpha Roster filetype is detected by looking at the the column header row. If any of the columns are missing, the filetype won't be detected.
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
-				string firstName = splitLine[_firstNameIndex].Replace("\"", "").Trim();
-				string lastName = splitLine[_lastNameIndex].Replace("\"", "").Trim();
-				string grade = splitLine[_gradeIndex];
-				string ssn = splitLine[_ssnIndex].Replace("-", "");
+				string firstName = splitLine.ElementAtOrDefault(_firstNameIndex).Replace("\"", "").Trim();
+				string lastName = splitLine.ElementAtOrDefault(_lastNameIndex).Replace("\"", "").Trim();
+				string grade = splitLine.ElementAtOrDefault(_gradeIndex);
+				string ssn = splitLine.ElementAtOrDefault(_ssnIndex).Replace("-", "");
 				DateTime dateOnStation = DateTime.Parse(splitLine[_dateOnStationIndex]);
-				string homePhone = splitLine[_homePhoneIndex];
-				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine[_pafsc], cafsc: splitLine[_cafsc], dafsc: splitLine[_dafsc]);
+				string homePhone = splitLine.ElementAtOrDefault(_homePhoneIndex);
+				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine.ElementAtOrDefault(_pafsc), cafsc: splitLine.ElementAtOrDefault(_cafsc), dafsc: splitLine.ElementAtOrDefault(_dafsc));
 
-				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = insightController.GetPersonByName(firstName, lastName).Result;
+				//TODO handle picking which person in the frontend
+				var person = insightController.GetPersonsByName(firstName, lastName).Result.FirstOrDefault();
 
 				// If you don't find the person (because we value LOXs, throw them out)
 				if (person == null) continue;

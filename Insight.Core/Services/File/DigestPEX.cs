@@ -50,26 +50,33 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
+			//detector requires all columns to work in a specific order, so there is no case where columns can be missing and digest PEX run
+
 			foreach (string line in FileContents)
 			{
 				var splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
 
 				// short name of person, format is "SmithJ" if name is "John Smith"
-				string shortName = splitLine[_shortNameIndex];
+				string shortName = splitLine.ElementAtOrDefault(_shortNameIndex);
 
 				// Flight Designation 
-				string pexName = splitLine[_pexDesignationIndex];
+				string pexName = splitLine.ElementAtOrDefault(_pexDesignationIndex);
 
 				// Now try to find the name of the person
 				// Find all people who have the short Name
-				var foundPerson = insightController.GetPersonByShortName(shortName);
+				var foundPersons = insightController.GetPersonsByShortName(shortName)?.Result;
 
-				if (foundPerson == null) continue;
-				
+				//TODO handle picking which person in the frontend
+				var person = foundPersons.FirstOrDefault();
+
+				if (foundPersons != null && foundPersons.Count > 0)
+				{
+					person.Flight = pexName;
+
+					insightController.Update(person);
+				}
+
 				// try to find the PEX Account
-				foundPerson.Flight = pexName;
-
-				insightController.Update(foundPerson);
 			}
 		}
 	}

@@ -1,66 +1,112 @@
-﻿using Insight.Core.Services.File;
-using Insight.Helpers;
-using Insight.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Insight.Core.Services.File;
+using Insight.Helpers;
+using Insight.ViewModels;
+using System.Resources;
+using Insight.Core.Helpers;
 
 namespace Insight.Views
 {
-	public sealed partial class UploadItemControl : UserControl
+	public sealed partial class UploadItemControl
 	{
-		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+		// why can't I link the resource file? doesn't seem to work in Strings or in Resource.resw :(
+		private const string uploadItem_FilesSuccess = "File(s) were successfully uploaded!";
+		private const string uploadItem_FilesFailure = "One or more items have failed. The following files could not be digested:";
+
+		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
+		// TODO: No Longer need this.
+		public static readonly DependencyProperty FileTypeProperty =
+			DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
 
 		public UploadItemControl()
 		{
 			InitializeComponent();
 		}
 
+		public UploadItemViewModel ViewModel { get; } = new UploadItemViewModel();
+
 		public string FileType
 		{
-			get { return (string)GetValue(FileTypeProperty); }
-			set { SetValue(FileTypeProperty, value); }
+			get => (string) GetValue(FileTypeProperty);
+			set => SetValue(FileTypeProperty, value);
 		}
 
-		// Using a DependencyProperty as the backing store for FileType.  This enables animation, styling, binding, etc...
-		// TODO: No Longer need this.
-		public static readonly DependencyProperty FileTypeProperty = DependencyProperty.Register("FileType", typeof(string), typeof(UploadItemControl), null);
-
 		/// <summary>
-		/// TODO: Need to move this to view model. No
+		///     TODO: Need to move this to view model. Really need to refactor this.
+		///		
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private async void btnFileDialog_Click(object sender, RoutedEventArgs e)
+		private async void BtnFileDialog_Click(object sender, RoutedEventArgs e)
 		{
-			var contentsOfFiles = await FileService.GetFiles();
+			// This is the file dialog returns a array of arrays of file contents
+			var (fileContents, failedFileNames, fileNames) = await FileService.GetContentsOfFiles();
 
-			Debug.WriteLine("FilesRead");
+			var contentsToDigest = new List<IDigest>();
 
-			List<IDigest> FileDigest = new List<IDigest>();
-
-			foreach (List<string> linesOfFile in contentsOfFiles)
+			if (fileNames.Count > 0)
 			{
-				// Refactor this to be a static method
-				Core.Models.FileType detectedFiletype = Detector.DetectFileType(linesOfFile);
-
-				if (detectedFiletype == Core.Models.FileType.Unknown)
+				// This orders the file contents in the right 
+				for (var i = 0; i < fileContents.Count; i++)
 				{
-					throw new Exception("Unsupported file type");
+					var linesOfFile = fileContents[i];
+					// Refactor this to be a static method
+					var detectedFiletype = Detector.DetectFileType(linesOfFile);
+
+					//If detector cannot read the file type then it cannot be digested
+					if (detectedFiletype == Core.Models.FileType.Unknown)
+					{
+						failedFileNames.Add(fileNames[i]);
+						continue;
+					}
+
+					//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
+					var digestor = DigestFactory.GetDigestor(detectedFiletype, linesOfFile, null);
+
+					// If the file is an undetectable file type, it is null
+					if (digestor != null)
+					{
+						contentsToDigest.Add(digestor);
+					}
 				}
 
-				//null is passed for dbContextOptions so that the InsightController built down the road defaults to using the live database.
-				FileDigest.Add(DigestFactory.GetDigestor(fileType: detectedFiletype, fileContents: linesOfFile, dbContextOptions: null));
-			}
+				contentsToDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
 
-			FileDigest.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+				// instantiate i outside of loop
+				for (var i = 0; i < contentsToDigest.Count; i++)
+				{
+					try
+					{
+						var content = contentsToDigest[i];
 
-			foreach (var digest in FileDigest)
-			{
-				digest.CleanInput();
-				digest.DigestLines();
+						content.CleanInput();
+						content.DigestLines();
+					}
+					catch
+					{
+						failedFileNames.Add(fileNames[i]);
+					}
+				}
+
+				var concatFailed = StringManipulation.FileNameFormatter(failedFileNames);
+
+				var dialog = new ContentDialog
+				{
+					Title = "Upload Status",
+					CloseButtonText = "OK",
+
+					// Make steps to concatenate all file names into 1 string
+					Content = failedFileNames.Count == 0 ? uploadItem_FilesSuccess : uploadItem_FilesFailure + concatFailed,
+
+					DefaultButton = ContentDialogButton.Close
+				};
+
+				ContentDialogResult result = await dialog.ShowAsync();
 			}
 		}
 	}

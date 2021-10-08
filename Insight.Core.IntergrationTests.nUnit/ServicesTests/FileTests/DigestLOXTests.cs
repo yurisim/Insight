@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -13,10 +14,9 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 	[TestFixture]
 	public class DigestLOXTests
 	{
+		private InsightController _insightController;
 
-		public InsightController insightController;
-
-		private static readonly DbContextOptions<InsightContext> dbContextOptions =
+		private static readonly DbContextOptions<InsightContext> DbContextOptions =
 			new DbContextOptionsBuilder<InsightContext>()
 				.UseInMemoryDatabase("InsightTestDB")
 				.Options;
@@ -24,13 +24,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[SetUp]
 		public void SetUp()
 		{
-			insightController = new InsightController(dbContextOptions);
+			_insightController = new InsightController(DbContextOptions);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			insightController.EnsureDatabaseDeleted();
+			_insightController.EnsureDatabaseDeleted();
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestLOX_ExpectOnePersonsTestCases))]
@@ -41,17 +41,17 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
 
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, DbContextOptions);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var org = insightController.GetOrgByAlias(expectedOrg).Result;
-			var orgs = insightController.GetAll<Org>().Result;
+			var allPersons = _insightController.GetAllPersons().Result;
+			var person = _insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var org = _insightController.GetOrgsByAlias(expectedOrg).Result.FirstOrDefault();
+			var orgs = _insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -69,8 +69,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				person.Organization.Name.Should().Be(org.Name);
 				person.Flight.Equals(expectedFlight);
 				person.CrewPosition.Should().Be(expectedCrewPosition);
-				//TODO implement rank
-				//person.Rank.Should().Be(expectedRank);
+				person.Rank.Should().Be(expectedRank);
 			}
 		}
 
@@ -82,16 +81,16 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
 
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, DbContextOptions);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAll<Person>().Result;
-			var org = insightController.GetOrgByAlias(expectedOrg);
-			var orgs = insightController.GetAll<Org>().Result;
+			var allPersons = _insightController.GetAll<Person>().Result;
+			var org = _insightController.GetOrgsByAlias(expectedOrg);
+			var orgs = _insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -113,15 +112,15 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			//arrange
 			FileType detectedFileType = Detector.DetectFileType(input);
 
-			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, dbContextOptions);
+			IDigest digest = DigestFactory.GetDigestor(detectedFileType, input, DbContextOptions);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAll<Person>().Result;
-			var orgs = insightController.GetAll<Org>().Result;
+			var allPersons = _insightController.GetAll<Person>().Result;
+			var orgs = _insightController.GetAll<Org>().Result;
 
 			//assert
 			using (new AssertionScope())
@@ -169,7 +168,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "960 AACS",
-					expectedGrade: Grade.E2,
+					expectedGrade: "AMN",
 					expectedCrewPosition: "ABM"
 				),
 
@@ -188,7 +187,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "522 ACNS",
-					expectedGrade: Grade.E2,
+					expectedGrade: "AMN",
 					expectedCrewPosition: "ABM"
 				),
 
@@ -200,13 +199,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"Squadron: 960 AACS,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
 						",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
-						"\" Alsop ,  Sophie \",ABM,E-3G,2nd Lt,E,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
+						"\" Alsop ,  Sophie \",ABM,E-3G,1LT,E,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
 					},
 					expectedFirstName: "Sophie",
 					expectedLastName: "Alsop",
 					expectedFlight: "E",
 					expectedOrg: "960 AACS",
-					expectedGrade: Grade.O2,
+					expectedGrade: "1LT",
 					expectedCrewPosition: "ABM"
 				),
 
@@ -224,7 +223,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Hyphe-nated",
 					expectedFlight: "A",
 					expectedOrg: "960th AACS",
-					expectedGrade: Grade.E2,
+					expectedGrade: "AMN",
 					expectedCrewPosition: "FE"
 				),
 
@@ -236,13 +235,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						"Squadron: 552 Air Control Network Squadron,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
 						",,,,,,,Flight Quals,,,,Dual Qual,,Certifications,,,,,,,,,,,,,,,,,,,Duty,,",
 						"Name,CP,MDS,Rank,Flight,Msn Rdy Status Assigned,Exp Ind,Instructor,Evaluator,E-3G Dragon,E-3B/C/G Legacy Flt Deck,Primary Qual,Secondary Qual,FPS/E-Told,Bounce Recovery,SOF,ISOF,Ops Sup,Jeppesen Approach Plate Certified,SDP,WX Tier 1,WX Tier 2,KC-46 AAR Cert,DRAGON Sim Operator,E-3B Certified,E-3G Certified,Active Sensor Operations,Data Link Operations,SL Certified,Msn Commander,DRAGON Msn Crew,IPEC,Attached,Remarks,",
-						"\"St. Onge, Dean\",FE,E-3G,bad_rank,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
+						"\"St. Onge, Dean\",FE,E-3G,SSSSSSSSSSSgt,A,CMR,I,,,,,,,,,,,,,,,,,,,X,,,,,,,,PERS: DNIF,",
 					},
 					expectedFirstName: "Dean",
 					expectedLastName: "St. Onge",
 					expectedFlight: "A",
 					expectedOrg: "552 Air Control Network Squadron",
-					expectedGrade: Grade.Unknown,
+					expectedGrade: "SSSSSSSSSSSgt",
 					expectedCrewPosition: "FE"
 				),
 
@@ -260,7 +259,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					expectedLastName: "Data",
 					expectedFlight: "",
 					expectedOrg: "960 AACS",
-					expectedGrade: Grade.Unknown,
+					expectedGrade: "",
 					expectedCrewPosition: ""
 				),
 			};
@@ -359,10 +358,10 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			private readonly string _expectedLastName;
 			private readonly string _expectedFlight;
 			private readonly string _expectedOrg;
-			private readonly Grade _expectedGrade;
+			private readonly string _expectedGrade;
 			private readonly string _expectedCrewPosition;
 
-			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight, string expectedOrg, Grade expectedGrade, string expectedCrewPosition)
+			public TestCaseObject(IList<string> input, string expectedFirstName, string expectedLastName, string expectedFlight, string expectedOrg, string expectedGrade, string expectedCrewPosition)
 			{
 				_input = input;
 				_expectedFirstName = expectedFirstName;
@@ -373,7 +372,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				_expectedCrewPosition = expectedCrewPosition;
 			}
 
-			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedFlight, out string expectedOrgAlias, out Grade expectedGrade, out string expectedCrewPosition)
+			public void Deconstruct(out IList<string> input, out string expectedFirstName, out string expectedLastName, out string expectedFlight, out string expectedOrgAlias, out string expectedGrade, out string expectedCrewPosition)
 			{
 				input = _input;
 				expectedFirstName = _expectedFirstName;

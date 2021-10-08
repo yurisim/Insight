@@ -46,10 +46,11 @@ namespace Insight.Core.Services.Database
 		/// <typeparam name="T"></typeparam>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public async Task<T> GetByID<T>(int id)
-			where T : class
+		[ItemCanBeNull]
+		public async Task<T> GetByID<T>(int id) where T : class
 		{
 			Task<T> output;
+
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
@@ -57,8 +58,6 @@ namespace Insight.Core.Services.Database
 					output = insightContext.FindAsync<T>(id).AsTask();
 				}
 			}
-
-			//TODO implement exception
 			catch (Exception e)
 			{
 				throw new Exception(e.Message);
@@ -72,19 +71,20 @@ namespace Insight.Core.Services.Database
 		/// If it doesn't exist, it spits out null. 
 		/// </summary>
 		/// <returns></returns>
-		public async Task<CourseInstance> GetCourseInstance(CourseInstance instanceToCheck)
+		[CanBeNull]
+		public async Task<List<CourseInstance>> GetCourseInstances(CourseInstance instanceToCheck)
 		{
-			CourseInstance foundInstance;
+			List<CourseInstance> foundInstances;
 			try
 			{
-				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
+				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					foundInstance = await insightContext.CourseInstances
+					foundInstances = await insightContext.CourseInstances
 						.Include(p => p.Person)
 						.Include(p => p.Course)
-						.FirstOrDefaultAsync(x => x.Person == instanceToCheck.Person &&
+						.Where(x => x.Person == instanceToCheck.Person &&
 									x.Course == instanceToCheck.Course &&
-									x.Completion == instanceToCheck.Completion);
+									x.Completion == instanceToCheck.Completion).ToListAsync();
 				}
 			}
 			//TODO implement exception
@@ -94,23 +94,28 @@ namespace Insight.Core.Services.Database
 			}
 
 			//returns person or null if none exist
-			return foundInstance;
+			return foundInstances;
 		}
 
+		/// <summary>
+		/// Gets course by its name
+		/// </summary>
+		/// <param name="courseName"></param>
+		/// <returns></returns>
 		[ItemCanBeNull]
-		public async Task<Course> GetCourseByName(string courseName)
+		public async Task<List<Course>> GetCoursesByName(string courseName)
 		{
 			// now try to find the course with the name
-			Task<Course> foundCourse= null;
+			List<Course> foundCourses = null ;
 
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					foundCourse = insightContext.Courses
+					foundCourses = await insightContext.Courses
 						.Where(course => course.Name == courseName)
 						.Include(course => course.CourseInstances)
-						.FirstOrDefaultAsync();
+						.ToListAsync();
 				}
 			}
 			//TODO implement exception
@@ -121,7 +126,7 @@ namespace Insight.Core.Services.Database
 
 			//returns person or null if none exist
 			// ReSharper disable once PossibleNullReferenceException
-			return await foundCourse;
+			return foundCourses;
 		}
 
 		/// <summary>
@@ -131,17 +136,17 @@ namespace Insight.Core.Services.Database
 		/// <param name="alias"></param>
 		/// <returns></returns>
 		[ItemCanBeNull]
-		public async Task<Org> GetOrgByAlias(string alias)
+		public async Task<List<Org>> GetOrgsByAlias(string alias)
 		{
-			Task<Org> org;
+			List<Org> orgs;
 
 			try
 			{
 				using (var insightContext = new InsightContext(_dbContextOptions))
 				{
-					org = insightContext.OrgAliases
+					orgs = await insightContext.OrgAliases
 						.Where(x => x.Name == alias.ToUpper())
-						.Select(x => x.Org).FirstOrDefaultAsync();
+						.Select(x => x.Org).ToListAsync();
 				}
 			}
 			//TODO implement exception
@@ -151,23 +156,23 @@ namespace Insight.Core.Services.Database
 			}
 
 			//returns org or null if none exist
-			return await org;
+			return orgs;
 		}
 
 		/// <summary>
 		/// Gets AFSC by name
 		/// </summary>
-		/// <param name="name"></param>
+		/// <param name="pafsc"></param>
 		/// <returns></returns>
-		public async Task<AFSC> GetAFSC(string pafsc)
+		public async Task<List<AFSC>> GetAFSCs(string pafsc)
 		{
 			//TODO search by any of p/c/d afsc
-			AFSC afsc = null;
+			List<AFSC> afscs = null;
 			try
 			{
 				using (InsightContext insightContext = new InsightContext(_dbContextOptions))
 				{
-					afsc = await insightContext.AFSCs.FirstOrDefaultAsync(x => x.PAFSC == pafsc.ToUpper());
+					afscs = await insightContext.AFSCs.Where(x => x.PAFSC == pafsc.ToUpper()).ToListAsync();
 
 				}
 			}
@@ -176,7 +181,7 @@ namespace Insight.Core.Services.Database
 				throw new Exception("Insight.db access error");
 			}
 
-			return afsc;
+			return afscs;
 		}
 	}
 }

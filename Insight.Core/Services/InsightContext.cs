@@ -11,6 +11,9 @@ namespace Insight.Core.Services
 
 		public DbSet<AFSC> AFSCs { get; set; }
 
+
+		public DbSet<SourceFile> SourceFiles { get; set; }
+
 		public DbSet<Course> Courses { get; set; }
 
 		public DbSet<CourseInstance> CourseInstances { get; set; }
@@ -48,6 +51,7 @@ namespace Insight.Core.Services
 		{
 			// Map table names
 			modelBuilder.Entity<AFSC>().ToTable("AFSCs");
+			modelBuilder.Entity<SourceFile>().ToTable("SourceFiles");
 			modelBuilder.Entity<Course>().ToTable("Courses");
 			modelBuilder.Entity<CourseInstance>().ToTable("CourseInstances");
 			modelBuilder.Entity<Medical>().ToTable("Medicals");

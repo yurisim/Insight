@@ -22,7 +22,7 @@ namespace Insight.Core.Services.File
 		int IDigest.Priority => 3;
 
 		/// <summary>
-		///     Removed duplicate lines in the ETMS Report as well as any other formatting
+		/// Removed duplicate lines in the ETMS Report as well as any other formatting
 		/// </summary>
 		public void CleanInput()
 		{
@@ -31,6 +31,7 @@ namespace Insight.Core.Services.File
 
 			for (var i = 0; i < FileContents.Count; i++)
 			{
+				// why not start i = 1 instead of removign header?
 				var splitLine = FileContents[i].Split(',');
 				if (!headersProcessed)
 				{
@@ -50,6 +51,8 @@ namespace Insight.Core.Services.File
 
 		public void DigestLines()
 		{
+			//detector requires all columns to work, so there is no case where columns can be missing and digest ETMS run
+
 			//return if contents is empty
 			if (FileContents.Count == 0) return;
 
@@ -60,15 +63,16 @@ namespace Insight.Core.Services.File
 			foreach (string line in FileContents)
 			{
 				string[] splitLine = line.Split(',').Select(d => d.Trim()).ToArray();
-				string squadron = splitLine[_pasDescriptionIndex].ToUpper();
+				string squadron = splitLine.ElementAtOrDefault(_pasDescriptionIndex).ToUpper();
 
-				string firstName = splitLine[_firstNameIndex];
-				string lastName = splitLine[_lastNameIndex];
-				string completionDate = splitLine[_completionDateIndex];
+				string firstName = splitLine.ElementAtOrDefault(_firstNameIndex);
+				string lastName = splitLine.ElementAtOrDefault(_lastNameIndex);
+				string completionDate = splitLine.ElementAtOrDefault(_completionDateIndex);
+
+				//TODO handle picking which person in the frontend
+				var foundPerson = insightController.GetPersonsByName(firstName, lastName, true).Result.FirstOrDefault();
 
 				// TODO: Exception if person is not found
-				var foundPerson = insightController.GetPersonByName(firstName, lastName, true).Result;
-
 				if (foundPerson == null) continue;
 
 				//if (foundPerson.CourseInstances == null)
@@ -94,7 +98,8 @@ namespace Insight.Core.Services.File
 				};
 
 				// check if the course instance exists
-				var foundInstance = insightController.GetCourseInstance(courseInstance).Result;
+				//TODO handle picking which one in frontend
+				var foundInstance = insightController.GetCourseInstances(courseInstance).Result.FirstOrDefault();
 
 				// if no instance is found
 				if (foundInstance == null)
@@ -122,7 +127,7 @@ namespace Insight.Core.Services.File
 
 		private T CreateOrReturn<T, T1>(string courseName, ref T1 entity)
 		{
-			var foundEntity = insightController.GetCourseByName(courseName);
+			var foundEntity = insightController.GetCoursesByName(courseName);
 
 			return default;
 		}

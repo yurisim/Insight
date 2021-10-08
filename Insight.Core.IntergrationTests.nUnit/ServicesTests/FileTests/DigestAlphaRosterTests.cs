@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -35,7 +36,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAlphaRoster_ExpectOnePersonsTestCases))]
-		public void DigestLOXTest_ExpectOnePerson(TestCaseObject testCaseParameters)
+		public void DigestAlphaRosterTest_ExpectOnePerson(TestCaseObject testCaseParameters)
 		{
 			var (input, expectedFirstName, expectedLastName, expectedSSN, expectedRank, expectedDAFSC, expectedCAFSC, expectedPAFSC, expectedHomePhone, expectedDateOnStation) = testCaseParameters;
 
@@ -57,7 +58,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())
@@ -80,7 +81,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestAlphaRoster_ExpectZeroPersonsTestCases))]
-		public void DigestLOXTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
+		public void DigestAlphaRosterTest_ExpectZeroPerson(TestCaseObject testCaseParameters)
 		{
 			(IList<string> input, _) = testCaseParameters;
 
@@ -152,6 +153,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			public static object[] DigestAlphaRoster_ExpectZeroPersonsTestCases =
 			{
+				//test case - no person data provided
 				new TestCaseObject(
 					new List<string>
 						{
