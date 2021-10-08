@@ -1,5 +1,8 @@
-﻿using Insight.Core.Models;
+﻿using System;
+using System.Collections.Generic;
+using Insight.Core.Models;
 using System.Globalization;
+using System.Linq;
 
 namespace Insight.Core.Helpers
 {
@@ -75,6 +78,23 @@ namespace Insight.Core.Helpers
 				default:
 					return Status.Unknown;
 			}
+		}
+
+		/// <summary>
+		/// Returns a list of failed file names with new lines spaced in between.
+		/// </summary>
+		/// <param name="failedFileNames"></param>
+		/// <returns></returns>
+		public static string FileNameFormatter(IEnumerable<string> failedFileNames)
+		{
+			var result = string.Empty;
+
+			foreach (var name in failedFileNames)
+			{
+				result = result + Environment.NewLine + name;
+			}
+
+			return result;
 		}
 	}
 }
