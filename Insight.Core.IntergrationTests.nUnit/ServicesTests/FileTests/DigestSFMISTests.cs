@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -61,9 +62,9 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
-			var m4Couse = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
-			var m9Couse = insightController.GetCourseByName(WeaponCourseTypes.Handgun).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var m4Couse = insightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
+			var m9Couse = insightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())
@@ -87,7 +88,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						Completion = m4CourseCompletionExpected,
 						Expiration = m4CourseCompletionExpected.AddDays(m4Couse.Interval * 365)
 					};
-					CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
+					CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 					courseInstanceFromDB.Should().NotBeNull();
 					m4Couse.Should().NotBeNull();
@@ -107,7 +108,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 						Completion = m9CourseCompletionExpected,
 						Expiration = m9CourseCompletionExpected.AddDays(m9Couse.Interval * 365)
 					};
-					CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
+					CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 					courseInstanceFromDB.Should().NotBeNull();
 					m9Couse.Should().NotBeNull();

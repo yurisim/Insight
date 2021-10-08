@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Insight.Core.Models;
@@ -57,7 +58,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAll<Person>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			//assert
 			using (new AssertionScope())

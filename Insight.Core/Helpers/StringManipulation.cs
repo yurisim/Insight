@@ -6,6 +6,42 @@ namespace Insight.Core.Helpers
 	public static class StringManipulation
 	{
 		/// <summary>
+		/// Takes a short name (SmithJ for John Smith) to a partial first name and a last name
+		/// </summary>
+		/// <param name="shortName"></param>
+		/// <returns></returns>
+		public static (string, string) ConvertShortNameToNames(string shortName)
+		{
+
+			if (string.IsNullOrEmpty(shortName)) return (null, null);
+
+			// break up shortname into first letters and last name
+			// if name is SmithJ, then J Smith
+
+			// TODO MAKE MORE FACTORS to find the correct person
+
+			int indexOfCapital;
+			for (indexOfCapital = shortName.Length - 1; indexOfCapital >= 0; indexOfCapital--)
+			{
+				if (char.IsUpper(shortName[indexOfCapital]))
+				{
+					break;
+				}
+			}
+
+			//no caps for last name found
+			if (indexOfCapital < 0)
+			{
+				return (null, null);
+			}
+
+			var firstLetters = shortName.Substring(indexOfCapital);
+			var lastName = shortName.Substring(0, indexOfCapital);
+
+			return (firstLetters, lastName);
+		}
+
+		/// <summary>
 		/// Converts string to have proper title case.
 		/// </summary>
 		/// <param name="improperCase"></param>

@@ -3,6 +3,7 @@ using Insight.Core.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 {
@@ -24,7 +25,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 					Id = 65475430
 				}
 			};
-			var nullCourse = controller.GetCourseInstance(shouldNotExist).Result;
+			var nullCourse = controller.GetCourseInstances(shouldNotExist).Result.FirstOrDefault();
 
 			nullCourse.Should().BeNull();
 		}
@@ -32,8 +33,8 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 		[Test]
 		public void GetCourseInstanceTest()
 		{
-			var person = controller.GetPersonByName("JOHN", "SMITH").Result;
-			var course = controller.GetCourseByName("Underwater Basket Weaving").Result;
+			var person = controller.GetPersonsByName("JOHN", "SMITH").Result.FirstOrDefault();
+			var course = controller.GetCoursesByName("Underwater Basket Weaving").Result.FirstOrDefault();
 
 			var shouldExist = new CourseInstance()
 			{
@@ -45,7 +46,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 
 			controller.AddCourseInstance(shouldExist, person: person, course: course);
 
-			var parsedCourse = controller.GetCourseInstance(shouldExist).Result;
+			var parsedCourse = controller.GetCourseInstances(shouldExist).Result.FirstOrDefault();
 
 			parsedCourse.Completion.Should().Be(DateTime.Today.AddHours('5'));
 		}
@@ -65,7 +66,7 @@ namespace Insight.Core.UnitTests.nUnit.ServicesTests.DatabaseTests
 			controller.Add(orgToAdd);
 
 			//act
-			var orgAliasFromDB = controller.GetOrgByAlias(orgAliasName).Result;
+			var orgAliasFromDB = controller.GetOrgsByAlias(orgAliasName).Result.FirstOrDefault();
 
 			//assert
 			orgAliasFromDB.Name.Should().Be(orgName.ToUpper());

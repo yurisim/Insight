@@ -59,8 +59,7 @@ namespace Insight.Core.Services.File
 		/// Values must be in all caps
 		/// </summary>
 		/// <param name="columnHeaders">Represents the row of headers for data columns</param>
-		private
-			void SetColumnIndexes(string[] columnHeaders)
+		private void SetColumnIndexes(string[] columnHeaders)
 		{
 			//Converts everything to upper case for comparison
 			columnHeaders = columnHeaders.Select(d => d.Trim()).ToArray();
@@ -92,7 +91,8 @@ namespace Insight.Core.Services.File
 				//string unit = splitLine[UnitIndex];
 				//string AFSC = splitLine[AFSCIndex];
 
-				Person person = insightController.GetPersonByName(firstName: firstName, lastName: lastName).Result;
+				//TODO handle picking which person in front end
+				Person person = insightController.GetPersonsByName(firstName: firstName, lastName: lastName).Result.FirstOrDefault();
 
 				//TODO handle user existing in AEF but not in alpha roster
 				if (person == null) continue;

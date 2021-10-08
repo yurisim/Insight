@@ -96,7 +96,8 @@ namespace Insight.Core.Services.File
 				string firstName = names[0];
 				string lastName = names[1].Replace("_", "-");
 
-				Person person = insightController.GetPersonByName(firstName, lastName).Result;
+				//TODO handle picking which person in the frontend
+				Person person = insightController.GetPersonsByName(firstName, lastName).Result.FirstOrDefault();
 
 				if (person == null) continue;
 

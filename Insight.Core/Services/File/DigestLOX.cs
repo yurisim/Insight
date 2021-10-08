@@ -19,7 +19,6 @@ namespace Insight.Core.Services.File
 		private int _flightIndex = -1;
 		private int _crewPositionIndex = -1;
 
-
 		private const int Offset = 1; //this offset is to account for the comma in the Name field
 
 
@@ -143,7 +142,8 @@ namespace Insight.Core.Services.File
 					return;
 				}
 
-				var org = insightController.GetOrgByAlias(_squadron).Result;
+				//TODO handle picking which org in the frontend
+				var org = insightController.GetOrgsByAlias(_squadron).Result.FirstOrDefault();
 
 				//TODO this is here so that org is created. Eventually, the user will have to determine that "960 AACS" is the same as "960 AIRBORNE AIR CTR" to facilitating create orgAliases in database
 				if (org == null)
@@ -171,7 +171,8 @@ namespace Insight.Core.Services.File
 					continue;
 				}
 
-				var person = insightController.GetPersonByName(firstName, lastName).Result;
+				//TODO handle picking which person in the frontend
+				var person = insightController.GetPersonsByName(firstName, lastName).Result.FirstOrDefault();
 
 				//This will assume if person is null at this point that a new one needs to be created.
 				if (person == null)

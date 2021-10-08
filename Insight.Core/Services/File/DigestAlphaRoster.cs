@@ -76,8 +76,8 @@ namespace Insight.Core.Services.File
 				string homePhone = splitLine.ElementAtOrDefault(_homePhoneIndex);
 				AFSC afsc = base.GetOrCreateAFSC(pafsc: splitLine.ElementAtOrDefault(_pafsc), cafsc: splitLine.ElementAtOrDefault(_cafsc), dafsc: splitLine.ElementAtOrDefault(_dafsc));
 
-				//TODO look for existing person and update if it exists. Lookup by name and SSN
-				var person = insightController.GetPersonByName(firstName, lastName).Result;
+				//TODO handle picking which person in the frontend
+				var person = insightController.GetPersonsByName(firstName, lastName).Result.FirstOrDefault();
 
 				// If you don't find the person (because we value LOXs, throw them out)
 				if (person == null) continue;

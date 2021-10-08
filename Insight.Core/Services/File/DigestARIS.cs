@@ -82,8 +82,8 @@ namespace Insight.Core.Services.File
 				string firstName = splitLine.ElementAtOrDefault(_nameIndex + 1).Replace("\"", "").Trim();
 				string lastName = splitLine.ElementAtOrDefault(_nameIndex).Replace("\"", "").Trim();
 
-				//TODO look for existing person and update if it exists
-				var person = insightController.GetPersonByName(firstName, lastName).Result;
+				//TODO handle choosing which person in the frontend
+				var person = insightController.GetPersonsByName(firstName, lastName).Result.FirstOrDefault();
 
 				// If you don't find the person (because we value LOXs, throw them out)
 				if (person == null) continue;

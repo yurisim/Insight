@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Insight.ViewModels
 {
@@ -44,7 +45,7 @@ namespace Insight.ViewModels
 			Source.Clear();
 
 			InsightController insightController = new InsightController();
-			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgByAlias(PageOrg).Result);
+			List<Person> persons = await insightController.GetAllPersons(insightController.GetOrgsByAlias(PageOrg).Result.FirstOrDefault());
 
 			List<string> allFlightNames = new List<string>();
 

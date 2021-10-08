@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 {
@@ -58,16 +59,16 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 
 			//arrange 2.0
 			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			Course course = null;
 			if (expectedFileType == FileType.ARIS_Handgun)
 			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Handgun).Result;
+				course = insightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
 			}
 			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
 			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
+				course = insightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
 			}
 
 			//assert
@@ -87,7 +88,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					Completion = courseCompletionExpected,
 					Expiration = courseExpirationExpected
 				};
-				CourseInstance courseInstanceFromDB = insightController.GetCourseInstance(courseInstanceToCheck).Result;
+				CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 				courseInstanceFromDB.Should().NotBeNull();
 
@@ -166,14 +167,12 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			var allPersons = insightController.GetAll<Person>().Result;
 			var courses = insightController.GetAll<Course>().Result;
 
-
 			//assert
 			using (new AssertionScope())
 			{
 				detectedFileType.Should().Be(expectedFileType);
 				allPersons.Count.Should().Be(0);
 				courses.Count.Should().Be(0);
-
 			}
 		}
 
