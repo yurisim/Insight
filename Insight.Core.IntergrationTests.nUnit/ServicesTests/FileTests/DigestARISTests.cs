@@ -16,7 +16,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 	public class DigestARISTests
 	{
 
-		public InsightController insightController;
+		public InsightController InsightController;
 
 		private static readonly DbContextOptions<InsightContext> dbContextOptions =
 			new DbContextOptionsBuilder<InsightContext>()
@@ -26,13 +26,13 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 		[SetUp]
 		public void SetUp()
 		{
-			insightController = new InsightController(dbContextOptions);
+			InsightController = new InsightController(dbContextOptions);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			insightController.EnsureDatabaseDeleted();
+			InsightController.EnsureDatabaseDeleted();
 		}
 
 		[TestCaseSource(typeof(TestCasesObjects), nameof(TestCasesObjects.DigestARIS_ExpectOnePersonsTestCases))]
@@ -51,24 +51,24 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				FirstName = expectedFirstName,
 				LastName = expectedLastName,
 			};
-			insightController.Add(personToCreateInDB);
+			InsightController.Add(personToCreateInDB);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var person = insightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
+			var allPersons = InsightController.GetAllPersons().Result;
+			var person = InsightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			Course course = null;
 			if (expectedFileType == FileType.ARIS_Handgun)
 			{
-				course = insightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
 			}
 			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
 			{
-				course = insightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
 			}
 
 			//assert
@@ -88,7 +88,7 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 					Completion = courseCompletionExpected,
 					Expiration = courseExpirationExpected
 				};
-				CourseInstance courseInstanceFromDB = insightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
+				CourseInstance courseInstanceFromDB = InsightController.GetCourseInstances(courseInstanceToCheck).Result.FirstOrDefault();
 
 				courseInstanceFromDB.Should().NotBeNull();
 
@@ -113,25 +113,27 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 				FirstName = expectedFirstName,
 				LastName = expectedLastName,
 			};
-			insightController.Add(personToCreateInDB);
+			InsightController.Add(personToCreateInDB);
 
 			//act
 			digest.CleanInput();
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAllPersons().Result;
-			var allCourses = insightController.GetAll<Course>().Result;
-			var person = insightController.GetPersonByName(firstName: expectedFirstName, lastName: expectedLastName).Result;
+			var allPersons = InsightController.GetAllPersons().Result;
+			var allCourses = InsightController.GetAll<Course>().Result;
+			var person = InsightController.GetPersonsByName(firstName: expectedFirstName, lastName: expectedLastName).Result.FirstOrDefault();
 
 			Course course = null;
+
 			if (expectedFileType == FileType.ARIS_Handgun)
 			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Handgun).Result;
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Handgun).Result.FirstOrDefault();
 			}
+
 			else if (expectedFileType == FileType.ARIS_Rifle_Carbine)
 			{
-				course = insightController.GetCourseByName(WeaponCourseTypes.Rifle_Carbine).Result;
+				course = InsightController.GetCoursesByName(WeaponCourseTypes.Rifle_Carbine).Result.FirstOrDefault();
 			}
 
 			//assert
@@ -164,8 +166,8 @@ namespace Insight.Core.IntegrationTests.nUnit.ServicesTests.FileTests
 			digest.DigestLines();
 
 			//arrange 2.0
-			var allPersons = insightController.GetAll<Person>().Result;
-			var courses = insightController.GetAll<Course>().Result;
+			var allPersons = InsightController.GetAll<Person>().Result;
+			var courses = InsightController.GetAll<Course>().Result;
 
 			//assert
 			using (new AssertionScope())
